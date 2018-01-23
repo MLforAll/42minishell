@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   msh_cmdexec.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/23 21:36:52 by kdumarai         ###   ########.fr       */
+/*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
+/*   Updated: 2018/01/23 20:54:00 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include <unistd.h>
+#include <sys/wait.h>
+#include "minishell.h"
 
-# include "libft.h"
-# include "msh_data.h"
+int		exec_cmd(t_cmd *cmd)
+{
+	pid_t	pid;
+	int		exval;
 
-t_cmd	*get_cmd_list(char *line);
-char	*ft_readline(const char *prompt);
-
-int		exec_cmd(t_cmd *cmd);
-char	*search_dir_for_exec(const char *path, const char *name);
-
-t_cmd	*ft_cmdnew(void);
-void	ft_cmdpb(t_cmd **headref, t_cmd *new);
-
-#endif
+	pid = fork();
+	if (pid == 0)
+		execve(cmd->c_path, cmd->c_argv, NULL);
+	wait4(pid, &exval, 0, NULL);
+	return (exval);
+}

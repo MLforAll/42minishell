@@ -1,28 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   msh_interpret.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/23 21:36:52 by kdumarai         ###   ########.fr       */
+/*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
+/*   Updated: 2018/01/23 20:06:53 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include "libft.h"
-# include "msh_data.h"
+t_cmd	*get_cmd_list(char *line)
+{
+	char		**cmds;
+	t_cmd		*ret;
+	t_cmd		*new;
 
-t_cmd	*get_cmd_list(char *line);
-char	*ft_readline(const char *prompt);
-
-int		exec_cmd(t_cmd *cmd);
-char	*search_dir_for_exec(const char *path, const char *name);
-
-t_cmd	*ft_cmdnew(void);
-void	ft_cmdpb(t_cmd **headref, t_cmd *new);
-
-#endif
+	ret = NULL;
+	cmds = ft_strsplit(line, ';');
+	while (*cmds)
+	{
+		new = ft_cmdnew();
+		new->c_argv = ft_strsplit(*cmds, ' ');
+		new->c_path = *new->c_argv;
+		ft_cmdpb(&ret, new);
+		cmds++;
+	}
+	return (ret);
+}

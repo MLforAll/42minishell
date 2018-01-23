@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   msh_data.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/23 21:36:52 by kdumarai         ###   ########.fr       */
+/*   Created: 2018/01/23 19:10:31 by kdumarai          #+#    #+#             */
+/*   Updated: 2018/01/23 20:01:19 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef MSH_DATA_H
+# define MSH_DATA_H
 
-# include "libft.h"
-# include "msh_data.h"
-
-t_cmd	*get_cmd_list(char *line);
-char	*ft_readline(const char *prompt);
-
-int		exec_cmd(t_cmd *cmd);
-char	*search_dir_for_exec(const char *path, const char *name);
-
-t_cmd	*ft_cmdnew(void);
-void	ft_cmdpb(t_cmd **headref, t_cmd *new);
+typedef struct		s_cmd
+{
+	int				c_builtin;
+	char			*c_path;
+	char			**c_argv;
+	int				c_prereq;
+	int				c_outfd;
+	int				c_errfd;
+	struct s_cmd	*next;
+}					t_cmd;
 
 #endif

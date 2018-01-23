@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/01/22 06:46:57 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/01/23 21:38:12 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,11 @@ INCLUDES = $(addprefix $(INCDIR)/, $(INCFILES))
 
 SRCDIR = srcs
 SRCFILES = minishell.c \
-	ft_readline.c
+	ft_readline.c \
+	msh_interpret.c \
+	msh_cmdexec.c \
+	msh_direxp.c \
+	lst_support.c
 SRCS = $(addprefix $(SRCDIR)/, $(SRCFILES))
 
 OBJDIR = objs
