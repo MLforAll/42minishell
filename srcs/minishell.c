@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Kelian <Kelian@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/23 23:33:08 by Kelian           ###   ########.fr       */
+/*   Updated: 2018/01/24 22:32:39 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,18 @@ int			main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
-	(void)env;
 	signal(SIGINT, SIG_IGN);
-	char *cmd = search_dir_for_exec("/bin", "ls");
-	printf("%s\n", cmd);
-	ft_strdel(&cmd);
 	while (42)
 	{
-		line = ft_readline("$> ");
+		line = ft_readline("\033[1;33mminishell@42\033[0;39m$ ");
 		if (line)
 		{
 			//ft_putstr("line is: ");
 			//ft_putendl(line);
-			test = get_cmd_list(line);
-			//ft_puttab(test->c_argv, NULL);
-			exval = exec_cmd(test);
-			printf("process exited: %i\n", exval);
+			test = get_cmd_list(line, env);
+			exval = exec_cmds(test, env);
+			ft_cmddel(&test);
+			//printf("process exited: %i\n", exval);
 		}
 		if (!line)
 			break ;

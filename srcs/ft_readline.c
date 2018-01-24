@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/23 20:06:57 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/24 17:22:44 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,6 @@ static void	set_noecho(int fd, struct termios t)
 {
 	t.c_lflag &= ~(ICANON | ECHO | ISIG);
 	tcsetattr(fd, TCSANOW, &t);
-}
-
-static void	print_nums_debug(char *buff)
-{
-	ft_putstr("< ");
-	while (*buff)
-	{
-		ft_putnbr(*buff);
-		if (*(buff + 1))
-			ft_putstr(" ; ");
-		buff++;
-	}
-	ft_putstr(" >");
 }
 
 static int	act_char(char *buff, ssize_t len)

@@ -1,27 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_data.h                                         :+:      :+:    :+:   */
+/*   msh_debug.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/23 19:10:31 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/24 21:27:24 by kdumarai         ###   ########.fr       */
+/*   Created: 2018/01/24 17:20:52 by kdumarai          #+#    #+#             */
+/*   Updated: 2018/01/24 21:23:46 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MSH_DATA_H
-# define MSH_DATA_H
+#include "minishell.h"
 
-typedef struct		s_cmd
+void	print_nums_debug(char *buff)
 {
-	int				c_builtin;
-	char			*c_path;
-	char			**c_argv;
-	int				c_prereq;
-	int				c_outfd;
-	int				c_errfd;
-	struct s_cmd	*next;
-}					t_cmd;
-
-#endif
+	ft_putstr("< ");
+	while (*buff)
+	{
+		ft_putnbr(*buff);
+		if (*(buff + 1))
+			ft_putstr(" ; ");
+		buff++;
+	}
+	ft_putstr(" >");
+}

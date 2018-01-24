@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_data.h                                         :+:      :+:    :+:   */
+/*   msh_err.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/23 19:10:31 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/24 21:27:24 by kdumarai         ###   ########.fr       */
+/*   Created: 2018/01/24 21:23:18 by kdumarai          #+#    #+#             */
+/*   Updated: 2018/01/24 21:27:18 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MSH_DATA_H
-# define MSH_DATA_H
+#include "minishell.h"
 
-typedef struct		s_cmd
+void		msh_err(int errc, const char *path)
 {
-	int				c_builtin;
-	char			*c_path;
-	char			**c_argv;
-	int				c_prereq;
-	int				c_outfd;
-	int				c_errfd;
-	struct s_cmd	*next;
-}					t_cmd;
-
-#endif
+	ft_putstr("-msh: ");
+	ft_putstr(path);
+	if (errc == 1)
+		ft_putendl(": command not found");
+	else if (errc == 2)
+		ft_putendl(": No such file or directory");
+}

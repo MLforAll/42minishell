@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/01/23 21:38:12 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/01/24 22:35:14 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC_FLAGS = -Wall -Werror -Wextra
 CC_LIB = -I includes -I libft
-LD_LIB = -L libft -lft
+LD_FLAGS = -L libft -lft
 
 LIBFT = libft/libft.a
 
@@ -28,7 +28,10 @@ SRCFILES = minishell.c \
 	msh_interpret.c \
 	msh_cmdexec.c \
 	msh_direxp.c \
-	lst_support.c
+	lst_support.c \
+	msh_err.c \
+	msh_env.c \
+	msh_debug.c
 SRCS = $(addprefix $(SRCDIR)/, $(SRCFILES))
 
 OBJDIR = objs
@@ -41,25 +44,36 @@ all: $(NAME)
 $(NAME): $(OBJS) $(INCLUDES)
 	@ printf "\r\033[K$(PROJTEXT)Compiling\n"
 	@ make -C $(dir $(LIBFT))
-	@ printf "$(PROJTEXT)Linking\n"
-	@ gcc -o $(NAME) $(LD_LIB) $(OBJS)
-	@ printf "$(PROJTEXT)\033[1;32mProgram built at $(NAME)\033[0;39m\n"
+	@ echo "$(PROJTEXT)Linking"
+	@ gcc -o $(NAME) $(LD_FLAGS) $(OBJS)
+	@ echo "$(PROJTEXT)\033[1;32mProgram built at $(NAME)\033[0;39m"
+
+noflags:
+	@ echo "\033[1;31m----------------------"
+	@ echo "CC FLAGS ARE DISABLED!"
+	@ echo "----------------------\033[0;39m"
+	@ make all CC_FLAGS=""
+
+fsanitize:
+	@ echo "\033[1;31m-------------------"
+	@ echo "-fsanitize ENABLED!"
+	@ echo "-------------------\033[0;39m"
+	@ make all LD_FLAGS="$(LD_FLAGS) -fsanitize=address"
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@ if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
 	@ printf "\033[K$(PROJTEXT)Compiling \033[1;33m$<\033[0;39m\r"
-	@ gcc $(CC_LIB) -c $< -o $@
-	@# gcc $(CC_FLAGS) $(CC_LIB) -c $< -o $@
+	@ gcc $(CC_FLAGS) $(CC_LIB) -c $< -o $@
 
 clean:
 	@ make clean -C $(dir $(LIBFT))
 	@ rm -rf $(OBJDIR)
-	@ printf "$(PROJTEXT)Removed objects\n"
+	@ echo "$(PROJTEXT)Removed objects"
 
 fclean: clean
 	@ make fclean -C $(dir $(LIBFT))
 	@ rm -f $(NAME)
-	@ printf "$(PROJTEXT)Removed $(NAME)\n"
+	@ echo "$(PROJTEXT)Removed $(NAME)"
 
 re: fclean all
 
