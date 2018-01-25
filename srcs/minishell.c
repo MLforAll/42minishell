@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/24 22:32:39 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/25 19:27:57 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,16 @@
 
 #include <stdio.h>
 
-int			main(int ac, char **av, char **env)
+int			main(int ac, char **av, char **environ)
 {
 	char			*line;
+	char			**env;
 	t_cmd			*test;
 	int				exval;
 
 	(void)ac;
 	(void)av;
+	env = ft_tabdup((const char**)environ);
 	signal(SIGINT, SIG_IGN);
 	while (42)
 	{
