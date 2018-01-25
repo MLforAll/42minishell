@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/24 17:22:44 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/25 01:54:47 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	act_char(char *buff, ssize_t len)
 		return (-2);
 	if (c == 127)
 	{
-		ft_putstr("\033[D\033[K");
+		ft_putstr_fd("\033[D\033[K", STDIN_FILENO);
 		return (3);
 	}
 	if (ft_strcmp("\033[D", buff) == 0 || ft_strcmp("\033[C", buff) == 0)
@@ -80,24 +80,25 @@ char		*ft_readline(const char *prompt)
 	char			*ret;
 	struct termios	t;
 
-	ft_putstr(prompt);
 	ret = ft_strnew(0);
-	tcgetattr(STDOUT_FILENO, &t);
-	set_noecho(STDOUT_FILENO, t);
+	if (tcgetattr(STDIN_FILENO, &t))
+		return (NULL);
+	set_noecho(STDIN_FILENO, t);
+	ft_putstr_fd(prompt, STDIN_FILENO);
 	while ((rb = read(STDIN_FILENO, buff, 4)) > 0)
 	{
 		buff[rb] = '\0';
 		if ((act_ret = act_char(buff, rb)) > 0 && act_ret < 3)
-			ft_putstr(buff);
+			ft_putstr_fd(buff, STDIN_FILENO);
 		if (act_ret < 0)
 		{
-			ft_putchar('\n');
+			ft_putchar_fd('\n', STDIN_FILENO);
 			break ;
 		}
 		else if (act_ret != 2 && act_ret != 0)
 			mod_line(&ret, buff, act_ret);
 	}
-	tcsetattr(STDOUT_FILENO, TCSANOW, &t);
+	tcsetattr(STDIN_FILENO, TCSANOW, &t);
 	if (act_ret == -2)
 		ft_strdel(&ret);
 	return (ret);
