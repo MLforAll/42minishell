@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/25 21:41:38 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/25 21:48:00 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 static void	fill_bltn(t_cmd *cmd, char *line_cmd)
 {
-	if (ft_strcmp(line_cmd, "echo"))
+	if (!ft_strcmp(line_cmd, "echo"))
 		cmd->builtin = &echo_bltn;
-	else if (ft_strcmp(line_cmd, "exit"))
+	else if (!ft_strcmp(line_cmd, "exit"))
 		cmd->builtin = &exit_bltn;
 }
 

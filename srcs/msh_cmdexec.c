@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/25 21:40:56 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/25 21:49:53 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int		exec_cmds(t_cmd *allcmds, char **env)
 
 	while (allcmds)
 	{
-		if (!allcmds->builtin)
+		if (allcmds->builtin)
 			ft_putendl("msh: builtin command!");
 		else
 			ret = exec_cmd(allcmds, env);
