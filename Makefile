@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/01/24 22:35:14 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/01/25 01:35:20 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,8 @@ LIBFT = libft/libft.a
 
 INCDIR = includes
 INCFILES = minishell.h
+		msh_data.h \
+		msh_debug.h
 INCLUDES = $(addprefix $(INCDIR)/, $(INCFILES))
 
 SRCDIR = srcs
