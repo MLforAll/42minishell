@@ -1,27 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_data.h                                         :+:      :+:    :+:   */
+/*   test_tabdup.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/23 19:10:31 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/25 21:41:11 by kdumarai         ###   ########.fr       */
+/*   Created: 2018/01/25 21:06:42 by kdumarai          #+#    #+#             */
+/*   Updated: 2018/01/25 21:11:17 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MSH_DATA_H
-# define MSH_DATA_H
+#include "libft.h"
 
-typedef struct		s_cmd
+int		main(int ac, char **av)
 {
-	int				(*builtin)(char **av);
-	char			*c_path;
-	char			**c_argv;
-	int				c_prereq;
-	int				c_outfd;
-	int				c_errfd;
-	struct s_cmd	*next;
-}					t_cmd;
+	char	**src;
+	char	**dest;
 
-#endif
+	if (ac < 3)
+		return (1);
+	src = ft_strsplit(av[1], *av[2]);
+	ft_puttab(src, "src");
+	ft_putendl("---------------");
+	dest = ft_tabdup((const char**)src);
+	ft_puttab(dest, "dest");
+	return (0);
+}

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 21:26:34 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/24 18:34:00 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/25 21:16:57 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ char	*search_dir_for_exec(const char *path, const char *name)
 	struct dirent	*dird;
 	char			*elem_path;
 	struct stat		st;
+	int				stat_ret;
 
 	if (!(dirp = opendir(path)))
 		return (NULL);
@@ -31,8 +32,8 @@ char	*search_dir_for_exec(const char *path, const char *name)
 		ft_strcat(elem_path, path);
 		ft_strcat(elem_path, "/");
 		ft_strcat(elem_path, dird->d_name);
-		stat(elem_path, &st);
-		if ((st.st_mode & S_IXUSR || st.st_mode & S_IXGRP
+		stat_ret = stat(elem_path, &st);
+		if (stat_ret != -1 && (st.st_mode & S_IXUSR || st.st_mode & S_IXGRP
 			|| st.st_mode & S_IXOTH) && ft_strcmp(dird->d_name, name) == 0)
 			break ;
 		ft_strdel(&elem_path);

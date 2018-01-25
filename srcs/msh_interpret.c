@@ -6,12 +6,20 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/24 22:40:16 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/25 21:41:38 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include "minishell.h"
+
+static void	fill_bltn(t_cmd *cmd, char *line_cmd)
+{
+	if (ft_strcmp(line_cmd, "echo"))
+		cmd->builtin = &echo_bltn;
+	else if (ft_strcmp(line_cmd, "exit"))
+		cmd->builtin = &exit_bltn;
+}
 
 static char	*get_cmd_path(char *line_cmd, char **env)
 {
@@ -37,15 +45,18 @@ static char	*get_cmd_path(char *line_cmd, char **env)
 t_cmd		*get_cmd_list(char *line, char **env)
 {
 	char		**cmds;
+	char		**bw;
 	t_cmd		*ret;
 	t_cmd		*new;
 
 	ret = NULL;
 	cmds = ft_strsplit(line, ';');
-	while (*cmds)
+	bw = cmds;
+	while (*bw)
 	{
 		new = ft_cmdnew();
-		new->c_argv = ft_strsplit(*cmds, ' ');
+		new->c_argv = ft_strsplit(*bw, ' ');
+		fill_bltn(new, *new->c_argv);
 		new->c_path = get_cmd_path(*new->c_argv, env);
 		if (ft_strchr(new->c_path, '/') && access(new->c_path, X_OK))
 		{
@@ -53,7 +64,8 @@ t_cmd		*get_cmd_list(char *line, char **env)
 			ft_cmddelone(&new);
 		}
 		ft_cmdpb(&ret, new);
-		cmds++;
+		bw++;
 	}
+	ft_tabfree(&cmds);
 	return (ret);
 }

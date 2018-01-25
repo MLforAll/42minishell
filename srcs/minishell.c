@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/25 19:27:57 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/25 21:14:27 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int			main(int ac, char **av, char **environ)
 	int				exval;
 
 	(void)ac;
-	(void)av;
 	env = ft_tabdup((const char**)environ);
+	chg_env_var("SHELL", av[0], env);
 	signal(SIGINT, SIG_IGN);
 	while (42)
 	{
@@ -44,5 +44,6 @@ int			main(int ac, char **av, char **environ)
 			break ;
 		ft_strdel(&line);
 	}
+	ft_tabfree(&env);
 	return (0);
 }

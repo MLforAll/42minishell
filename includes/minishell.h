@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/24 22:43:22 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/25 21:37:17 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 # include "libft.h"
 # include "msh_data.h"
+
+int		echo_bltn(char **av);
+int		exit_bltn(char **av);
 
 int		exec_cmds(t_cmd *allcmds, char **env);
 int		exec_cmd(t_cmd *cmd, char **env);

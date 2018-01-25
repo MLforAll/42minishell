@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 19:49:11 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/24 21:40:59 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/25 21:19:52 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	ft_cmddelone(t_cmd **cmdref)
 	curr = *cmdref;
 	next = curr->next;
 	if (curr->c_path != *curr->c_argv)
-		ft_tabfree(&curr->c_argv);
+		ft_strdel(&curr->c_path);
 	if (curr->c_argv)
 		ft_tabfree(&curr->c_argv);
 	free(curr);

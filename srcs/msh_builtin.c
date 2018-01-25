@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_data.h                                         :+:      :+:    :+:   */
+/*   msh_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/23 19:10:31 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/25 21:41:11 by kdumarai         ###   ########.fr       */
+/*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
+/*   Updated: 2018/01/25 21:41:54 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MSH_DATA_H
-# define MSH_DATA_H
+#include "minishell.h"
 
-typedef struct		s_cmd
+int		echo_bltn(char **av)
 {
-	int				(*builtin)(char **av);
-	char			*c_path;
-	char			**c_argv;
-	int				c_prereq;
-	int				c_outfd;
-	int				c_errfd;
-	struct s_cmd	*next;
-}					t_cmd;
+	while (*(++av))
+	{
+		ft_putstr(*av);
+		ft_putchar(' ');
+	}
+	return (0);
+}
 
-#endif
+int		exit_bltn(char **av)
+{
+	(void)av;
+	return (0);
+}
