@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/01/25 01:40:29 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/01/25 17:37:14 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,20 +46,20 @@ all: $(NAME)
 $(NAME): $(OBJS) $(INCLUDES)
 	@ printf "\r\033[K$(PROJTEXT)Compiling\n"
 	@ make -C $(dir $(LIBFT))
-	@ echo "$(PROJTEXT)Linking"
+	@ printf "$(PROJTEXT)Linking\n"
 	@ gcc -o $(NAME) $(LD_FLAGS) $(OBJS)
-	@ echo "$(PROJTEXT)\033[1;32mProgram built at $(NAME)\033[0;39m"
+	@ printf "$(PROJTEXT)\033[1;32mProgram built at $(NAME)\033[0;39m\n"
 
 noflags:
-	@ echo "\033[1;31m----------------------"
-	@ echo "CC FLAGS ARE DISABLED!"
-	@ echo "----------------------\033[0;39m"
+	@ printf "\033[1;31m----------------------\n"
+	@ printf "| CC_FLAGS DISABLED! |\n"
+	@ printf "\r----------------------\033[0;39m\n"
 	@ make all CC_FLAGS=""
 
 fsanitize:
-	@ echo "\033[1;31m-------------------"
-	@ echo "-fsanitize ENABLED!"
-	@ echo "-------------------\033[0;39m"
+	@ printf "\033[1;31m------------------------------\n"
+	@ printf "\r| ADDRESS SANITIZER ENABLED! |\n"
+	@ printf "\r------------------------------\033[0;39m\n"
 	@ make all LD_FLAGS="$(LD_FLAGS) -fsanitize=address"
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
@@ -70,12 +70,12 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 clean:
 	@ make clean -C $(dir $(LIBFT))
 	@ rm -rf $(OBJDIR)
-	@ echo "$(PROJTEXT)Removed objects"
+	@ printf "$(PROJTEXT)Removed objects\n"
 
 fclean: clean
 	@ make fclean -C $(dir $(LIBFT))
 	@ rm -f $(NAME)
-	@ echo "$(PROJTEXT)Removed $(NAME)"
+	@ printf "$(PROJTEXT)Removed $(NAME)\n"
 
 re: fclean all
 
