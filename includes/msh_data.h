@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 19:10:31 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/25 21:41:11 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/26 19:40:27 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 
 typedef struct		s_cmd
 {
-	int				(*builtin)(char **av);
+	int				(*builtin)(int, char **, char ***);
 	char			*c_path;
 	char			**c_argv;
 	int				c_prereq;
-	int				c_outfd;
-	int				c_errfd;
+	char			*c_in;
+	char			*c_out;
+	char			*c_err;
 	struct s_cmd	*next;
 }					t_cmd;
 

@@ -1,29 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_builtin.c                                      :+:      :+:    :+:   */
+/*   msh_autocompletion.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/25 21:41:54 by kdumarai         ###   ########.fr       */
+/*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
+/*   Updated: 2018/01/26 22:04:53 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		echo_bltn(char **av)
+char	*autocomplete_line(char *line)
 {
-	while (*(++av))
-	{
-		ft_putstr(*av);
-		ft_putchar(' ');
-	}
-	return (0);
-}
+	char	**comps;
 
-int		exit_bltn(char **av)
-{
-	(void)av;
-	return (0);
+	comps = ft_strsplit(line, ' ');
+	if (!ft_strchr(line, '/'))
+		
 }

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/25 21:49:53 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/26 18:56:36 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,22 @@
 #include <sys/wait.h>
 #include "minishell.h"
 
-int		exec_cmd(t_cmd *cmd, char **env)
+int		exec_cmd(t_cmd *cmd, char ***env)
 {
 	pid_t	pid;
 	int		exval;
 
 	exval = 0;
+	if (cmd->builtin)
+	{
+		return ((cmd->builtin)((int)ft_tablen((const char**)cmd->c_argv), \
+			cmd->c_argv, env));
+	}
 	pid = fork();
 	if (pid == 0)
 	{
-		chg_env_var("_", cmd->c_path, env);
-		execve(cmd->c_path, cmd->c_argv, env);
+		chg_env_var(*env, "_", cmd->c_path);
+		execve(cmd->c_path, cmd->c_argv, *env);
 		msh_err(1, cmd->c_path);
 		exit(127);
 	}
@@ -33,16 +38,13 @@ int		exec_cmd(t_cmd *cmd, char **env)
 	return (WEXITSTATUS(exval));
 }
 
-int		exec_cmds(t_cmd *allcmds, char **env)
+int		exec_cmds(t_cmd *allcmds, char ***env)
 {
 	int		ret;
 
 	while (allcmds)
 	{
-		if (allcmds->builtin)
-			ft_putendl("msh: builtin command!");
-		else
-			ret = exec_cmd(allcmds, env);
+		ret = exec_cmd(allcmds, env);
 		allcmds = allcmds->next;
 	}
 	return (ret);

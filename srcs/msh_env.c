@@ -6,16 +6,14 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 22:31:45 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/25 21:05:47 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/26 19:10:41 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
 
-#include <stdio.h>
-
-char	*get_env_var(const char *var, char **env)
+char	*get_env_var(char **env, const char *var)
 {
 	char	*ret;
 
@@ -30,7 +28,7 @@ char	*get_env_var(const char *var, char **env)
 	return (NULL);
 }
 
-void	chg_env_var(const char *var, char *new, char **env)
+void	chg_env_var(char **env, const char *var, char *new)
 {
 	char	*tmp;
 
@@ -47,4 +45,42 @@ void	chg_env_var(const char *var, char *new, char **env)
 	ft_strcat(*env, var);
 	ft_strcat(*env, "=");
 	ft_strcat(*env, new);
+}
+
+void	add_env_var(char ***env, const char *var, char *value)
+{
+	char		**old;
+	char		*new_entry[2];
+	char		entry_str[ft_strlen(var) + ft_strlen(value) + 2];
+
+	ft_strcpy(entry_str, var);
+	ft_strcat(entry_str, "=");
+	ft_strcat(entry_str, value);
+	new_entry[0] = entry_str;
+	new_entry[1] = NULL;
+	old = *env;
+	*env = ft_tabjoin((const char**)*env, (const char**)new_entry);
+	ft_tabfree(&old);
+}
+
+void	del_env_var(char ***env, const char *var)
+{
+	char	*tmp;
+	char	**new_env;
+	char	**bw;
+	char	**bwn;
+
+	new_env = (char**)malloc(sizeof(char*) * \
+		(ft_tablen((const char**)*env) + 1));
+	bwn = new_env;
+	bw = *env;
+	while (*bw)
+	{
+		if (!(tmp = ft_strstart(*bw, (char*)var)) || *tmp != '=')
+			*(bwn++) = ft_strdup(*bw);
+		bw++;
+	}
+	*bwn = NULL;
+	ft_tabfree(env);
+	*env = new_env;
 }
