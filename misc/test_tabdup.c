@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:06:42 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/25 21:11:17 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/26 02:49:43 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,7 @@ int		main(int ac, char **av)
 	ft_putendl("---------------");
 	dest = ft_tabdup((const char**)src);
 	ft_puttab(dest, "dest");
+	ft_tabfree(&dest);
+	ft_tabfree(&src);
 	return (0);
 }
