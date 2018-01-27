@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/26 22:42:15 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/27 22:28:12 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,24 +39,29 @@ int		echo_bltn(int ac, char **av, char ***env)
 int		cd_bltn(int ac, char **av, char ***env)
 {
 	char	*path_cd;
+	char	*pathname;
+	char	*oldpwd;
 
 	path_cd = (ac == 1) ? get_env_var(*env, "HOME") : av[1];
+	oldpwd = NULL;
+	if (ac > 1 && ft_strcmp(av[1], "-") == 0)
+		path_cd = (oldpwd = get_env_var(*env, "OLDPWD"));
 	if (!path_cd || access(path_cd, X_OK) == -1)
 	{
-		ft_putstr_fd("msh: cd: ", STDERR_FILENO);
-		if (path_cd)
-			ft_putstr_fd(path_cd, STDERR_FILENO);
-		ft_putendl_fd("No such file or directory", STDERR_FILENO);
+		msh_err(2, av[0], path_cd);
 		return (1);
 	}
+	if (path_cd == oldpwd)
+		ft_putendl(path_cd);
 	if (chdir(path_cd) == -1)
 	{
-		ft_putstr_fd("msh: cd: ", STDERR_FILENO);
-		if (path_cd)
-			ft_putstr_fd(path_cd, STDERR_FILENO);
-		ft_putendl_fd("Can't cd to directory", STDERR_FILENO);
+		msh_err(3, av[0], path_cd);
 		return (1);
 	}
+	chg_env_var(*env, "OLDPWD", get_env_var(*env, "PWD"));
+	pathname = getcwd(NULL, 0);
+	chg_env_var(*env, "PWD", pathname);
+	free(pathname);
 	return (0);
 }
 

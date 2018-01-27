@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/26 17:52:27 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/27 19:48:13 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ static int	act_char(char *buff, ssize_t len, char *line, t_cursor *csr)
 		csr->pos++;
 		return (3);
 	}
+
 	if (c == '\n' || c == 3)
 		return (-1);
 	if (c == 4)
@@ -107,6 +108,20 @@ static void	mod_line(char **line, char *buff, int act_ret, t_cursor *csr)
 	free(tmp);
 }
 
+void	line_add(char **line, char *add, t_cursor *csr)
+{
+	char	*tmp;
+	size_t	len;
+
+	tmp = *line;
+	*line = ft_strjoin(*line, add);
+	free(tmp);
+	len = ft_strlen(add);
+	ft_putstr_fd(add, STDIN_FILENO);
+	csr->max += len;
+	csr->pos += len;
+}
+
 char		*ft_readline(const char *prompt)
 {
 	char			buff[5];
@@ -124,6 +139,8 @@ char		*ft_readline(const char *prompt)
 		buff[rb] = '\0';
 		if ((act_ret = act_char(buff, rb, ret, &csr)) > 0 && act_ret < 3)
 			ft_putstr_fd(buff, STDIN_FILENO);
+		if (*buff == '\t')
+			autocomplete_line(&ret, &csr);
 		if (act_ret < 0)
 		{
 			ft_putchar_fd('\n', STDIN_FILENO);

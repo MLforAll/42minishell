@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/26 22:39:52 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/27 22:26:50 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ t_cmd		*get_cmd_list(char *line, char **env)
 		if (new->c_path && ft_strchr(new->c_path, '/')
 			&& access(new->c_path, X_OK))
 		{
-			msh_err(2, new->c_path);
+			msh_err(2, NULL, new->c_path);
 			ft_cmddelone(&new);
 		}
 		ft_cmdpb(&ret, new);

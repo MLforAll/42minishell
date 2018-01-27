@@ -2,3 +2,4 @@ msh_debug.c
 msh_debug.h
 test_tabdup.c
 printenv.c
+get_keycodes.c

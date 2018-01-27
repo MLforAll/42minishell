@@ -1,0 +1,12 @@
+echo salut les gars
+setenv VAR=salut
+echo ----
+env
+echo ----
+echo ta vu ma belle variable?
+unsetenv VAR
+echo ----
+env
+echo ----
+echo gone!
+

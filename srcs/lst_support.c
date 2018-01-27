@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 19:49:11 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/26 18:57:52 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/27 22:02:36 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,10 @@ void	ft_cmddel(t_cmd **headref)
 	while (*headref)
 		ft_cmddelone(headref);
 	*headref = NULL;
+}
+
+void	free_tlist(void *content, size_t size)
+{
+	(void)size;
+	free(content);
 }

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 17:46:30 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/25 17:49:08 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/27 22:03:05 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 ** 25/01/18: to be used later
 */
 
-# define BUFF_SIZE	32
+# define RL_BUFF_SIZE	32
 
 /*
 ** struct for cursor mgmt
@@ -26,8 +26,16 @@
 
 typedef struct	s_cursor
 {
-	size_t	pos;
-	size_t	max;
+	unsigned int	pos;
+	size_t			max;
 }				t_cursor;
+
+/*
+** Functions
+*/
+
+void	autocomplete_line(char **line, t_cursor *csr);
+void	line_add(char **line, char *add, t_cursor *csr);
+char	*ft_readline(const char *prompt);
 
 #endif

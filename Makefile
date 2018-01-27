@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/01/26 22:26:01 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/01/27 18:17:43 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRCFILES = minishell.c \
 	msh_env.c \
 	msh_env_builtins.c \
 	msh_builtins.c \
+	msh_autocompletion.c \
 	msh_debug.c
 SRCS = $(addprefix $(SRCDIR)/, $(SRCFILES))
 
