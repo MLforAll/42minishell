@@ -6,12 +6,13 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 12:56:55 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/30 22:20:59 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <dirent.h>
 #include "ft_readline.h"
 #include "minishell.h"
 
@@ -25,35 +26,6 @@ static char		*get_diff(char *base, char *check)
 		check++;
 	}
 	return (base);
-}
-
-static void		rm_dups(t_list **lst)
-{
-	t_list	*bw;
-	t_list	*prev;
-	t_list	*chk;
-	t_list	**ptr;
-
-	bw = *lst;
-	prev = NULL;
-	while (bw)
-	{
-		chk = *lst;
-		while (chk != bw)
-		{
-			if (ft_strcmp(bw->content, chk->content) == 0)
-			{
-				ptr = (!prev) ? lst : &prev->next;
-				*ptr = bw->next;
-				ft_lstdelone(&bw, &free_tlist);
-				bw = prev;
-			}
-			else
-				chk = chk->next;
-		}
-		prev = bw;
-		bw = bw->next;
-	}
 }
 
 static t_list	*get_res_with_path(char *base, char **env)
@@ -74,9 +46,29 @@ static t_list	*get_res_with_path(char *base, char **env)
 			ptr = &(*ptr)->next;
 		bw++;
 	}
-	rm_dups(&ret);
+	ft_lstrmdups(&ret);
 	ft_tabfree(&paths);
 	return (ret);
+}
+
+static char		*get_highest_common(t_list *lst)
+{
+	int		first;
+	size_t	len;
+	size_t	new;
+
+	first = TRUE;
+	len = 0;
+	while (lst->next)
+	{
+		new = 0;
+		new = ft_strcmpi((const char*)lst->content, (const char*)lst->next->content);
+		len = (new < len || first) ? new : len;
+		if (first)
+			first = FALSE;
+		lst = lst->next;
+	}
+	return (len == 0 ? NULL : ft_strsub(lst->content, 0, len));
 }
 
 void			ac_line(char **line, t_cursor *csr, const char *prmpt, char **env)
@@ -85,16 +77,20 @@ void			ac_line(char **line, t_cursor *csr, const char *prmpt, char **env)
 	t_list	*res;
 	char	*fname;
 	char	*diff;
+	char	*base;
 
-	last = (last = ft_strchr(*line, ' ')) ? last + 1 : *line;
+	last = (last = ft_strrchr(*line, ' ')) ? last + 1 : *line;
 	fname = (fname = ft_strrchr(last, '/')) ? fname + 1 : last;
 	res = (!ft_strchr(*line, ' ') && !ft_strchr(*line, '/')) \
 								? get_res_with_path(last, env) \
 								: search_execs_begin(last, NULL);
-	if (res && !res->next)
+	base = (res && !res->next) ? res->content : get_highest_common(res);
+	if (base)
 	{
-		if ((diff = get_diff(res->content, fname)))
+		if ((diff = get_diff(base, fname)))
 			line_add(line, diff, csr);
+		if (base == res->content)
+			line_add(line, (res->content_size == DT_DIR) ? "/" : " ", csr);
 	}
 	else if (res)
 	{
@@ -103,5 +99,7 @@ void			ac_line(char **line, t_cursor *csr, const char *prmpt, char **env)
 		ft_putstr_fd(prmpt, STDIN_FILENO);
 		ft_putstr_fd(*line, STDIN_FILENO);
 	}
+	if (base && base != res->content)
+		ft_strdel(&base);
 	ft_lstdel(&res, &free_tlist);
 }

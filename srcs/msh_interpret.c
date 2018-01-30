@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/27 22:26:50 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/30 22:50:31 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	fill_bltn(t_cmd *cmd, char *line_cmd)
 		cmd->builtin = &unsetenv_bltn;
 }
 
-static char	*get_cmd_path(char *line_cmd, char **env)
+char		*get_cmd_path(char *line_cmd, char **env)
 {
 	char	*env_path;
 	char	**paths;

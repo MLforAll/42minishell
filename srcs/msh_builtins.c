@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/27 22:28:12 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/30 19:03:49 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ int		cd_bltn(int ac, char **av, char ***env)
 		msh_err(3, av[0], path_cd);
 		return (1);
 	}
-	chg_env_var(*env, "OLDPWD", get_env_var(*env, "PWD"));
+	set_env_var(env, "OLDPWD", get_env_var(*env, "PWD"));
 	pathname = getcwd(NULL, 0);
-	chg_env_var(*env, "PWD", pathname);
-	free(pathname);
+	set_env_var(env, "PWD", pathname);
+	ft_strdel(&pathname);
 	return (0);
 }
 

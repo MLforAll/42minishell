@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/27 22:37:13 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/30 22:49:41 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int		exec_cmd(t_cmd *cmd, char ***env);
 
 void	msh_err(int errc, const char *bltn, const char *path);
 
+char	*get_cmd_path(char *line_cmd, char **env);
 t_cmd	*get_cmd_list(char *line, char **env);
 
 char	*get_basedir(const char *path);
@@ -41,14 +42,20 @@ char	*search_dir_for_exec(const char *path, const char *name);
 t_list	*search_execs_begin(const char *path, const char *search_dir);
 
 char	*get_env_var(char **env, const char *var);
-void	chg_env_var(char **env, const char *var, char *new);
-void	add_env_var(char ***env, const char *var, char *value);
+void	set_env_var(char ***env, const char *var, char *value);
+void	set_env_from_str(char ***env, char *str);
 void	del_env_var(char ***env, const char *var);
+
+/*
+** lists
+*/
 
 t_cmd	*ft_cmdnew(void);
 void	ft_cmdpb(t_cmd **headref, t_cmd *new);
 void	ft_cmddel(t_cmd **headref);
 void	ft_cmddelone(t_cmd **cmdref);
+
 void	free_tlist(void *content, size_t size);
+void	ft_lstrmdups(t_list **lst);
 
 #endif

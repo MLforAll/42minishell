@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 00:10:18 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/30 20:18:39 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int			main(int ac, char **av, char **environ)
 		env = (char**)malloc(sizeof(char*));
 		*env = NULL;
 	}
-	chg_env_var(env, "SHELL", av[0]);
+	set_env_var(&env, "SHELL", av[0]);
 	if (ac > 1)
 		exec_shell(av[1], &env);
 	else
