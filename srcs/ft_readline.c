@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 01:38:43 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/30 12:55:21 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,14 +140,7 @@ char		*ft_readline(const char *prompt, char **env)
 		if ((act_ret = act_char(buff, rb, ret, &csr)) > 0 && act_ret < 3)
 			ft_putstr_fd(buff, STDIN_FILENO);
 		if (*buff == '\t')
-		{
-			if (ac_line(&ret, &csr, env))
-			{
-				ft_strdel(&ret);
-				ret = ft_strnew(0);
-				break ;
-			}
-		}
+			ac_line(&ret, &csr, prompt, env);
 		if (act_ret < 0)
 		{
 			ft_putchar_fd('\n', STDIN_FILENO);

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 17:46:30 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 01:35:21 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/30 12:55:38 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct	s_cursor
 ** Functions
 */
 
-int		ac_line(char **line, t_cursor *csr, char **env);
+void	ac_line(char **line, t_cursor *csr, const char *prmpt, char **env);
 void	line_add(char **line, char *add, t_cursor *csr);
 char	*ft_readline(const char *prompt, char **env);
 

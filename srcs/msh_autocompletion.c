@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 02:03:07 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/30 12:56:55 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,13 @@ static t_list	*get_res_with_path(char *base, char **env)
 	return (ret);
 }
 
-int				ac_line(char **line, t_cursor *csr, char **env)
+void			ac_line(char **line, t_cursor *csr, const char *prmpt, char **env)
 {
 	char	*last;
 	t_list	*res;
 	char	*fname;
 	char	*diff;
-	int		ret;
 
-	ret = 0;
 	last = (last = ft_strchr(*line, ' ')) ? last + 1 : *line;
 	fname = (fname = ft_strrchr(last, '/')) ? fname + 1 : last;
 	res = (!ft_strchr(*line, ' ') && !ft_strchr(*line, '/')) \
@@ -102,8 +100,8 @@ int				ac_line(char **line, t_cursor *csr, char **env)
 	{
 		ft_putchar_fd('\n', STDIN_FILENO);
 		ft_putlst_fd(res, STDIN_FILENO);
-		ret = 1;
+		ft_putstr_fd(prmpt, STDIN_FILENO);
+		ft_putstr_fd(*line, STDIN_FILENO);
 	}
 	ft_lstdel(&res, &free_tlist);
-	return (ret);
 }
