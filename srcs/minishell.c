@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/27 22:33:01 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/30 00:10:18 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	interactive_shell(char ***env)
 
 	if (!(prompt = get_env_var(*env, "MSH_PROMPT")))
 		prompt = "\033[1;33mminishell@42\033[0;39m$ ";
-	while ((line = ft_readline(prompt)))
+	while ((line = ft_readline(prompt, *env)))
 	{
 		//ft_putstr("line is: ");
 		//ft_putendl(line);
