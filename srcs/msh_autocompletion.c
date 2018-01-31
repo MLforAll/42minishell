@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 22:20:59 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/31 12:35:25 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ static char		*get_highest_common(t_list *lst)
 
 	first = TRUE;
 	len = 0;
+	if (!lst)
+		return (NULL);
 	while (lst->next)
 	{
 		new = 0;
