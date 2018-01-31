@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/30 23:00:55 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 23:01:31 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/31 21:24:40 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ static int	get_env_opts(int ac, char **av, int *idx)
 	return (ret);
 }
 
-int		env_bltn(int ac, char **av, char ***env)
+int			env_bltn(int ac, char **av, char ***env)
 {
-	char	**new_env;
-	int		idx;
-	int		opts;
-	t_cmd	*cmd;
+	char			**new_env;
+	int				idx;
+	int				opts;
+	t_cmd			*cmd;
 
 	idx = 1;
 	opts = get_env_opts(ac, av, &idx);

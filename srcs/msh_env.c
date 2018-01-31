@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 22:31:45 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 20:18:33 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/31 18:47:34 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ static int		chg_env_var(char **env, const char *var, char *new)
 	return (1);
 }
 
-void	set_env_var(char ***env, const char *var, char *value)
+void			set_env_var(char ***env, const char *var, char *value)
 {
-	char		**old;
-	char		*new_entry[2];
-	char		entry_str[ft_strlen(var) + ft_strlen(value) + 2];
+	char	**old;
+	char	*new_entry[2];
+	char	entry_str[ft_strlen(var) + ft_strlen(value) + 2];
 
 	if (chg_env_var(*env, var, value))
 		return ;
@@ -68,7 +68,7 @@ void	set_env_var(char ***env, const char *var, char *value)
 	ft_tabfree(&old);
 }
 
-void	set_env_from_str(char ***env, char *str)
+void			set_env_from_str(char ***env, char *str)
 {
 	char	*eq;
 	char	*var;
@@ -83,7 +83,7 @@ void	set_env_from_str(char ***env, char *str)
 	ft_strdel(&var);
 }
 
-void	del_env_var(char ***env, const char *var)
+void			del_env_var(char ***env, const char *var)
 {
 	char	*tmp;
 	char	**new_env;

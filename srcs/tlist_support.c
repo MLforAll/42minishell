@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/30 21:55:07 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 22:21:20 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/31 18:16:01 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,12 @@ void	ft_lstrmdups(t_list **lst)
 		prev = bw;
 		bw = bw->next;
 	}
+}
+
+int		ft_lstsortalpha(t_list *a, t_list *b)
+{
+	int		diff;
+
+	diff = ft_strcmp(a->content, b->content);
+	return (diff > 0);
 }

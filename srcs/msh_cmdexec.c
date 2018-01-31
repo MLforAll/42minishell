@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 19:10:45 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/31 18:46:18 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		exec_cmd(t_cmd *cmd, char ***env)
 	{
 		set_env_var(env, "_", cmd->c_path);
 		execve(cmd->c_path, cmd->c_argv, *env);
-		msh_err(1, NULL, cmd->c_path);
+		msh_err(MSH_ERR_NOCMD, NULL, cmd->c_path);
 		exit(127);
 	}
 	wait4(pid, &exval, 0, NULL);

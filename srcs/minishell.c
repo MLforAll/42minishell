@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 20:18:39 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/31 18:59:19 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,14 @@ static void	exec_shell(const char *path, char ***env)
 	char	*line;
 	int		fd;
 
-	if (!path)
-		return ;
-	fd = open(path, O_RDONLY);
+	fd = (!path) ? STDIN_FILENO : open(path, O_RDONLY);
 	while (get_next_line(fd, &line) > 0)
 	{
 		process_line(line, env);
 		ft_strdel(&line);
 	}
-	close(fd);
+	if (fd != STDIN_FILENO)
+		close(fd);
 }
 
 int			main(int ac, char **av, char **environ)
@@ -66,6 +65,7 @@ int			main(int ac, char **av, char **environ)
 	char	**env;
 
 	signal(SIGINT, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
 	if (environ)
 		env = ft_tabdup((const char**)environ);
 	else
@@ -74,7 +74,7 @@ int			main(int ac, char **av, char **environ)
 		*env = NULL;
 	}
 	set_env_var(&env, "SHELL", av[0]);
-	if (ac > 1)
+	if (ac > 1 || !ft_isatty(STDIN_FILENO))
 		exec_shell(av[1], &env);
 	else
 		interactive_shell(&env);

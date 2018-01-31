@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 21:26:34 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 19:02:19 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/31 18:35:45 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <sys/stat.h>
 #include "minishell.h"
 
-char	*get_basedir(const char *path)
+char		*get_basedir(const char *path)
 {
 	char	*ret;
 	char	*rchr_ret;
@@ -41,7 +41,7 @@ static int	is_exec(const char *path, int folder)
 	return (0);
 }
 
-char	*search_dir_for_exec(const char *path, const char *name)
+char		*search_dir_for_exec(const char *path, const char *name)
 {
 	DIR				*dirp;
 	struct dirent	*dird;
@@ -65,7 +65,7 @@ char	*search_dir_for_exec(const char *path, const char *name)
 	return (elem_path);
 }
 
-t_list	*search_execs_begin(const char *path, const char *search_dir)
+t_list		*search_execs_begin(const char *path, const char *search_dir)
 {
 	t_list			*ret;
 	DIR				*dirp;
@@ -74,8 +74,7 @@ t_list	*search_execs_begin(const char *path, const char *search_dir)
 	char			*name;
 
 	basedir = (!search_dir) ? get_basedir(path) : (char*)search_dir;
-	name = ft_strrchr(path, '/');
-	name = (name) ? name + 1 : (char*)path;
+	name = get_name_from_path(path);
 	if (!(dirp = opendir(basedir)))
 		return (NULL);
 	ret = NULL;
@@ -83,7 +82,7 @@ t_list	*search_execs_begin(const char *path, const char *search_dir)
 	{
 		if (ft_strncmp(dird->d_name, name, ft_strlen(name)) == 0)
 		{
-			ft_lstadd(&ret, ft_lstnew(dird->d_name, dird->d_namlen));
+			ft_lstadd(&ret, ft_lstnew(dird->d_name, dird->d_namlen + 1));
 			ret->content_size = (size_t)dird->d_type;
 		}
 	}

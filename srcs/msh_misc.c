@@ -1,36 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_env_builtins.c                                 :+:      :+:    :+:   */
+/*   msh_misc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/31 18:32:18 by kdumarai         ###   ########.fr       */
+/*   Created: 2018/01/31 18:31:09 by kdumarai          #+#    #+#             */
+/*   Updated: 2018/01/31 18:43:24 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include <stdlib.h>
-#include "minishell.h"
+#include "libft.h"
 
-int		setenv_bltn(int ac, char **av, char ***env)
+char	*ft_strdiff(char *base, char *check)
 {
-	if (ac > 3)
+	if (!base || !check)
+		return (NULL);
+	while (*base && *check && *base == *check)
 	{
-		ft_putendl_fd("msh: setenv: Too many arguments", STDERR_FILENO);
-		return (1);
+		base++;
+		check++;
 	}
-	if (ac == 1)
-		return (env_bltn(1, NULL, env));
-	set_env_from_str(env, av[1]);
-	return (0);
+	return (base);
 }
 
-int		unsetenv_bltn(int ac, char **av, char ***env)
+char	*get_last_component(const char *str, char c)
 {
-	if (ac == 1)
-		return (1);
-	del_env_var(env, av[1]);
-	return (0);
+	char	*tmp;
+
+	tmp = ft_strrchr(str, c);
+	return ((tmp) ? tmp + 1 : (char*)str);
+}
+
+char	*get_name_from_path(const char *path)
+{
+	return (get_last_component(path, '/'));
 }

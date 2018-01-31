@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 22:49:41 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/01/31 20:25:23 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,17 @@
 # include "libft.h"
 # include "msh_data.h"
 
-# define YES	1
-# define NO		0
-# define TRUE	1
-# define FALSE	0
+# define YES			1
+# define NO				0
+# define TRUE			1
+# define FALSE			0
+
+# define MSH_ERR_NOCMD	1
+# define MSH_ERR_NOENT	2
+# define MSH_ERR_NOCD	3
+# define MSH_ERR_NOSET	4
+# define MSH_ERR_TMARG	5
+# define MSH_ERR_PERM	6
 
 int		echo_bltn(int ac, char **av, char ***env);
 int		cd_bltn(int ac, char **av, char ***env);
@@ -32,7 +39,10 @@ int		unsetenv_bltn(int ac, char **av, char ***env);
 int		exec_cmds(t_cmd *allcmds, char ***env);
 int		exec_cmd(t_cmd *cmd, char ***env);
 
-void	msh_err(int errc, const char *bltn, const char *path);
+int		msh_err(int errc, const char *bltn, const char *path);
+char	*ft_strdiff(char *base, char *check);
+char	*get_last_component(const char *str, char c);
+char	*get_name_from_path(const char *path);
 
 char	*get_cmd_path(char *line_cmd, char **env);
 t_cmd	*get_cmd_list(char *line, char **env);
@@ -57,5 +67,6 @@ void	ft_cmddelone(t_cmd **cmdref);
 
 void	free_tlist(void *content, size_t size);
 void	ft_lstrmdups(t_list **lst);
+int		ft_lstsortalpha(t_list *a, t_list *b);
 
 #endif
