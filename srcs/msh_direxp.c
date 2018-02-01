@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 21:26:34 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/31 18:35:45 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/01 22:28:30 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,15 @@ char		*get_basedir(const char *path)
 {
 	char	*ret;
 	char	*rchr_ret;
+	size_t	ret_len;
 
-	if (*path == '/')
-		return (ft_strsub(path, 0, 1));
 	if (!(rchr_ret = ft_strrchr(path, '/')))
 		return (ft_strdup("."));
-	if (!(ret = ft_strnew(rchr_ret - path)))
+	if ((ret_len = rchr_ret - path) == 0)
+		ret_len = 1;
+	if (!(ret = ft_strnew(ret_len)))
 		return (NULL);
-	ft_strncpy(ret, path, rchr_ret - path);
+	ft_strncpy(ret, path, ret_len);
 	return (ret);
 }
 
@@ -37,8 +38,8 @@ static int	is_exec(const char *path, int folder)
 	if (stat(path, &st) != -1 && (st.st_mode & S_IXUSR
 		|| st.st_mode & S_IXGRP || st.st_mode & S_IXOTH)
 		&& S_ISDIR(st.st_mode) == folder)
-		return (1);
-	return (0);
+		return (TRUE);
+	return (FALSE);
 }
 
 char		*search_dir_for_exec(const char *path, const char *name)

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/31 18:59:19 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/01 23:09:32 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@
 #include "ft_readline.h"
 #include "minishell.h"
 
-#include <stdio.h>
-
 static void	process_line(char *line, char ***env)
 {
 	t_cmd	*cmdlst;
@@ -29,17 +27,54 @@ static void	process_line(char *line, char ***env)
 	ft_cmddel(&cmdlst);
 }
 
+static char	*get_prompt(char **env)
+{
+	char	*ret;
+	char	*envprompt;
+	char	*pwd;
+	char	*tmp;
+
+	tmp = NULL;
+	if (!(envprompt = get_env_var(env, "MSH_PROMPT")))
+	{
+		if (!(pwd = get_name_from_path(get_env_var(env, "PWD"))))
+		{
+			if (!(tmp = getcwd(NULL, 0)))
+				pwd = ft_strdup("unknown");
+			else
+			{
+				pwd = ft_strdup(get_name_from_path(tmp));
+				ft_strdel(&tmp);
+			}
+		}
+		else
+			pwd = ft_strdup(pwd);
+		ret = ft_strnew(33 + ft_strlen(pwd));
+		ft_strcpy(ret, "\033[1;36mminishell:");
+		ft_strcat(ret, "\033[1;33m");
+		ft_strcat(ret, pwd);
+		ft_strcat(ret, "\033[0;39m$ ");
+		ft_strdel(&pwd);
+	}
+	else
+		ret = ft_strdup(envprompt);
+	return (ret);
+}
+
 static void	interactive_shell(char ***env)
 {
 	char	*line;
 	char	*prompt;
 
-	if (!(prompt = get_env_var(*env, "MSH_PROMPT")))
-		prompt = "\033[1;33mminishell@42\033[0;39m$ ";
-	while ((line = ft_readline(prompt, *env)))
+	line = NULL;
+	prompt = NULL;
+	while (42)
 	{
-		//ft_putstr("line is: ");
-		//ft_putendl(line);
+		prompt = get_prompt(*env);
+		line = ft_readline(prompt, *env);
+		ft_strdel(&prompt);
+		if (!line)
+			break ;
 		process_line(line, env);
 		ft_strdel(&line);
 	}
@@ -79,5 +114,5 @@ int			main(int ac, char **av, char **environ)
 	else
 		interactive_shell(&env);
 	ft_tabfree(&env);
-	return (0);
+	return (EXIT_SUCCESS);
 }

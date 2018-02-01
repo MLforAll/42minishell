@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/31 18:31:09 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/31 18:43:24 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/01 22:42:23 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ char	*get_last_component(const char *str, char c)
 {
 	char	*tmp;
 
+	if (!str)
+		return (NULL);
 	tmp = ft_strrchr(str, c);
 	return ((tmp) ? tmp + 1 : (char*)str);
 }

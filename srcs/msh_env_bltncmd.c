@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/30 23:00:55 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/31 21:24:40 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/01 22:29:42 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,5 @@ int			env_bltn(int ac, char **av, char ***env)
 	}
 	if (new_env != *env)
 		ft_tabfree(&new_env);
-	return (0);
+	return (EXIT_SUCCESS);
 }

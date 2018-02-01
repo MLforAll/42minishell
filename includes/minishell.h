@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/31 20:25:23 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/01 22:24:41 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int		exec_cmds(t_cmd *allcmds, char ***env);
 int		exec_cmd(t_cmd *cmd, char ***env);
 
 int		msh_err(int errc, const char *bltn, const char *path);
+
 char	*ft_strdiff(char *base, char *check);
 char	*get_last_component(const char *str, char c);
 char	*get_name_from_path(const char *path);

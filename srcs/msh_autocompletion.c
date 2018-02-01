@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/31 21:25:45 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/01 20:47:43 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,21 @@ static char		*get_highest_common(t_list *lst)
 	return (len == 0 ? NULL : ft_strsub(lst->content, 0, len));
 }
 
+static int		check_is_command(char *line)
+{
+	size_t	nchars;
+
+	nchars = 0;
+	while (*line)
+	{
+		if (*line == ' ' && nchars > 0)
+			return (0);
+		nchars += (*line > 32 && *line < 127);
+		line++;
+	}
+	return (1);
+}
+
 static void		show_choices(t_list **res, const char *prompt, char *line)
 {
 	ft_putchar_fd('\n', STDIN_FILENO);
@@ -83,7 +98,7 @@ void			ac_line(char **line, t_cursor *csr, const char *prmpt, char **env)
 
 	last = get_last_component(*line, ' ');
 	fname = get_name_from_path(last);
-	res = (!ft_strchr(*line, ' ') && !ft_strchr(*line, '/')) \
+	res = (!ft_strchr(*line, '/') && check_is_command(*line)) \
 								? get_res_with_path(last, env) \
 								: search_execs_begin(last, NULL);
 	base = (res && !res->next) ? res->content : get_highest_common(res);

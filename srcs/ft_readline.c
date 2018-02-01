@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 22:26:57 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/01 23:19:36 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,11 @@ static void	mod_line(char **line, char *buff, int act_ret, t_cursor *csr)
 	tmp = *line;
 	(void)act_ret;
 	*line = ft_strnew(csr->max);
-	if (csr->pos > 1)
+	if (csr->pos > 0)
 		ft_strncat(*line, tmp, csr->pos);
 	if (act_ret != 4)
 		ft_strcat(*line, buff);
-	ft_strcat(*line, tmp + csr->pos + (act_ret == 4 ? 1 : -1));
+	ft_strcat(*line, tmp + csr->pos + (act_ret == 4));
 	(*line)[csr->max] = '\0';
 	free(tmp);
 }
