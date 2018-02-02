@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/02/02 20:21:01 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/02/02 21:12:47 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,6 @@ LIBFT = libft/libft.a
 INCDIR = includes
 INCFILES = minishell.h \
 		msh_data.h \
-		msh_debug.h \
 		ft_readline.h
 INCLUDES = $(addprefix $(INCDIR)/, $(INCFILES))
 
@@ -36,11 +35,11 @@ SRCFILES = minishell.c \
 	bltns/msh_env_builtins.c \
 	bltns/msh_env_bltncmd.c \
 	bltns/msh_builtins.c \
-	msh_autocompletion.c \
 	lists/lst_support.c \
 	lists/tlist_support.c \
+	msh_autocompletion.c \
 	ft_readline/ft_readline.c \
-	ft_readline/ft_readline_utils.c \
+	ft_readline/ft_readline_utils.c
 SRCS = $(addprefix $(SRCDIR)/, $(SRCFILES))
 
 OBJDIR = objs
