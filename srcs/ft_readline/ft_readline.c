@@ -6,15 +6,15 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/01 23:19:36 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/02 20:15:17 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <termios.h>
 #include <stdlib.h>
+#include "libft.h"
 #include "ft_readline.h"
-#include "minishell.h"
 
 /*
 ** ft_readline
@@ -30,7 +30,7 @@ static int	set_term(int fd, int echo, const char *prompt)
 	struct termios	t;
 
 	if (tcgetattr(fd, &t))
-		return (0);
+		return (FALSE);
 	if (!echo)
 	{
 		ft_putstr_fd(prompt, fd);
@@ -39,53 +39,33 @@ static int	set_term(int fd, int echo, const char *prompt)
 	else
 		t.c_lflag |= (ICANON | ECHO | ISIG);
 	tcsetattr(fd, TCSANOW, &t);
-	return (1);
+	return (TRUE);
 }
 
 static int	act_char(char *buff, ssize_t len, char **line, t_cursor *csr)
 {
-	char			c;
-
-	c = (len == 1) ? *buff : 0;
-	//print_nums_debug(buff);
-	if (ft_isprint(c))
+	if (is_buff_text(buff))
 	{
-		ft_putstr_fd("\033[K", STDIN_FILENO);
-		ft_putstr_fd(buff, STDIN_FILENO);
-		ft_putstr_fd("\033[s", STDIN_FILENO);
-		ft_putstr_fd(*line + csr->pos, STDIN_FILENO);
-		ft_putstr_fd("\033[u", STDIN_FILENO);
-		csr->max++;
-		csr->pos++;
-		return (3);
+		rl_add_text(buff, len, *line, csr);
+		return (RL_ADD_ACT);
 	}
-
-	if (c == 4 || c == 3)
+	if (*buff == 4 || *buff == 3)
 		ft_strdel(line);
-	if (c == 3)
+	if (*buff == 3)
 		*line = ft_strnew(0);
-	if (c == '\n' || c == 4 || c == 3)
-		return (-1);
-	if (c == 127 && csr->pos > 0)
+	if (*buff == '\n' || *buff == 4 || *buff == 3)
 	{
-		ft_putstr_fd("\033[D\033[K\033[s", STDIN_FILENO);
-		ft_putstr_fd(*line + csr->pos, STDIN_FILENO);
-		ft_putstr_fd("\033[u", STDIN_FILENO);
-		csr->max--;
-		csr->pos--;
-		return (4);
+		ft_putchar_fd('\n', STDIN_FILENO);
+		return (RL_QUIT_ACT);
 	}
-	if (ft_strcmp("\033[C", buff) == 0 && csr->pos < csr->max)
+	if (rl_csr_keys(buff, csr))
+		return (RL_MOVE_ACT);
+	if (*buff == 127 && csr->pos > 0)
 	{
-		csr->pos++;
-		return (2);
+		rl_rm_text(*line, csr);
+		return (RL_BACKSPACE_ACT);
 	}
-	if (ft_strcmp("\033[D", buff) == 0 && csr->pos > 0)
-	{
-		csr->pos--;
-		return (2);
-	}
-	return (0);
+	return (RL_DEFAULT_ACT);
 }
 
 static void	mod_line(char **line, char *buff, int act_ret, t_cursor *csr)
@@ -94,12 +74,13 @@ static void	mod_line(char **line, char *buff, int act_ret, t_cursor *csr)
 
 	tmp = *line;
 	(void)act_ret;
-	*line = ft_strnew(csr->max);
+	*line = ft_strnew(csr->max + 1);
 	if (csr->pos > 0)
-		ft_strncat(*line, tmp, csr->pos);
+		ft_strncat(*line, tmp, csr->pos - (act_ret != 4));
 	if (act_ret != 4)
 		ft_strcat(*line, buff);
-	ft_strcat(*line, tmp + csr->pos + (act_ret == 4));
+	if (csr->pos != csr->max)
+		ft_strcat(*line, tmp + csr->pos + ((act_ret == 4) ? 1 : -1));
 	(*line)[csr->max] = '\0';
 	free(tmp);
 }
@@ -125,25 +106,22 @@ char		*ft_readline(const char *prompt, char **env)
 	int				act_ret;
 	t_cursor		csr;
 	char			*ret;
-	
-	if (!set_term(STDIN_FILENO, 0, prompt))
+
+	if (!set_term(STDIN_FILENO, FALSE, prompt))
 		return (NULL);
 	ft_bzero(&csr, sizeof(t_cursor));
+	ft_bzero(buff, sizeof(buff));
 	ret = ft_strnew(0);
 	while ((rb = read(STDIN_FILENO, buff, 4)) > 0)
 	{
-		buff[rb] = '\0';
-		if ((act_ret = act_char(buff, rb, &ret, &csr)) > 0 && act_ret < 3)
-			ft_putstr_fd(buff, STDIN_FILENO);
+		act_ret = act_char(buff, rb, &ret, &csr);
 		if (*buff == '\t')
 			ac_line(&ret, &csr, prompt, env);
 		if (act_ret < 0)
-		{
-			ft_putchar_fd('\n', STDIN_FILENO);
 			break ;
-		}
 		else if (act_ret != 2 && act_ret != 0)
 			mod_line(&ret, buff, act_ret, &csr);
+		ft_bzero(buff, sizeof(buff));
 	}
 	set_term(STDIN_FILENO, 1, prompt);
 	return (ret);

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/01 22:24:41 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/02 20:15:31 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 
 # include "libft.h"
 # include "msh_data.h"
-
-# define YES			1
-# define NO				0
-# define TRUE			1
-# define FALSE			0
 
 # define MSH_ERR_NOCMD	1
 # define MSH_ERR_NOENT	2
