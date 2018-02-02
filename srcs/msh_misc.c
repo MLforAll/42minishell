@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/31 18:31:09 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/01 22:42:23 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/02 23:02:43 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,9 @@ char	*get_last_component(const char *str, char c)
 
 char	*get_name_from_path(const char *path)
 {
+	if (!path)
+		return (NULL);
+	if (ft_strcmp((char*)path, "/") == 0)
+		return ((char*)path);
 	return (get_last_component(path, '/'));
 }

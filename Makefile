@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/02/02 21:12:47 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/02/02 23:19:48 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,9 +32,9 @@ SRCFILES = minishell.c \
 	msh_err.c \
 	msh_misc.c \
 	msh_env.c \
-	bltns/msh_env_builtins.c \
-	bltns/msh_env_bltncmd.c \
 	bltns/msh_builtins.c \
+	bltns/msh_env_bltncmd.c \
+	bltns/msh_cd_bltncmd.c \
 	lists/lst_support.c \
 	lists/tlist_support.c \
 	msh_autocompletion.c \

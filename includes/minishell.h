@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/02 20:15:31 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/02 22:48:20 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@
 # include "libft.h"
 # include "msh_data.h"
 
-# define MSH_ERR_NOCMD	1
-# define MSH_ERR_NOENT	2
-# define MSH_ERR_NOCD	3
-# define MSH_ERR_NOSET	4
-# define MSH_ERR_TMARG	5
-# define MSH_ERR_PERM	6
+# define MSH_ERR_NOCMD		1
+# define MSH_ERR_NOENT		2
+# define MSH_ERR_NOCD		3
+# define MSH_ERR_NOSET		4
+# define MSH_ERR_TMARG		5
+# define MSH_ERR_PERM		6
+# define MSH_ERR_UNDEFINED	0
 
 int		echo_bltn(int ac, char **av, char ***env);
 int		cd_bltn(int ac, char **av, char ***env);
@@ -43,9 +44,9 @@ char	*get_name_from_path(const char *path);
 char	*get_cmd_path(char *line_cmd, char **env);
 t_cmd	*get_cmd_list(char *line, char **env);
 
-char	*get_basedir(const char *path);
-char	*search_dir_for_exec(const char *path, const char *name);
-t_list	*search_execs_begin(const char *path, const char *search_dir);
+char	*get_basedir(const char *f_path);
+char	*search_dir_for_file(const char *d_path, const char *name);
+t_list	*search_files_begin(const char *f_path, const char *s_dir, int exec);
 
 char	*get_env_var(char **env, const char *var);
 void	set_env_var(char ***env, const char *var, char *value);

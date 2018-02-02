@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 21:26:34 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/01 22:28:30 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/02 22:49:55 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,49 +15,49 @@
 #include <sys/stat.h>
 #include "minishell.h"
 
-char		*get_basedir(const char *path)
+char		*get_basedir(const char *f_path)
 {
-	char	*ret;
-	char	*rchr_ret;
-	size_t	ret_len;
+	char			*ret;
+	char			*rchr_ret;
+	size_t			ret_len;
 
-	if (!(rchr_ret = ft_strrchr(path, '/')))
+	if (!(rchr_ret = ft_strrchr(f_path, '/')))
 		return (ft_strdup("."));
-	if ((ret_len = rchr_ret - path) == 0)
+	if ((ret_len = rchr_ret - f_path) == 0)
 		ret_len = 1;
 	if (!(ret = ft_strnew(ret_len)))
 		return (NULL);
-	ft_strncpy(ret, path, ret_len);
+	ft_strncpy(ret, f_path, ret_len);
 	return (ret);
 }
 
-static int	is_exec(const char *path, int folder)
+static char	*get_elem_path(const char *d_path, char *name)
 {
-	struct stat		st;
+	char			*ret;
 
-	if (stat(path, &st) != -1 && (st.st_mode & S_IXUSR
-		|| st.st_mode & S_IXGRP || st.st_mode & S_IXOTH)
-		&& S_ISDIR(st.st_mode) == folder)
-		return (TRUE);
-	return (FALSE);
+	if (!d_path || !name)
+		return (NULL);
+	if (!(ret = ft_strnew(ft_strlen(d_path) + ft_strlen(name) + 1)))
+		return (NULL);
+	ft_strcat(ret, d_path);
+	ft_strcat(ret, "/");
+	ft_strcat(ret, name);
+	return (ret);
 }
 
-char		*search_dir_for_exec(const char *path, const char *name)
+char		*search_dir_for_file(const char *d_path, const char *name)
 {
 	DIR				*dirp;
 	struct dirent	*dird;
 	char			*elem_path;
 
-	if (!(dirp = opendir(path)))
+	if (!(dirp = opendir(d_path)))
 		return (NULL);
 	elem_path = NULL;
 	while ((dird = readdir(dirp)))
 	{
-		elem_path = ft_strnew(ft_strlen(path) + ft_strlen(dird->d_name) + 1);
-		ft_strcat(elem_path, path);
-		ft_strcat(elem_path, "/");
-		ft_strcat(elem_path, dird->d_name);
-		if (ft_strcmp(dird->d_name, name) == 0 && is_exec(elem_path, NO))
+		elem_path = get_elem_path(d_path, dird->d_name);
+		if (ft_strcmp(dird->d_name, name) == 0 && dird->d_type != DT_DIR)
 			break ;
 		ft_strdel(&elem_path);
 	}
@@ -66,7 +66,29 @@ char		*search_dir_for_exec(const char *path, const char *name)
 	return (elem_path);
 }
 
-t_list		*search_execs_begin(const char *path, const char *search_dir)
+static int	is_exec(const char *d_path, char *name, int folder)
+{
+	struct stat		st;
+	char			*elem_path;
+	int				ret;
+
+	if (!d_path || !name || !(elem_path = get_elem_path(d_path, name)))
+		return (FALSE);
+	ret = FALSE;
+	if (stat(elem_path, &st) != -1 && (st.st_mode & S_IXUSR
+		|| st.st_mode & S_IXGRP || st.st_mode & S_IXOTH)
+		&& S_ISDIR(st.st_mode) == folder)
+		ret = TRUE;
+	free(elem_path);
+	return (ret);
+}
+
+/*
+** ft_strstart alternative with ft_strncmp
+** ft_strncmp(dird->d_name, name, ft_strlen(name)) == 0
+*/
+
+t_list		*search_files_begin(const char *f_path, const char *s_dir, int exec)
 {
 	t_list			*ret;
 	DIR				*dirp;
@@ -74,21 +96,23 @@ t_list		*search_execs_begin(const char *path, const char *search_dir)
 	char			*basedir;
 	char			*name;
 
-	basedir = (!search_dir) ? get_basedir(path) : (char*)search_dir;
-	name = get_name_from_path(path);
+	basedir = (!s_dir) ? get_basedir(f_path) : (char*)s_dir;
+	name = get_name_from_path(f_path);
 	if (!(dirp = opendir(basedir)))
 		return (NULL);
 	ret = NULL;
 	while ((dird = readdir(dirp)))
 	{
-		if (ft_strncmp(dird->d_name, name, ft_strlen(name)) == 0)
+		if ((!exec && ft_strstart(dird->d_name, name))
+			|| (exec && ft_strstart(dird->d_name, name)
+				&& is_exec(s_dir, dird->d_name, FALSE)))
 		{
 			ft_lstadd(&ret, ft_lstnew(dird->d_name, dird->d_namlen + 1));
 			ret->content_size = (size_t)dird->d_type;
 		}
 	}
 	closedir(dirp);
-	if (!search_dir)
-		ft_strdel(&basedir);
+	if (!s_dir)
+		free(basedir);
 	return (ret);
 }

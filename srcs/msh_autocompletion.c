@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/01 20:47:43 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/02 22:44:10 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,17 @@ static t_list	*get_res_with_path(char *base, char **env)
 	char	**paths;
 	char	**bw;
 	t_list	*ret;
-	t_list	**ptr;
+	t_list	*new;
 
 	if (!base || !*base || !(pathenv = get_env_var(env, "PATH")))
 		return (NULL);
 	paths = ft_strsplit(pathenv, ':');
 	bw = paths;
 	ret = NULL;
-	ptr = &ret;
 	while (*bw)
 	{
-		*ptr = search_execs_begin(base, *bw);
-		if (*ptr)
-			ptr = &(*ptr)->next;
+		if ((new = search_files_begin(base, *bw, TRUE)))
+			ft_lstadd(&ret, new);
 		bw++;
 	}
 	ft_lstrmdups(&ret);
@@ -100,7 +98,7 @@ void			ac_line(char **line, t_cursor *csr, const char *prmpt, char **env)
 	fname = get_name_from_path(last);
 	res = (!ft_strchr(*line, '/') && check_is_command(*line)) \
 								? get_res_with_path(last, env) \
-								: search_execs_begin(last, NULL);
+								: search_files_begin(last, NULL, FALSE);
 	base = (res && !res->next) ? res->content : get_highest_common(res);
 	if (base && *(diff = ft_strdiff(base, fname)))
 	{

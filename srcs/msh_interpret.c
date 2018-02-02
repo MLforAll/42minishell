@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/01 22:30:11 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/02 22:19:01 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char		*get_cmd_path(char *line_cmd, char **env)
 	tmp = paths;
 	while (*tmp)
 	{
-		if ((ret = search_dir_for_exec(*tmp, line_cmd)))
+		if ((ret = search_dir_for_file(*tmp, line_cmd)))
 			break ;
 		tmp++;
 	}
@@ -66,12 +66,6 @@ t_cmd		*get_cmd_list(char *line, char **env)
 		new->c_argv = ft_strsplit(*bw, ' ');
 		fill_bltn(new, *new->c_argv);
 		new->c_path = (!new->builtin) ? get_cmd_path(*new->c_argv, env) : NULL;
-		if (new->c_path && ft_strchr(new->c_path, '/')
-			&& access(new->c_path, X_OK))
-		{
-			msh_err(2, NULL, new->c_path);
-			ft_cmddelone(&new);
-		}
 		ft_cmdpb(&ret, new);
 		bw++;
 	}

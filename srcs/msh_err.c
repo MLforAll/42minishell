@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 21:23:18 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/01 22:08:40 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/02 22:20:57 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ static void	msh_puterr(int errc)
 		ft_putendl_fd("too many arguments", STDERR_FILENO);
 	else if (errc == MSH_ERR_PERM)
 		ft_putendl_fd("Permission denied", STDERR_FILENO);
+	else
+		ft_putendl_fd("Undefined error", STDERR_FILENO);
 }
 
 int			msh_err(int errc, const char *bltn, const char *path)
