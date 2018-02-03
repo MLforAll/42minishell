@@ -5,13 +5,21 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/23 19:10:31 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/02 22:56:03 by kdumarai         ###   ########.fr       */
+/*   Created: 2018/02/03 20:21:10 by kdumarai          #+#    #+#             */
+/*   Updated: 2018/02/03 20:24:19 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MSH_DATA_H
 # define MSH_DATA_H
+
+/*
+** cmd struct
+**
+** NOTE, 03/02/18:
+**	c_prereq, c_in, c_out, c_err
+**	are UNUSED!
+*/
 
 typedef struct		s_cmd
 {

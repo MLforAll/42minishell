@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_autocompletion.c                               :+:      :+:    :+:   */
+/*   ft_rl_autocompletion.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/02 22:44:10 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/03 21:51:58 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static char		*get_highest_common(t_list *lst)
 	while (lst->next)
 	{
 		new = 0;
-		new = ft_strcmpi((const char*)lst->content, (const char*)lst->next->content);
+		new = ft_strcmpi(lst->content, lst->next->content);
 		len = (new < len || first) ? new : len;
 		if (first)
 			first = FALSE;
@@ -86,7 +86,7 @@ static void		show_choices(t_list **res, const char *prompt, char *line)
 	ft_putstr_fd(line, STDIN_FILENO);
 }
 
-void			ac_line(char **line, t_cursor *csr, const char *prmpt, char **env)
+void			ac_line(char **line, t_cursor *csr, const char *pr, char **env)
 {
 	char	*last;
 	t_list	*res;
@@ -107,7 +107,7 @@ void			ac_line(char **line, t_cursor *csr, const char *prmpt, char **env)
 			line_add(line, (res->content_size == DT_DIR) ? "/" : " ", csr);
 	}
 	else if (res)
-		show_choices(&res, prmpt, *line);
+		show_choices(&res, pr, *line);
 	if (base && base != res->content)
 		ft_strdel(&base);
 	ft_lstdel(&res, &free_tlist);

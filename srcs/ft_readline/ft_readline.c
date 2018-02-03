@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/02 20:15:17 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/03 23:27:30 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,10 @@ static int	set_term(int fd, int echo, const char *prompt)
 	return (TRUE);
 }
 
-static int	act_char(char *buff, ssize_t len, char **line, t_cursor *csr)
+static int	act_char(char *buff, char **line, t_cursor *csr)
 {
-	if (is_buff_text(buff))
-	{
-		rl_add_text(buff, len, *line, csr);
+	if (rl_add_text(buff, *line, csr))
 		return (RL_ADD_ACT);
-	}
 	if (*buff == 4 || *buff == 3)
 		ft_strdel(line);
 	if (*buff == 3)
@@ -74,7 +71,7 @@ static void	mod_line(char **line, char *buff, int act_ret, t_cursor *csr)
 
 	tmp = *line;
 	(void)act_ret;
-	*line = ft_strnew(csr->max + 1);
+	*line = ft_strnew(csr->max);
 	if (csr->pos > 0)
 		ft_strncat(*line, tmp, csr->pos - (act_ret != 4));
 	if (act_ret != 4)
@@ -114,7 +111,7 @@ char		*ft_readline(const char *prompt, char **env)
 	ret = ft_strnew(0);
 	while ((rb = read(STDIN_FILENO, buff, 4)) > 0)
 	{
-		act_ret = act_char(buff, rb, &ret, &csr);
+		act_ret = act_char(buff, &ret, &csr);
 		if (*buff == '\t')
 			ac_line(&ret, &csr, prompt, env);
 		if (act_ret < 0)

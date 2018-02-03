@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/02 23:19:18 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/03 22:19:45 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include "minishell.h"
 
-int			echo_bltn(int ac, char **av, char ***env)
+int		echo_bltn(int ac, char **av, char ***env)
 {
 	int		nonl;
 
@@ -57,7 +57,7 @@ int		unsetenv_bltn(int ac, char **av, char ***env)
 	return (EXIT_SUCCESS);
 }
 
-int			exit_bltn(int ac, char **av, char ***env)
+int		exit_bltn(int ac, char **av, char ***env)
 {
 	(void)env;
 	if (ac > 2)

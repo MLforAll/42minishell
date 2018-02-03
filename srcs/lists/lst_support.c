@@ -6,13 +6,12 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 19:49:11 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/01/30 21:55:50 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/03 21:47:40 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "libft.h"
-#include "msh_data.h"
+#include "minishell.h"
 
 t_cmd	*ft_cmdnew(void)
 {

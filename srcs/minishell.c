@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/02 22:49:58 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/03 23:12:08 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,40 +25,6 @@ static void	process_line(char *line, char ***env)
 	cmdlst = get_cmd_list(line, *env);
 	exec_cmds(cmdlst, env);
 	ft_cmddel(&cmdlst);
-}
-
-static char	*get_prompt(char **env)
-{
-	char	*ret;
-	char	*envprompt;
-	char	*pwd;
-	char	*tmp;
-
-	tmp = NULL;
-	if (!(envprompt = get_env_var(env, "MSH_PROMPT")))
-	{
-		if (!(pwd = get_name_from_path(get_env_var(env, "PWD"))))
-		{
-			if (!(tmp = getcwd(NULL, 0)))
-				pwd = ft_strdup("unknown");
-			else
-			{
-				pwd = ft_strdup(get_name_from_path(tmp));
-				ft_strdel(&tmp);
-			}
-		}
-		else
-			pwd = ft_strdup(pwd);
-		ret = ft_strnew(33 + ft_strlen(pwd));
-		ft_strcpy(ret, "\033[1;36mminishell:");
-		ft_strcat(ret, "\033[1;33m");
-		ft_strcat(ret, pwd);
-		ft_strcat(ret, "\033[0;39m$ ");
-		ft_strdel(&pwd);
-	}
-	else
-		ret = ft_strdup(envprompt);
-	return (ret);
 }
 
 static void	interactive_shell(char ***env)
@@ -99,6 +65,7 @@ int			main(int ac, char **av, char **environ)
 {
 	char	**env;
 
+	signal(SIGINT, SIG_IGN);
 	signal(SIGTERM, SIG_IGN);
 	signal(SIGTSTP, SIG_IGN);
 	if (environ)

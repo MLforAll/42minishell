@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/02/02 23:19:48 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/02/03 20:24:34 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,27 +20,30 @@ LIBFT = libft/libft.a
 
 INCDIR = includes
 INCFILES = minishell.h \
-		msh_data.h \
-		ft_readline.h
+		   msh_data.h \
+		   ft_readline.h
 INCLUDES = $(addprefix $(INCDIR)/, $(INCFILES))
 
 SRCDIR = srcs
 SRCFILES = minishell.c \
 	msh_interpret.c \
 	msh_cmdexec.c \
-	msh_direxp.c \
 	msh_err.c \
 	msh_misc.c \
+	msh_prompt.c \
 	msh_env.c \
 	bltns/msh_builtins.c \
 	bltns/msh_env_bltncmd.c \
 	bltns/msh_cd_bltncmd.c \
-	lists/lst_support.c \
-	lists/tlist_support.c \
-	msh_autocompletion.c \
+	fsexp_functions.c \
 	ft_readline/ft_readline.c \
-	ft_readline/ft_readline_utils.c
+	ft_readline/ft_rl_utils.c \
+	ft_readline/ft_rl_autocompletion.c \
+	lists/lst_support.c \
+	lists/tlist_support.c
 SRCS = $(addprefix $(SRCDIR)/, $(SRCFILES))
+NSRC = $(shell echo "$(SRCFILES)" | awk '{print NF}')
+CSRC = 1
 
 OBJDIR = objs
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
@@ -50,7 +53,7 @@ PROJTEXT = \033[1;36m$(NAME): \033[0;39m
 all: $(NAME)
 
 $(NAME): $(OBJS) $(INCLUDES)
-	@ printf "\r\033[K$(PROJTEXT)Compiling\n"
+	@ printf "\033[K$(PROJTEXT)Compiling\n"
 	@ make -C $(dir $(LIBFT))
 	@ printf "$(PROJTEXT)Linking\n"
 	@ gcc -o $(NAME) $(LD_FLAGS) $(OBJS)
@@ -70,7 +73,10 @@ fsanitize:
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@ if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
-	@ printf "\033[K$(PROJTEXT)Compiling \033[1;33m$<\033[0;39m\r"
+	@ printf "\033[K$(PROJTEXT)Compiling \033[1;33m$<"
+	@ printf " %.0s" {1..$(shell expr 44 - $(shell printf "$<" | wc -m))}
+	@ printf "\033[1;34m[%3.0f%%]\033[0;39m\r" "$(shell bc <<< "scale=1; $(CSRC) / $(NSRC) * 100")"
+	@ $(eval CSRC = $(shell expr $(CSRC) + 1))
 	@ gcc $(CC_FLAGS) $(CC_LIB) -c $< -o $@
 
 clean:

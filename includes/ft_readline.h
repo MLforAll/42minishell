@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 17:46:30 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/02 20:14:22 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/03 21:23:20 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define RL_BUFF_SIZE		32
 
 /*
-** to fill later
+** ft_readline codes
 */
 
 # define RL_BACKSPACE_ACT	4
@@ -47,17 +47,17 @@ typedef struct	s_cursor
 ** Functions
 */
 
-void	ac_line(char **line, t_cursor *csr, const char *prmpt, char **env);
-void	line_add(char **line, char *add, t_cursor *csr);
-char	*ft_readline(const char *prompt, char **env);
+void			ac_line(char **line, t_cursor *csr, const char *pr, char **env);
+void			line_add(char **line, char *add, t_cursor *csr);
+char			*ft_readline(const char *prompt, char **env);
 
 /*
-**
+** Utilities functions
 */
 
-int		is_buff_text(char *buff);
-int		rl_csr_keys(char *buff, t_cursor *csr);
-void	rl_add_text(char *buff, ssize_t len, char *line, t_cursor *csr);
-void	rl_rm_text(char *line, t_cursor *csr);
+int				is_buff_text(char *buff);
+int				rl_csr_keys(char *buff, t_cursor *csr);
+int				rl_add_text(char *buff, char *line, t_cursor *csr);
+void			rl_rm_text(char *line, t_cursor *csr);
 
 #endif

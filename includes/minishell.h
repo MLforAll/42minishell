@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/02 22:48:20 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/03 20:25:24 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 # include "libft.h"
 # include "msh_data.h"
 
+/*
+** comment
+*/
+
 # define MSH_ERR_NOCMD		1
 # define MSH_ERR_NOENT		2
 # define MSH_ERR_NOCD		3
@@ -23,6 +27,26 @@
 # define MSH_ERR_TMARG		5
 # define MSH_ERR_PERM		6
 # define MSH_ERR_UNDEFINED	0
+
+/*
+** prompt
+*/
+
+char	*get_prompt(char **env);
+
+/*
+** cmd parsing and exec
+*/
+
+int		exec_cmds(t_cmd *allcmds, char ***env);
+int		exec_cmd(t_cmd *cmd, char ***env);
+
+char	*get_cmd_path(char *line_cmd, char **env);
+t_cmd	*get_cmd_list(char *line, char **env);
+
+/*
+** builtins
+*/
 
 int		echo_bltn(int ac, char **av, char ***env);
 int		cd_bltn(int ac, char **av, char ***env);
@@ -32,26 +56,31 @@ int		env_bltn(int ac, char **av, char ***env);
 int		setenv_bltn(int ac, char **av, char ***env);
 int		unsetenv_bltn(int ac, char **av, char ***env);
 
-int		exec_cmds(t_cmd *allcmds, char ***env);
-int		exec_cmd(t_cmd *cmd, char ***env);
-
-int		msh_err(int errc, const char *bltn, const char *path);
-
-char	*ft_strdiff(char *base, char *check);
-char	*get_last_component(const char *str, char c);
-char	*get_name_from_path(const char *path);
-
-char	*get_cmd_path(char *line_cmd, char **env);
-t_cmd	*get_cmd_list(char *line, char **env);
+/*
+** fsexp utilities
+*/
 
 char	*get_basedir(const char *f_path);
 char	*search_dir_for_file(const char *d_path, const char *name);
 t_list	*search_files_begin(const char *f_path, const char *s_dir, int exec);
 
+/*
+** env mgmt
+*/
+
 char	*get_env_var(char **env, const char *var);
 void	set_env_var(char ***env, const char *var, char *value);
 void	set_env_from_str(char ***env, char *str);
 void	del_env_var(char ***env, const char *var);
+
+/*
+** misc functions / utilities
+*/
+
+char	*ft_strdiff(char *base, char *check);
+char	*get_last_component(const char *str, char c);
+char	*get_name_from_path(const char *path);
+int		msh_err(int errc, const char *bltn, const char *path);
 
 /*
 ** lists
