@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/03 18:03:30 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/05 22:23:19 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,36 +15,40 @@
 #include <sys/wait.h>
 #include "minishell.h"
 
-static void	cmd_err(char *path)
+static int	cmd_chk(char *path)
 {
 	int		noent_msg;
 
-	noent_msg = ft_strchr(path, '/') ? MSH_ERR_NOCMD : MSH_ERR_NOENT;
+	noent_msg = ft_strchr(path, '/') ? MSH_ERR_NOENT : MSH_ERR_NOCMD;
 	if (access(path, F_OK) == -1)
-		msh_err(noent_msg, NULL, path);
-	else if (access(path, X_OK) == -1)
-		msh_err(MSH_ERR_PERM, NULL, path);
-	else
-		msh_err(MSH_ERR_UNDEFINED, NULL, path);
+		return (noent_msg);
+	if (access(path, X_OK) == -1)
+		return (MSH_ERR_PERM);
+	return (0);
 }
 
 int			exec_cmd(t_cmd *cmd, char ***env)
 {
 	pid_t	pid;
 	int		exval;
+	int		errval;
 
-	exval = 0;
 	if (cmd->builtin)
 	{
 		return ((cmd->builtin)((int)ft_tablen((const char**)cmd->c_argv), \
 			cmd->c_argv, env));
 	}
+	if ((errval = cmd_chk(cmd->c_path)))
+	{
+		msh_err(errval, NULL, cmd->c_path);
+		return (127);
+	}
+	exval = 0;
 	pid = fork();
 	if (pid == 0)
 	{
 		set_env_var(env, "_", cmd->c_path);
 		execve(cmd->c_path, cmd->c_argv, *env);
-		cmd_err(cmd->c_path);
 		exit(127);
 	}
 	wait4(pid, &exval, 0, NULL);
