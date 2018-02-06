@@ -75,7 +75,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@ if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
 	@ printf "\033[K$(PROJTEXT)Compiling \033[1;33m$<"
 	@ printf " %.0s" {1..$(shell expr 44 - $(shell printf "$<" | wc -m))}
-	@ printf "\033[1;34m[%3.0f%%]\033[0;39m\r" "$(shell bc <<< "scale=1; $(CSRC) / $(NSRC) * 100")"
+	@ export LC_ALL=C; printf "\033[1;34m[%3.0f%%]\033[0;39m\r" "$(shell bc <<< "scale=1; $(CSRC) / $(NSRC) * 100")"
 	@ $(eval CSRC = $(shell expr $(CSRC) + 1))
 	@ gcc $(CC_FLAGS) $(CC_LIB) -c $< -o $@
 
