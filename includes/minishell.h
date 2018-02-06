@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/03 20:25:24 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/06 21:16:39 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft.h"
 # include "msh_data.h"
+# include "msh_prompt.h"
 
 /*
 ** comment
@@ -27,12 +28,6 @@
 # define MSH_ERR_TMARG		5
 # define MSH_ERR_PERM		6
 # define MSH_ERR_UNDEFINED	0
-
-/*
-** prompt
-*/
-
-char	*get_prompt(char **env);
 
 /*
 ** cmd parsing and exec
@@ -80,7 +75,9 @@ void	del_env_var(char ***env, const char *var);
 char	*ft_strdiff(char *base, char *check);
 char	*get_last_component(const char *str, char c);
 char	*get_name_from_path(const char *path);
+
 int		msh_err(int errc, const char *bltn, const char *path);
+int		msh_err_ret(int errc, const char *bltn, const char *path, int retv);
 
 /*
 ** lists

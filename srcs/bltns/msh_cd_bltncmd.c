@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/02 23:19:17 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/06 21:48:01 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ static void	chg_cd_env(char ***env, char *bkp, int old)
 	if (old)
 		pathname = (tmp) ? tmp : bkp;
 	else
-		pathname = (tmp) ? tmp : getcwd(NULL, 0);
+		pathname = (bkp) ? bkp : getcwd(NULL, 0);
 	set_env_var(env, old ? "OLDPWD" : "PWD", pathname);
-	if (pathname != tmp)
+	if (pathname != tmp && pathname != bkp)
 		ft_strdel(&pathname);
 }
 
@@ -72,6 +72,6 @@ int			cd_bltn(int ac, char **av, char ***env)
 									: MSH_ERR_PERM, av[0], path_cd));
 	}
 	chg_cd_env(env, bkp, YES);
-	chg_cd_env(env, NULL, NO);
+	chg_cd_env(env, path_cd, NO);
 	return (EXIT_SUCCESS);
 }

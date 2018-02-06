@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 21:26:34 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/03 23:22:38 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/06 19:30:31 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char		*search_dir_for_file(const char *d_path, const char *name)
 	struct dirent	*dird;
 	char			*elem_path;
 
-	if (!(dirp = opendir(d_path)))
+	if (!d_path || !name || !(dirp = opendir(d_path)))
 		return (NULL);
 	elem_path = NULL;
 	while ((dird = readdir(dirp)))

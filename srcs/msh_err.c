@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 21:23:18 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/02 22:20:57 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/06 19:56:41 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	msh_puterr(int errc)
 		ft_putendl_fd("Undefined error", STDERR_FILENO);
 }
 
-int			msh_err(int errc, const char *bltn, const char *path)
+static void	msh_prep_err(int errc, const char *bltn, const char *path)
 {
 	ft_putstr_fd("msh: ", STDERR_FILENO);
 	if (bltn)
@@ -45,5 +45,16 @@ int			msh_err(int errc, const char *bltn, const char *path)
 		ft_putstr_fd((errc == MSH_ERR_NOSET) ? " " : ": ", STDERR_FILENO);
 	}
 	msh_puterr(errc);
+}
+
+int			msh_err(int errc, const char *bltn, const char *path)
+{
+	msh_prep_err(errc, bltn, path);
 	return (1);
+}
+
+int			msh_err_ret(int errc, const char *bltn, const char *path, int retv)
+{
+	msh_prep_err(errc, bltn, path);
+	return (retv);
 }

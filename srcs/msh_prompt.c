@@ -6,25 +6,44 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 19:23:49 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/03 23:15:46 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/06 21:41:54 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include <sys/param.h>
+#include <pwd.h>
 #include "minishell.h"
+
+static void	get_hostname_username(t_prompt *dest)
+{
+	char			hostname[MAXHOSTNAMELEN + 1];
+	uid_t			puid;
+	struct passwd	*ppw;
+
+	if (gethostname(hostname, MAXHOSTNAMELEN) == -1)
+		dest->hostname = NULL;
+	else
+		dest->hostname = ft_strdup(hostname);
+	puid = getuid();
+	if (!(ppw = getpwuid(puid)))
+		dest->username = NULL;
+	else
+		dest->username = ft_strdup(ppw->pw_name);
+}
 
 static char	*get_pwd(char **env)
 {
-	char	*ret;
-	char	*pwd;
-	char	*home;
-	char	*tmp;
+	char			*ret;
+	char			*pwd;
+	char			*home;
+	char			*tmp;
 
 	pwd = get_env_var(env, "PWD");
 	if (!(ret = get_name_from_path(pwd)))
 	{
 		if (!(tmp = getcwd(NULL, 0)))
-			return(ft_strdup("unknown"));
+			return (ft_strdup("unknown"));
 		ret = ft_strdup(get_name_from_path(tmp));
 		ft_strdel(&tmp);
 	}
@@ -40,21 +59,29 @@ static char	*get_pwd(char **env)
 
 char		*get_prompt(char **env)
 {
-	char	*ret;
-	char	*envprompt;
-	char	*pwd;
+	char			*ret;
+	char			*envprompt;
+	t_prompt		dprompt;
 
 	if (!(envprompt = get_env_var(env, "MSH_PROMPT")))
 	{
-		pwd = get_pwd(env);
-		ret = ft_strnew(33 + ft_strlen(pwd));
-		ft_strcpy(ret, "\033[1;36mminishell:");
-		ft_strcat(ret, "\033[1;33m");
-		ft_strcat(ret, pwd);
-		ft_strcat(ret, "\033[0;39m$ ");
-		ft_strdel(&pwd);
+		dprompt.pwd = get_pwd(env);
+		get_hostname_username(&dprompt);
+		if (!dprompt.pwd || !dprompt.hostname || !dprompt.username)
+			return (ft_strdup("msh-1.0$ "));
+		ret = ft_strnew(24 + ft_strlen(dprompt.pwd) + \
+			ft_strlen(dprompt.hostname) + ft_strlen(dprompt.username));
+		ft_strcpy(ret, "\033[1;36m");
+		ft_strcat(ret, dprompt.hostname);
+		ft_strcat(ret, ":\033[1;33m");
+		ft_strcat(ret, dprompt.pwd);
+		ft_strcat(ret, "\033[0;39m ");
+		ft_strcat(ret, dprompt.username);
+		ft_strcat(ret, "$ ");
+		ft_strdel(&dprompt.hostname);
+		ft_strdel(&dprompt.pwd);
+		ft_strdel(&dprompt.username);
+		return (ret);
 	}
-	else
-		ret = ft_strdup(envprompt);
-	return (ret);
+	return (ft_strdup(envprompt));
 }

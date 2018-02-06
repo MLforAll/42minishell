@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/02 22:19:01 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/06 21:18:30 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,13 @@ char		*get_cmd_path(char *line_cmd, char **env)
 	char	**tmp;
 	char	*ret;
 
+	if (!line_cmd)
+		return (NULL);
 	if (ft_strchr(line_cmd, '/') || !(env_path = get_env_var(env, "PATH")))
 		return (line_cmd);
 	paths = ft_strsplit(env_path, ':');
 	tmp = paths;
+	ret = NULL;
 	while (*tmp)
 	{
 		if ((ret = search_dir_for_file(*tmp, line_cmd)))
