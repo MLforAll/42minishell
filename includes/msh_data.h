@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 20:21:10 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/03 20:24:19 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/07 06:09:43 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** cmd struct
 **
 ** NOTE, 03/02/18:
-**	c_prereq, c_in, c_out, c_err
+**	c_prereq, c_outs
 **	are UNUSED!
 */
 
@@ -27,9 +27,7 @@ typedef struct		s_cmd
 	char			*c_path;
 	char			**c_argv;
 	int				c_prereq;
-	char			*c_in;
-	char			*c_out;
-	char			*c_err;
+	char			**c_outs;
 	struct s_cmd	*next;
 }					t_cmd;
 

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/06 21:18:30 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/07 04:24:47 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,39 @@
 
 static void	fill_bltn(t_cmd *cmd, char *line_cmd)
 {
-	if (ft_strcmp(line_cmd, "echo") == 0)
-		cmd->builtin = &echo_bltn;
-	else if (ft_strcmp(line_cmd, "cd") == 0)
-		cmd->builtin = &cd_bltn;
-	else if (ft_strcmp(line_cmd, "exit") == 0)
-		cmd->builtin = &exit_bltn;
-	else if (ft_strcmp(line_cmd, "env") == 0)
-		cmd->builtin = &env_bltn;
-	else if (ft_strcmp(line_cmd, "setenv") == 0)
-		cmd->builtin = &setenv_bltn;
-	else if (ft_strcmp(line_cmd, "unsetenv") == 0)
-		cmd->builtin = &unsetenv_bltn;
+	char			*nptr;
+	unsigned int	idx;
+	static int		(*bltns_funcs[])(int, char **, char ***) =
+	{
+		&echo_bltn,
+		&cd_bltn,
+		&exit_bltn,
+		&env_bltn,
+		&setenv_bltn,
+		&unsetenv_bltn,
+		NULL
+	};
+
+	idx = 0;
+	nptr = MSH_BLTNS;
+	while (idx < sizeof(bltns_funcs) / sizeof(*bltns_funcs))
+	{
+		if (ft_strcmp(line_cmd, nptr) == 0)
+		{
+			cmd->builtin = bltns_funcs[idx];
+			return ;
+		}
+		nptr += ft_strlen(nptr) + 1;
+		idx++;
+	}
 }
 
 char		*get_cmd_path(char *line_cmd, char **env)
 {
-	char	*env_path;
-	char	**paths;
-	char	**tmp;
-	char	*ret;
+	char			*env_path;
+	char			**paths;
+	char			**tmp;
+	char			*ret;
 
 	if (!line_cmd)
 		return (NULL);
@@ -55,10 +68,10 @@ char		*get_cmd_path(char *line_cmd, char **env)
 
 t_cmd		*get_cmd_list(char *line, char **env)
 {
-	char		**cmds;
-	char		**bw;
-	t_cmd		*ret;
-	t_cmd		*new;
+	char			**cmds;
+	char			**bw;
+	t_cmd			*ret;
+	t_cmd			*new;
 
 	ret = NULL;
 	cmds = ft_strsplit(line, ';');

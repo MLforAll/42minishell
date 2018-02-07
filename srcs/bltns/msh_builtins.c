@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/03 22:19:45 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/06 22:42:49 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,10 @@ int		setenv_bltn(int ac, char **av, char ***env)
 		return (EXIT_FAILURE);
 	}
 	if (ac == 1)
-		return (env_bltn(1, NULL, env));
+	{
+		ft_puttab(*env, NULL);
+		return (EXIT_SUCCESS);
+	}
 	set_env_from_str(env, av[1]);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/06 21:16:39 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/06 22:24:20 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # define MSH_ERR_TMARG		5
 # define MSH_ERR_PERM		6
 # define MSH_ERR_UNDEFINED	0
+
+# define MSH_BLTNS			"echo\0cd\0exit\0env\0setenv\0unsetenv"
 
 /*
 ** cmd parsing and exec

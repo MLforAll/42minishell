@@ -4,3 +4,4 @@ test_tabdup.c
 printenv.c
 get_keycodes.c
 ft_readline_tester.c
+testpipe.c

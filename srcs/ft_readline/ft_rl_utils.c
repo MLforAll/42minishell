@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/03 23:26:11 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/07 04:16:57 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libft.h"
 #include "ft_readline.h"
 
-int		rl_csr_keys(char *buff, t_cursor *csr)
+int			rl_csr_keys(char *buff, t_cursor *csr)
 {
 	int		ret;
 
@@ -61,7 +61,7 @@ int			rl_add_text(char *buff, char *line, t_cursor *csr)
 	return (ret);
 }
 
-void	rl_rm_text(char *line, t_cursor *csr)
+void		rl_rm_text(char *line, t_cursor *csr)
 {
 	ft_putstr_fd("\033[D\033[K\033[s", STDIN_FILENO);
 	ft_putstr_fd(line + csr->pos, STDIN_FILENO);

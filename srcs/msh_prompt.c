@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 19:23:49 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/06 21:41:54 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/06 22:05:32 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,20 @@
 static void	get_hostname_username(t_prompt *dest)
 {
 	char			hostname[MAXHOSTNAMELEN + 1];
+	char			*dot;
 	uid_t			puid;
 	struct passwd	*ppw;
 
 	if (gethostname(hostname, MAXHOSTNAMELEN) == -1)
 		dest->hostname = NULL;
 	else
-		dest->hostname = ft_strdup(hostname);
+	{
+		dot = ft_strchr(hostname, '.');
+		if (dot)
+			dest->hostname = ft_strsub(hostname, 0, dot - hostname);
+		else
+			dest->hostname = ft_strdup(hostname);
+	}
 	puid = getuid();
 	if (!(ppw = getpwuid(puid)))
 		dest->username = NULL;

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/06 21:48:01 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/06 22:21:14 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,27 @@ static void	chg_cd_env(char ***env, char *bkp, int old)
 	char	*pathname;
 	char	*tmp;
 
-	tmp = NULL;
-	if (old && !bkp)
+	if ((old && !bkp) || (!old && bkp && ft_strcmp(bkp, ".") == 0))
 		return ;
-	if (old)
-		tmp = get_env_var(*env, "PWD");
+	tmp = get_env_var(*env, "PWD");
 	if (old)
 		pathname = (tmp) ? tmp : bkp;
+	else if (bkp && tmp)
+	{
+		if (ft_strcmp(bkp, "..") == 0)
+			pathname = get_basedir(tmp);
+		else
+		{
+			pathname = ft_strnew(ft_strlen(tmp) + ft_strlen(bkp) + 1);
+			ft_strcpy(pathname, tmp);
+			ft_strcat(pathname, "/");
+			ft_strcat(pathname, bkp);
+		}
+	}
 	else
-		pathname = (bkp) ? bkp : getcwd(NULL, 0);
+		pathname = getcwd(NULL, 0);
 	set_env_var(env, old ? "OLDPWD" : "PWD", pathname);
-	if (pathname != tmp && pathname != bkp)
+	if (pathname != tmp && pathname)
 		ft_strdel(&pathname);
 }
 

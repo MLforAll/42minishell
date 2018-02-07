@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/06 20:02:30 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/07 07:40:47 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,16 @@ int			exec_cmd(t_cmd *cmd, char ***env)
 	pid_t	pid;
 	int		exval;
 	int		errval;
+	//int		pipes;
 
 	if (cmd->builtin)
+	{
 		return ((cmd->builtin)((int)ft_tablen((const char**)cmd->c_argv), \
 			cmd->c_argv, env));
+	}
 	if ((errval = cmd_chk(cmd->c_path)) >= 0)
 		msh_err_ret(errval, NULL, cmd->c_path, 127);
+	//pipes = create_pipes(cmd);
 	exval = 0;
 	pid = fork();
 	if (pid == 0)
