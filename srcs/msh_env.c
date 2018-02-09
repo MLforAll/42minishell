@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 22:31:45 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/06 19:14:38 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/08 22:32:00 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int		chg_env_var(char **env, const char *var, char *new)
 		return (FALSE);
 	ft_strdel(env);
 	*env = ft_strnew(ft_strlen(var) + ft_strlen(new) + 1);
-	ft_strcat(*env, var);
+	ft_strcpy(*env, var);
 	ft_strcat(*env, "=");
 	ft_strcat(*env, new);
 	return (TRUE);

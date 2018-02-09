@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/06 22:21:14 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/08 23:04:26 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	chg_cd_env(char ***env, char *bkp, int old)
 	tmp = get_env_var(*env, "PWD");
 	if (old)
 		pathname = (tmp) ? tmp : bkp;
-	else if (bkp && tmp)
+	else if (bkp && tmp && *bkp != '/')
 	{
 		if (ft_strcmp(bkp, "..") == 0)
 			pathname = get_basedir(tmp);
@@ -40,7 +40,7 @@ static void	chg_cd_env(char ***env, char *bkp, int old)
 		pathname = getcwd(NULL, 0);
 	set_env_var(env, old ? "OLDPWD" : "PWD", pathname);
 	if (pathname != tmp && pathname)
-		ft_strdel(&pathname);
+		free(pathname);
 }
 
 static char	*get_cd_path(int ac, char **av, char **env)
@@ -82,6 +82,7 @@ int			cd_bltn(int ac, char **av, char ***env)
 									: MSH_ERR_PERM, av[0], path_cd));
 	}
 	chg_cd_env(env, bkp, YES);
+	free(bkp);
 	chg_cd_env(env, path_cd, NO);
 	return (EXIT_SUCCESS);
 }

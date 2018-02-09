@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/07 04:24:47 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/09 01:40:44 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,13 @@ static void	fill_bltn(t_cmd *cmd, char *line_cmd)
 {
 	char			*nptr;
 	unsigned int	idx;
-	static int		(*bltns_funcs[])(int, char **, char ***) =
-	{
-		&echo_bltn,
-		&cd_bltn,
-		&exit_bltn,
-		&env_bltn,
-		&setenv_bltn,
-		&unsetenv_bltn,
-		NULL
-	};
+	static int		(*bltns_funcs[])(int, char **, char ***) = {&echo_bltn,
+		&cd_bltn, &exit_bltn, &env_bltn, &setenv_bltn, &unsetenv_bltn,
+		NULL};
 
 	idx = 0;
-	nptr = MSH_BLTNS;
-	while (idx < sizeof(bltns_funcs) / sizeof(*bltns_funcs))
+	nptr = SH_BLTNS;
+	while (idx < sizeof(bltns_funcs) / sizeof(*bltns_funcs) && *nptr)
 	{
 		if (ft_strcmp(line_cmd, nptr) == 0)
 		{

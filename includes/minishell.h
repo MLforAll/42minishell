@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/06 22:24:20 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/09 01:53:49 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@
 ** comment
 */
 
+# define SH_NAME			"msh"
+# define SH_RC				".mshrc"
+# define SH_BLTNS			"echo\0cd\0exit\0env\0setenv\0unsetenv\0"
+
 # define MSH_ERR_NOCMD		1
 # define MSH_ERR_NOENT		2
 # define MSH_ERR_NOCD		3
@@ -28,8 +32,6 @@
 # define MSH_ERR_TMARG		5
 # define MSH_ERR_PERM		6
 # define MSH_ERR_UNDEFINED	0
-
-# define MSH_BLTNS			"echo\0cd\0exit\0env\0setenv\0unsetenv"
 
 /*
 ** cmd parsing and exec
@@ -77,9 +79,11 @@ void	del_env_var(char ***env, const char *var);
 char	*ft_strdiff(char *base, char *check);
 char	*get_last_component(const char *str, char c);
 char	*get_name_from_path(const char *path);
+char	*get_name_from_path_2(const char *path);
 
 int		msh_err(int errc, const char *bltn, const char *path);
 int		msh_err_ret(int errc, const char *bltn, const char *path, int retv);
+void	msh_child_sighandler(int sigc);
 
 /*
 ** lists

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/03 23:12:08 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/08 22:25:47 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,39 @@ static void	process_line(char *line, char ***env)
 	ft_cmddel(&cmdlst);
 }
 
+static void	exec_shell(const char *path, char ***env)
+{
+	char	*line;
+	int		fd;
+
+	fd = (!path) ? STDIN_FILENO : open(path, O_RDONLY);
+	if (fd == -1)
+		return ;
+	while (get_next_line(fd, &line) > 0)
+	{
+		process_line(line, env);
+		ft_strdel(&line);
+	}
+	if (fd != STDIN_FILENO)
+		close(fd);
+}
+
+static void	launch_rc(char ***env)
+{
+	char	*home;
+	char	*rcpath;
+
+	if (!(home = get_env_var(*env, "HOME")))
+		return ;
+	if (!(rcpath = ft_strnew(ft_strlen(home) + ft_strlen(SH_RC) + 1)))
+		return ;
+	ft_strcpy(rcpath, home);
+	ft_strcat(rcpath, "/");
+	ft_strcat(rcpath, SH_RC);
+	exec_shell(rcpath, env);
+	free(rcpath);
+}
+
 static void	interactive_shell(char ***env)
 {
 	char	*line;
@@ -34,6 +67,7 @@ static void	interactive_shell(char ***env)
 
 	line = NULL;
 	prompt = NULL;
+	launch_rc(env);
 	while (42)
 	{
 		prompt = get_prompt(*env);
@@ -44,21 +78,6 @@ static void	interactive_shell(char ***env)
 		process_line(line, env);
 		ft_strdel(&line);
 	}
-}
-
-static void	exec_shell(const char *path, char ***env)
-{
-	char	*line;
-	int		fd;
-
-	fd = (!path) ? STDIN_FILENO : open(path, O_RDONLY);
-	while (get_next_line(fd, &line) > 0)
-	{
-		process_line(line, env);
-		ft_strdel(&line);
-	}
-	if (fd != STDIN_FILENO)
-		close(fd);
 }
 
 int			main(int ac, char **av, char **environ)

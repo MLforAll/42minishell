@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/31 18:31:09 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/02 23:02:43 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/08 21:55:55 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,31 @@ char	*get_name_from_path(const char *path)
 	if (ft_strcmp((char*)path, "/") == 0)
 		return ((char*)path);
 	return (get_last_component(path, '/'));
+}
+
+char	*get_name_from_path_2(const char *path)
+{
+	char	*tmp;
+	char	*chr;
+	size_t	len;
+	size_t	len_to_slash;
+
+	if ((tmp = get_name_from_path(path)) && *tmp)
+		return (ft_strdup(tmp));
+	if (!tmp)
+		return (NULL);
+	if ((len = ft_strlen(path)) == 0)
+		return (NULL);
+	tmp = (char*)path + len - 1;
+	while (len--)
+	{
+		if (*tmp == '/' && tmp[1])
+			break ;
+		tmp--;
+	}
+	tmp++;
+	if (!(chr = ft_strchr(tmp, '/')))
+		return (ft_strdup(tmp));
+	len_to_slash = chr - tmp;
+	return (ft_strsub(tmp, 0, len_to_slash));
 }

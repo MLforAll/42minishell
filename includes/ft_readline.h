@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 17:46:30 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/03 21:23:20 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/08 23:18:07 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ typedef struct	s_cursor
 ** Functions
 */
 
-void			ac_line(char **line, t_cursor *csr, const char *pr, char **env);
 void			line_add(char **line, char *add, t_cursor *csr);
 char			*ft_readline(const char *prompt, char **env);
 
@@ -59,5 +58,17 @@ int				is_buff_text(char *buff);
 int				rl_csr_keys(char *buff, t_cursor *csr);
 int				rl_add_text(char *buff, char *line, t_cursor *csr);
 void			rl_rm_text(char *line, t_cursor *csr);
+
+/*
+** Autocompletion
+*/
+
+void			ac_line(char **line, t_cursor *csr, const char *pr, char **env);
+
+/*
+** Autocompletion Utilities functions
+*/
+
+t_list			*get_res_with_path(char *base, char **env);
 
 #endif

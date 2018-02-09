@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 21:23:18 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/07 04:18:13 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/08 20:18:40 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ static void	msh_puterr(int errc)
 
 static void	msh_prep_err(int errc, const char *bltn, const char *path)
 {
-	ft_putstr_fd("msh: ", STDERR_FILENO);
+	ft_putstr_fd(SH_NAME, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
 	if (bltn)
 	{
 		ft_putstr_fd(bltn, STDERR_FILENO);
@@ -57,4 +58,20 @@ int			msh_err_ret(int errc, const char *bltn, const char *path, int retv)
 {
 	msh_prep_err(errc, bltn, path);
 	return (retv);
+}
+
+void		msh_child_sighandler(int sigc)
+{
+	const char	*errs[] = { "Hangup", "", "Quit", "Illegal instruction",
+		"Trace trap", "Abort", "Pollable event", "Floating point exception",
+		"Killed", "Bus error", "Segmentation fault",
+		"Bad argument to system call", "Write on a pipe with no one to read it",
+		"Alarm clock", "Terminated", "Urgent condition on IO channel"};
+
+	if (sigc < 0 || sigc > 17 || sigc == 2)
+		return ;
+	ft_putstr_fd(errs[sigc - 1], STDIN_FILENO);
+	ft_putstr_fd(": ", STDIN_FILENO);
+	ft_putnbr_fd(sigc, STDIN_FILENO);
+	ft_putchar_fd('\n', STDIN_FILENO);
 }
