@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/09 01:53:49 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/09 07:37:24 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@
 ** cmd parsing and exec
 */
 
-int		exec_cmds(t_cmd *allcmds, char ***env);
-int		exec_cmd(t_cmd *cmd, char ***env);
+int		exec_cmds(char *line, char *shpath, char ***env);
+int		exec_cmd(t_cmd *cmd, char *shpath, char ***env);
 
 char	*get_cmd_path(char *line_cmd, char **env);
-t_cmd	*get_cmd_list(char *line, char **env);
+void	interpret_cmd(t_cmd *dest, char *line, char **env);
 
 /*
 ** builtins

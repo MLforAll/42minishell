@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/08 20:13:56 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/09 08:03:25 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,20 @@ static int	cmd_chk(char *path)
 	return (-1);
 }
 
-int			exec_cmd(t_cmd *cmd, char ***env)
+static void	exec_scpt(t_cmd *cmd, char *shpath, char **env)
+{
+	char	*av_f[2];
+	char	**av;
+
+	if (!shpath)
+		return ;
+	av_f[0] = shpath;
+	av_f[1] = NULL;
+	av = ft_tabjoin((const char**)av_f, (const char**)cmd->c_argv);
+	execve(shpath, av, env);
+}
+
+int			exec_cmd(t_cmd *cmd, char *shpath, char ***env)
 {
 	pid_t	pid;
 	int		exval;
@@ -46,8 +59,10 @@ int			exec_cmd(t_cmd *cmd, char ***env)
 	pid = fork();
 	if (pid == 0)
 	{
+		signal(SIGTERM, SIG_DFL);
 		set_env_var(env, "_", cmd->c_path);
 		execve(cmd->c_path, cmd->c_argv, *env);
+		exec_scpt(cmd, shpath, *env);
 		exit(127);
 	}
 	wait4(pid, &exval, 0, NULL);
@@ -56,14 +71,24 @@ int			exec_cmd(t_cmd *cmd, char ***env)
 	return (WEXITSTATUS(exval));
 }
 
-int			exec_cmds(t_cmd *allcmds, char ***env)
+int			exec_cmds(char *line, char *shpath, char ***env)
 {
 	int		ret;
+	t_cmd	*props;
+	char	**cmds;
+	//char	**pipes;
+	char	**bw;
 
-	while (allcmds)
+	cmds = ft_strsplit(line, ';');
+	bw = cmds;
+	while (*bw)
 	{
-		ret = exec_cmd(allcmds, env);
-		allcmds = allcmds->next;
+		props = ft_cmdnew();
+		interpret_cmd(props, *bw, *env);
+		ret = exec_cmd(props, shpath, env);
+		bw++;
+		ft_cmddel(&props);
 	}
+	ft_tabfree(&cmds);
 	return (ret);
 }

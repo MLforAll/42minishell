@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/08 23:12:06 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/09 01:55:42 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/09 04:24:08 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 
 static char		*get_highest_common(t_list *lst)
 {
-	int		first;
-	size_t	len;
-	size_t	new;
+	int				first;
+	size_t			len;
+	size_t			new;
 
 	first = TRUE;
 	len = 0;
@@ -40,7 +40,7 @@ static char		*get_highest_common(t_list *lst)
 
 static int		check_is_command(char *line)
 {
-	size_t	nchars;
+	size_t			nchars;
 
 	nchars = 0;
 	while (*line)
@@ -62,19 +62,41 @@ static void		show_choices(t_list **res, const char *prompt, char *line)
 	ft_putstr_fd(line, STDIN_FILENO);
 }
 
+static char		*get_region(char *line, t_cursor *csr)
+{
+	char			*tmp;
+	unsigned int	idx;
+
+	if (csr->pos == csr->max)
+	{
+		if (!(tmp = get_last_component(line, ' ')))
+			return (NULL);
+		return (ft_strdup(tmp));
+	}
+	idx = csr->pos;
+	while (idx--)
+	{
+		if (line[idx] == ' ')
+			break ;
+	}
+	idx++;
+	return (ft_strsub(line, idx, csr->pos - idx));
+}
+
 void			ac_line(char **line, t_cursor *csr, const char *pr, char **env)
 {
-	char	*last;
-	t_list	*res;
-	char	*fname;
-	char	*diff;
-	char	*base;
+	char			*region;
+	t_list			*res;
+	char			*fname;
+	char			*diff;
+	char			*base;
 
-	last = get_last_component(*line, ' ');
-	fname = get_name_from_path(last);
+	region = get_region(*line, csr);
+	fname = get_name_from_path(region);
 	res = (!ft_strchr(*line, '/') && check_is_command(*line)) \
-								? get_res_with_path(last, env) \
-								: search_files_begin(last, NULL, FALSE);
+								? get_res_with_path(region, env) \
+								: search_files_begin(region, NULL, FALSE);
+	ft_strdel(&region);
 	base = (res && !res->next) ? res->content : get_highest_common(res);
 	if (base && *(diff = ft_strdiff(base, fname)))
 	{

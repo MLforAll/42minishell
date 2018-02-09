@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/09 01:40:44 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/09 07:55:36 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,25 +59,9 @@ char		*get_cmd_path(char *line_cmd, char **env)
 	return ((!ret) ? line_cmd : ret);
 }
 
-t_cmd		*get_cmd_list(char *line, char **env)
+void		interpret_cmd(t_cmd *dest, char *line, char **env)
 {
-	char			**cmds;
-	char			**bw;
-	t_cmd			*ret;
-	t_cmd			*new;
-
-	ret = NULL;
-	cmds = ft_strsplit(line, ';');
-	bw = cmds;
-	while (*bw)
-	{
-		new = ft_cmdnew();
-		new->c_argv = ft_strsplit(*bw, ' ');
-		fill_bltn(new, *new->c_argv);
-		new->c_path = (!new->builtin) ? get_cmd_path(*new->c_argv, env) : NULL;
-		ft_cmdpb(&ret, new);
-		bw++;
-	}
-	ft_tabfree(&cmds);
-	return (ret);
+	dest->c_argv = ft_strsplit(line, ' ');
+	fill_bltn(dest, *dest->c_argv);
+	dest->c_path = (!dest->builtin) ? get_cmd_path(*dest->c_argv, env) : NULL;
 }

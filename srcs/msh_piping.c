@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 04:39:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/08 19:53:25 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/09 07:36:15 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,32 +45,15 @@ int		*get_pipes(size_t n)
 {
 	int				*ret;
 	unsigned int	shift;
+	size_t			len;
 
-	if (!(ret = (int*)malloc(sizeof(int) * (sizeof(int) * n * 2))))
+	len = n / 2 + (n % 2);
+	if (!(ret = (int*)malloc(sizeof(int) * (sizeof(int) * len))))
 		return (NULL);
-	idx = 0;
-	while (n--)
+	while (len--)
 	{
 		pipe(ret + shift);
 		shift += 2;
 	}
 	return (ret);
-}
-
-size_t	get_plen(t_cmd *cmd)
-{
-	size_t			npipes;
-	int				chks;
-	char			**ptr;
-
-	npipes = 0;
-	chks = 3;
-	ptr = &cmd->c_in;
-	while (chks--)
-	{
-		if (*ptr)
-			npipes++;
-		ptr++;
-	}
-	return (npipes);
 }

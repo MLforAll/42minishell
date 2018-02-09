@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/08 23:10:29 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/09 07:46:17 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,13 @@ int		setenv_bltn(int ac, char **av, char ***env)
 
 int		unsetenv_bltn(int ac, char **av, char ***env)
 {
+	int		idx;
+
 	if (ac == 1)
 		return (EXIT_FAILURE);
-	del_env_var(env, av[1]);
+	idx = 0;
+	while (idx < ac)
+		del_env_var(env, av[idx++]);
 	return (EXIT_SUCCESS);
 }
 

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/03 23:27:30 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/09 07:52:54 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,19 @@ static int	set_term(int fd, int echo, const char *prompt)
 	return (TRUE);
 }
 
-static int	act_char(char *buff, char **line, t_cursor *csr)
+static int	act_char(char *buff, char **line, const char *pr, t_cursor *csr)
 {
 	if (rl_add_text(buff, *line, csr))
 		return (RL_ADD_ACT);
 	if (*buff == 4 || *buff == 3)
 		ft_strdel(line);
-	if (*buff == 3)
+	if (*buff == 3 || *buff == 21)
 		*line = ft_strnew(0);
+	if (*buff == 21)
+	{
+		ft_putstr_fd("\r\033[K", STDIN_FILENO);
+		ft_putstr_fd(pr, STDIN_FILENO);
+	}
 	if (*buff == '\n' || *buff == 4 || *buff == 3)
 	{
 		ft_putchar_fd('\n', STDIN_FILENO);
@@ -62,6 +67,8 @@ static int	act_char(char *buff, char **line, t_cursor *csr)
 		rl_rm_text(*line, csr);
 		return (RL_BACKSPACE_ACT);
 	}
+	if (*buff != '\t')
+		ft_putchar_fd('\a', STDIN_FILENO);
 	return (RL_DEFAULT_ACT);
 }
 
@@ -111,7 +118,7 @@ char		*ft_readline(const char *prompt, char **env)
 	ret = ft_strnew(0);
 	while ((rb = read(STDIN_FILENO, buff, 4)) > 0)
 	{
-		act_ret = act_char(buff, &ret, &csr);
+		act_ret = act_char(buff, &ret, prompt, &csr);
 		if (*buff == '\t')
 			ac_line(&ret, &csr, prompt, env);
 		if (act_ret < 0)

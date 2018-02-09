@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/09 01:56:20 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/09 07:47:10 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void		add_bltn_ac(char *base, t_list **res)
 		nptr += ft_strlen(nptr) + 1;
 	}
 	if (*nptr)
-		ft_lstadd(res, ft_lstnew(nptr, ft_strlen(nptr)));
+		ft_lstadd(res, ft_lstnew(nptr, ft_strlen(nptr) + 1));
 }
 
 t_list			*get_res_with_path(char *base, char **env)
