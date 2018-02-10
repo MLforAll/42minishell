@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/09 07:47:10 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/10 23:53:12 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void		add_bltn_ac(char *base, t_list **res)
 		ft_lstadd(res, ft_lstnew(nptr, ft_strlen(nptr) + 1));
 }
 
-t_list			*get_res_with_path(char *base, char **env)
+static t_list	*get_res_with_path(char *base, char **env)
 {
 	char	*pathenv;
 	char	**paths;
@@ -53,5 +53,31 @@ t_list			*get_res_with_path(char *base, char **env)
 	add_bltn_ac(base, &ret);
 	ft_lstrmdups(&ret);
 	ft_tabfree(&paths);
+	return (ret);
+}
+
+static int		check_is_command(char *line)
+{
+	size_t	nchars;
+
+	nchars = 0;
+	while (*line)
+	{
+		if (*line == ' ' && nchars > 0)
+			return (FALSE);
+		nchars += (*line > 32 && *line < 127);
+		line++;
+	}
+	return (TRUE);
+}
+
+t_list			*get_ac_result(char *line, char *region, char **env)
+{
+	t_list	*ret;
+
+	if (!ft_strchr(line, '/') && check_is_command(line))
+		ret = get_res_with_path(region, env);
+	else
+		ret = search_files_begin(region, NULL, FALSE);
 	return (ret);
 }

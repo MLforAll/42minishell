@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/30 23:00:55 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/09 02:52:45 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/10 20:08:42 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int			env_bltn(int ac, char **av, char ***env)
 		cmd = ft_cmdnew();
 		cmd->c_path = get_cmd_path(av[idx], *env);
 		cmd->c_argv = ft_tabdup((const char**)(av + idx));
-		exec_cmd(cmd, NULL, &new_env);
+		exec_cmd(cmd, &new_env);
 	}
 	if (new_env != *env)
 		ft_tabfree(&new_env);

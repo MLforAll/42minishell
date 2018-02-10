@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/09 07:37:24 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/11 00:02:38 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,30 @@
 # include "msh_prompt.h"
 
 /*
-** comment
+** macros
 */
 
 # define SH_NAME			"msh"
+# define SH_PLAIN_PROMPT	"msh$ "
 # define SH_RC				".mshrc"
 # define SH_BLTNS			"echo\0cd\0exit\0env\0setenv\0unsetenv\0"
 
-# define MSH_ERR_NOCMD		1
-# define MSH_ERR_NOENT		2
-# define MSH_ERR_NOCD		3
-# define MSH_ERR_NOSET		4
-# define MSH_ERR_TMARG		5
-# define MSH_ERR_PERM		6
-# define MSH_ERR_UNDEFINED	0
+# define SH_ERR_UNDEFINED	0
+# define SH_ERR_NOCMD		1
+# define SH_ERR_NOENT		2
+# define SH_ERR_NOCD		3
+# define SH_ERR_NOSET		4
+# define SH_ERR_TMARG		5
+# define SH_ERR_PERM		6
 
 /*
 ** cmd parsing and exec
 */
 
-int		exec_cmds(char *line, char *shpath, char ***env);
-int		exec_cmd(t_cmd *cmd, char *shpath, char ***env);
+int		exec_shell(const char *path, char ***env);
+
+int		exec_cmds(char *line, char ***env);
+int		exec_cmd(t_cmd *cmd, char ***env);
 
 char	*get_cmd_path(char *line_cmd, char **env);
 void	interpret_cmd(t_cmd *dest, char *line, char **env);

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/08 23:12:06 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/09 04:24:08 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/10 23:56:32 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,6 @@ static char		*get_highest_common(t_list *lst)
 		lst = lst->next;
 	}
 	return (len == 0 ? NULL : ft_strsub(lst->content, 0, len));
-}
-
-static int		check_is_command(char *line)
-{
-	size_t			nchars;
-
-	nchars = 0;
-	while (*line)
-	{
-		if (*line == ' ' && nchars > 0)
-			return (0);
-		nchars += (*line > 32 && *line < 127);
-		line++;
-	}
-	return (1);
 }
 
 static void		show_choices(t_list **res, const char *prompt, char *line)
@@ -91,17 +76,16 @@ void			ac_line(char **line, t_cursor *csr, const char *pr, char **env)
 	char			*diff;
 	char			*base;
 
-	region = get_region(*line, csr);
+	if (!(region = get_region(*line, csr)))
+		return ;
 	fname = get_name_from_path(region);
-	res = (!ft_strchr(*line, '/') && check_is_command(*line)) \
-								? get_res_with_path(region, env) \
-								: search_files_begin(region, NULL, FALSE);
+	res = get_ac_result(*line, region, env);
 	ft_strdel(&region);
 	base = (res && !res->next) ? res->content : get_highest_common(res);
 	if (base && *(diff = ft_strdiff(base, fname)))
 	{
 		line_add(line, diff, csr);
-		if (base == res->content)
+		if (base == res->content && res->content_size != DT_LNK)
 			line_add(line, (res->content_size == DT_DIR) ? "/" : " ", csr);
 	}
 	else if (res && res->next)

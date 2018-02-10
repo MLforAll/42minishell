@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/08 23:04:26 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/11 00:03:30 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,14 @@ static char	*get_cd_path(int ac, char **av, char **env)
 	if (ac == 1)
 	{
 		if (!(ret = get_env_var(env, "HOME")))
-			msh_err(MSH_ERR_NOSET, av[0], "HOME");
+			msh_err(SH_ERR_NOSET, av[0], "HOME");
 	}
 	else
 		ret = av[1];
 	if (ac > 1 && ft_strcmp(av[1], "-") == 0)
 	{
 		if (!(oldpwd = get_env_var(env, "OLDPWD")))
-			msh_err(MSH_ERR_NOSET, av[0], "OLDPWD");
+			msh_err(SH_ERR_NOSET, av[0], "OLDPWD");
 		ret = oldpwd;
 	}
 	if (ret && ret == oldpwd)
@@ -78,8 +78,8 @@ int			cd_bltn(int ac, char **av, char ***env)
 	if (chdir(path_cd) == -1)
 	{
 		ft_strdel(&bkp);
-		return (msh_err(access(path_cd, F_OK) == -1 ? MSH_ERR_NOENT \
-									: MSH_ERR_PERM, av[0], path_cd));
+		return (msh_err(access(path_cd, F_OK) == -1 ? SH_ERR_NOENT \
+									: SH_ERR_PERM, av[0], path_cd));
 	}
 	chg_cd_env(env, bkp, YES);
 	free(bkp);

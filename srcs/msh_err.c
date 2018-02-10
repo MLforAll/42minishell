@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 21:23:18 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/08 20:18:40 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/11 00:08:37 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,17 @@
 
 static void	msh_puterr(int errc)
 {
-	if (errc == MSH_ERR_NOCMD)
+	if (errc == SH_ERR_NOCMD)
 		ft_putendl_fd("command not found", STDERR_FILENO);
-	else if (errc == MSH_ERR_NOENT)
+	else if (errc == SH_ERR_NOENT)
 		ft_putendl_fd("No such file or directory", STDERR_FILENO);
-	else if (errc == MSH_ERR_NOCD)
+	else if (errc == SH_ERR_NOCD)
 		ft_putendl_fd("Can't cd to directory", STDERR_FILENO);
-	else if (errc == MSH_ERR_NOSET)
+	else if (errc == SH_ERR_NOSET)
 		ft_putendl_fd("not set", STDERR_FILENO);
-	else if (errc == MSH_ERR_TMARG)
+	else if (errc == SH_ERR_TMARG)
 		ft_putendl_fd("too many arguments", STDERR_FILENO);
-	else if (errc == MSH_ERR_PERM)
+	else if (errc == SH_ERR_PERM)
 		ft_putendl_fd("Permission denied", STDERR_FILENO);
 	else
 		ft_putendl_fd("Undefined error", STDERR_FILENO);
@@ -43,7 +43,7 @@ static void	msh_prep_err(int errc, const char *bltn, const char *path)
 	if (path)
 	{
 		ft_putstr_fd(path, STDERR_FILENO);
-		ft_putstr_fd((errc == MSH_ERR_NOSET) ? " " : ": ", STDERR_FILENO);
+		ft_putstr_fd((errc == SH_ERR_NOSET) ? " " : ": ", STDERR_FILENO);
 	}
 	msh_puterr(errc);
 }
@@ -62,13 +62,15 @@ int			msh_err_ret(int errc, const char *bltn, const char *path, int retv)
 
 void		msh_child_sighandler(int sigc)
 {
-	const char	*errs[] = { "Hangup", "", "Quit", "Illegal instruction",
-		"Trace trap", "Abort", "Pollable event", "Floating point exception",
+	const char	*errs[] = {"Hangup", NULL, NULL, "Illegal instruction",
+		"Trace/BPT trap", "Abort trap", "EMT trap", "Floating point exception",
 		"Killed", "Bus error", "Segmentation fault",
-		"Bad argument to system call", "Write on a pipe with no one to read it",
-		"Alarm clock", "Terminated", "Urgent condition on IO channel"};
+		"Bad system call", NULL, "Alarm clock", "Terminated",
+		NULL, NULL, NULL, NULL, NULL, NULL, NULL, "Cputime limit exceeded",
+		"Filesize limit exceeded", "Virtual timer expired", "Profiling timer expired",
+		NULL, NULL, "User defined signal 1", "User defined signal 2"};
 
-	if (sigc < 0 || sigc > 17 || sigc == 2)
+	if (sigc < 0 || sigc > 31 || !errs[sigc - 1])
 		return ;
 	ft_putstr_fd(errs[sigc - 1], STDIN_FILENO);
 	ft_putstr_fd(": ", STDIN_FILENO);

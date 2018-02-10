@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 17:46:30 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/08 23:18:07 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/10 23:39:09 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,6 @@ void			ac_line(char **line, t_cursor *csr, const char *pr, char **env);
 ** Autocompletion Utilities functions
 */
 
-t_list			*get_res_with_path(char *base, char **env);
+t_list			*get_ac_result(char *line, char *region, char **env);
 
 #endif

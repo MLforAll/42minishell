@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/09 07:52:54 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/10 23:15:59 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 /*
 ** ft_readline
 ** a smaller copy of GNU's readline function, used by shells like bash
-** that allows line-editing
+** that allows line-editing.
 **
 ** To accomplish that, the terminal is set in raw mode, so a read
-** call on stdin will respond at each keypress
+** call on stdin will respond at each keypress.
 */
 
 static int	set_term(int fd, int echo, const char *prompt)
