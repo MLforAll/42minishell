@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/11 00:03:48 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/11 08:50:29 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ int			exec_cmd(t_cmd *cmd, char ***env)
 int			exec_cmds(char *line, char ***env)
 {
 	int		ret;
-	t_cmd	*props;
+	t_cmd	*cmdp;
+	t_cmd	*cbw;
 	char	**cmds;
 	char	**bw;
 
@@ -68,11 +69,15 @@ int			exec_cmds(char *line, char ***env)
 	bw = cmds;
 	while (*bw)
 	{
-		props = ft_cmdnew();
-		interpret_cmd(props, *bw, *env);
-		ret = exec_cmd(props, env);
+		cmdp = interpret_cmd(*bw, *env);
+		cbw = cmdp;
+		while (cbw)
+		{
+			ret = exec_cmd(cbw, env);
+			cbw = cbw->next;
+		}
 		bw++;
-		ft_cmddel(&props);
+		ft_cmddel(&cmdp);
 	}
 	ft_tabfree(&cmds);
 	return (ret);

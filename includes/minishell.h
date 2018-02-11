@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/11 00:02:38 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/11 08:50:11 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int		exec_cmds(char *line, char ***env);
 int		exec_cmd(t_cmd *cmd, char ***env);
 
 char	*get_cmd_path(char *line_cmd, char **env);
-void	interpret_cmd(t_cmd *dest, char *line, char **env);
+t_cmd	*interpret_cmd(char *cline, char **env);
 
 /*
 ** builtins
@@ -93,7 +93,7 @@ void	msh_child_sighandler(int sigc);
 */
 
 t_cmd	*ft_cmdnew(void);
-void	ft_cmdpb(t_cmd **headref, t_cmd *new);
+void	ft_cmdpush(t_cmd **headref, t_cmd *new);
 void	ft_cmddel(t_cmd **headref);
 void	ft_cmddelone(t_cmd **cmdref);
 

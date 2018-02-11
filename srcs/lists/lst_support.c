@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 19:49:11 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/03 21:47:40 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/11 08:50:03 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_cmd	*ft_cmdnew(void)
 	return (ret);
 }
 
-void	ft_cmdpb(t_cmd **headref, t_cmd *new)
+void	ft_cmdpush(t_cmd **headref, t_cmd *new)
 {
 	t_cmd	**tmp;
 
