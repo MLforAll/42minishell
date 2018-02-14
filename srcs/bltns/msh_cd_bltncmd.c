@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/11 00:03:30 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/14 06:43:00 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	chg_cd_env(char ***env, char *bkp, int old)
 		free(pathname);
 }
 
-static char	*get_cd_path(int ac, char **av, char **env)
+static char	*get_cd_path(int ac, char **av, char **env, int outfd)
 {
 	char	*ret;
 	char	*oldpwd;
@@ -63,16 +63,16 @@ static char	*get_cd_path(int ac, char **av, char **env)
 		ret = oldpwd;
 	}
 	if (ret && ret == oldpwd)
-		ft_putendl(ret);
+		ft_putendl_fd(ret, outfd);
 	return (ret);
 }
 
-int			cd_bltn(int ac, char **av, char ***env)
+int			cd_bltn(int ac, char **av, char ***env, int outfd)
 {
 	char	*path_cd;
 	char	*bkp;
 
-	if (!(path_cd = get_cd_path(ac, av, *env)))
+	if (!(path_cd = get_cd_path(ac, av, *env, outfd)))
 		return (EXIT_FAILURE);
 	bkp = getcwd(NULL, 0);
 	if (chdir(path_cd) == -1)

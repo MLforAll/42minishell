@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/10 23:15:59 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/14 08:15:29 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void		line_add(char **line, char *add, t_cursor *csr)
 	csr->pos += len;
 }
 
-char		*ft_readline(const char *prompt, char **env)
+char		*ft_readline(const char *prompt, char **env, t_history *hist)
 {
 	char			buff[5];
 	ssize_t			rb;
@@ -119,6 +119,14 @@ char		*ft_readline(const char *prompt, char **env)
 	while ((rb = read(STDIN_FILENO, buff, 4)) > 0)
 	{
 		act_ret = act_char(buff, &ret, prompt, &csr);
+		if (rl_history_keys(&hist, buff, &ret))
+		{
+			ft_putstr_fd("\r\033[K", STDIN_FILENO);
+			ft_putstr_fd(prompt, STDIN_FILENO);
+			ft_putstr_fd(ret, STDIN_FILENO);
+			csr.max = ft_strlen(ret);
+			csr.pos = csr.max;
+		}
 		if (*buff == '\t')
 			ac_line(&ret, &csr, prompt, env);
 		if (act_ret < 0)

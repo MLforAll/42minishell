@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/08 23:12:06 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/10 23:56:32 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/14 08:11:18 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,17 +80,15 @@ void			ac_line(char **line, t_cursor *csr, const char *pr, char **env)
 		return ;
 	fname = get_name_from_path(region);
 	res = get_ac_result(*line, region, env);
-	ft_strdel(&region);
 	base = (res && !res->next) ? res->content : get_highest_common(res);
-	if (base && *(diff = ft_strdiff(base, fname)))
-	{
+	if (base && (diff = ft_strdiff(base, fname)) && *diff)
 		line_add(line, diff, csr);
-		if (base == res->content && res->content_size != DT_LNK)
-			line_add(line, (res->content_size == DT_DIR) ? "/" : " ", csr);
-	}
+	if (base == res->content && res->content_size != DT_LNK)
+		line_add(line, (res->content_size == DT_DIR) ? "/" : " ", csr);
 	else if (res && res->next)
 		show_choices(&res, pr, *line);
 	if (base && base != res->content)
 		ft_strdel(&base);
+	ft_strdel(&region);
 	ft_lstdel(&res, &free_tlist);
 }

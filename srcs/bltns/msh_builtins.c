@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/11 00:03:23 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/14 06:55:54 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include "minishell.h"
 
-int		echo_bltn(int ac, char **av, char ***env)
+int		echo_bltn(int ac, char **av, char ***env, int outfd)
 {
 	int		nonl;
 
@@ -27,35 +27,33 @@ int		echo_bltn(int ac, char **av, char ***env)
 	}
 	while (*(++av))
 	{
-		ft_putstr(*av);
+		ft_putstr_fd(*av, outfd);
 		if (*(av + 1))
-			ft_putchar(' ');
+			ft_putchar_fd(' ', outfd);
 	}
 	if (!nonl)
-		ft_putchar('\n');
+		ft_putchar_fd('\n', outfd);
 	return (EXIT_SUCCESS);
 }
 
-int		setenv_bltn(int ac, char **av, char ***env)
+int		setenv_bltn(int ac, char **av, char ***env, int outfd)
 {
 	if (ac > 3)
-	{
-		ft_putendl_fd("msh: setenv: Too many arguments", STDERR_FILENO);
-		return (EXIT_FAILURE);
-	}
+		return (msh_err(SH_ERR_TMARG, "setenv", NULL));
 	if (ac == 1)
 	{
-		ft_puttab(*env, NULL);
+		ft_puttab_fd(*env, NULL, outfd);
 		return (EXIT_SUCCESS);
 	}
 	set_env_from_str(env, av[1]);
 	return (EXIT_SUCCESS);
 }
 
-int		unsetenv_bltn(int ac, char **av, char ***env)
+int		unsetenv_bltn(int ac, char **av, char ***env, int outfd)
 {
 	int		idx;
 
+	(void)outfd;
 	if (ac == 1)
 		return (EXIT_FAILURE);
 	idx = 0;
@@ -64,9 +62,10 @@ int		unsetenv_bltn(int ac, char **av, char ***env)
 	return (EXIT_SUCCESS);
 }
 
-int		exit_bltn(int ac, char **av, char ***env)
+int		exit_bltn(int ac, char **av, char ***env, int outfd)
 {
 	(void)env;
+	(void)outfd;
 	if (ac > 2)
 		return (msh_err(SH_ERR_TMARG, av[0], NULL));
 	exit((ac > 1) ? ft_atoi(av[1]) : EXIT_SUCCESS);

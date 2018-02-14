@@ -15,6 +15,7 @@ allowing line editing, autocompletion and history to exit.
 - Autocompletion
 - Exec commands
 - Environement
+- Pipes (intercommand \`\`|'' kind)
 - Ctrl-C and Ctrl-D signals
 
 # Todo

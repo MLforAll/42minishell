@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 21:23:18 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/13 22:38:05 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/14 06:59:07 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ static void	msh_puterr(int errc)
 		ft_putendl_fd("too many arguments", STDERR_FILENO);
 	else if (errc == SH_ERR_PERM)
 		ft_putendl_fd("Permission denied", STDERR_FILENO);
+	else if (errc == SH_ERR_FORK)
+		ft_putendl_fd("Fork failed", STDERR_FILENO);
 	else
 		ft_putendl_fd("Undefined error", STDERR_FILENO);
 }

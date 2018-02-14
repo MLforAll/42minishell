@@ -6,11 +6,12 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/09 07:48:41 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/14 08:14:51 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include <stdlib.h>
 #include "libft.h"
 #include "ft_readline.h"
 
@@ -32,6 +33,30 @@ int			rl_csr_keys(char *buff, t_cursor *csr)
 	if (ret)
 		ft_putstr_fd(buff, STDIN_FILENO);
 	return (ret);
+}
+
+int			rl_history_keys(t_history **history, char *buff, char **line)
+{
+	int		ret;
+
+	if (!*history)
+		return (FALSE);
+	ret = FALSE;
+	if (ft_strcmp("\033[A", buff) == 0 && (*history)->next)
+	{
+		*history = (*history)->next;
+		ret = TRUE;
+	}
+	if (ft_strcmp("\033[B", buff) == 0 && (*history)->prev)
+	{
+		*history = (*history)->prev;
+		ret = TRUE;
+	}
+	if (!ret)
+		return (FALSE);
+	free(*line);
+	*line = ft_strdup((*history)->line);
+	return (TRUE);
 }
 
 static int	rl_add_char(char c, t_cursor *csr)

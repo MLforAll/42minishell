@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/02/13 19:36:51 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/02/14 07:27:11 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,7 @@ SRCFILES = minishell.c \
 	fsexp_functions.c \
 	ft_readline/ft_readline.c \
 	ft_readline/ft_rl_utils.c \
+	ft_readline/ft_rl_history.c \
 	ft_readline/ft_rl_acroutine.c \
 	ft_readline/ft_rl_autocompletion.c \
 	lists/lst_support.c \

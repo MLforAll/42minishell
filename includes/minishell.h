@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/13 23:51:36 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/14 06:58:56 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 # define SH_ERR_NOSET		4
 # define SH_ERR_TMARG		5
 # define SH_ERR_PERM		6
+# define SH_ERR_FORK		7
 
 /*
 ** cmd parsing and exec
@@ -54,13 +55,13 @@ t_cmd	*interpret_cmd(char *cline, char **env);
 ** builtins
 */
 
-int		echo_bltn(int ac, char **av, char ***env);
-int		cd_bltn(int ac, char **av, char ***env);
-int		exit_bltn(int ac, char **av, char ***env);
+int		echo_bltn(int ac, char **av, char ***env, int outfd);
+int		cd_bltn(int ac, char **av, char ***env, int outfd);
+int		exit_bltn(int ac, char **av, char ***env, int outfd);
 
-int		env_bltn(int ac, char **av, char ***env);
-int		setenv_bltn(int ac, char **av, char ***env);
-int		unsetenv_bltn(int ac, char **av, char ***env);
+int		env_bltn(int ac, char **av, char ***env, int outfd);
+int		setenv_bltn(int ac, char **av, char ***env, int outfd);
+int		unsetenv_bltn(int ac, char **av, char ***env, int outfd);
 
 /*
 ** fsexp utilities

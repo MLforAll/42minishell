@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/13 23:55:07 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/14 07:59:49 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,20 +55,29 @@ static void	interactive_shell(char ***env)
 {
 	char	*line;
 	char	*prompt;
+	t_history	*hist;
 
 	line = NULL;
 	prompt = NULL;
+	hist = NULL;
 	launch_rc(env);
 	while (42)
 	{
 		prompt = get_prompt(*env);
-		line = ft_readline(prompt, *env);
+		line = ft_readline(prompt, *env, hist);
+		if (line && *line)
+		{
+			ft_histdelone(&hist);
+			ft_histadd(&hist, line);
+			ft_histadd(&hist, "");
+		}
 		ft_strdel(&prompt);
 		if (!line)
 			break ;
 		exec_cmds(line, env);
 		ft_strdel(&line);
 	}
+	ft_histdel(&hist);
 }
 
 int			main(int ac, char **av, char **environ)

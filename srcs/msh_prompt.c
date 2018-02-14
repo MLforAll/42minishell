@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 19:23:49 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/11 00:12:11 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/14 06:36:52 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static char	*get_prompt_str(t_prompt *dprompt)
 	char	*ret;
 
 	if (!dprompt->pwd || !dprompt->hostname || !dprompt->username)
-			return (ft_strdup(SH_PLAIN_PROMPT));
+		return (ft_strdup(SH_PLAIN_PROMPT));
 	ret = ft_strnew(25 + ft_strlen(dprompt->pwd) + \
 		ft_strlen(dprompt->hostname) + ft_strlen(dprompt->username));
 	ft_strcpy(ret, "\033[1;36m");

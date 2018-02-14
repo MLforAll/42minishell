@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/13 23:51:23 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/14 06:42:08 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	fill_bltn(t_cmd *cmd, char *line_cmd)
 {
 	char			*nptr;
 	unsigned int	idx;
-	static int		(*bltns_funcs[])(int, char **, char ***) = {&echo_bltn,
+	static int		(*bltns_funcs[])(int, char **, char ***, int) = {&echo_bltn,
 		&cd_bltn, &exit_bltn, &env_bltn, &setenv_bltn, &unsetenv_bltn,
 		NULL};
 
