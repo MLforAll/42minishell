@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 19:49:11 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/11 08:50:03 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/13 22:16:19 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,21 @@ t_cmd	*ft_cmdnew(void)
 
 void	ft_cmdpush(t_cmd **headref, t_cmd *new)
 {
-	t_cmd	**tmp;
+	t_cmd	*tmp;
 
 	if (!headref || !new)
 		return ;
-	tmp = headref;
-	while (*tmp)
-		tmp = &(*tmp)->next;
-	*tmp = new;
+	if (!*headref)
+	{
+		new->prev = NULL;
+		*headref = new;
+		return ;
+	}
+	tmp = *headref;
+	while (tmp->next)
+		tmp = tmp->next;
+	new->prev = tmp;
+	tmp->next = new;
 }
 
 void	ft_cmddelone(t_cmd **cmdref)

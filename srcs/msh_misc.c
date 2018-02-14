@@ -6,10 +6,11 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/31 18:31:09 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/09 03:52:42 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/13 22:36:10 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <signal.h>
 #include <stdlib.h>
 #include "libft.h"
 
@@ -69,4 +70,14 @@ char	*get_name_from_path_2(const char *path)
 		return (ft_strdup(tmp));
 	len_to_slash = chr - tmp;
 	return (ft_strsub(tmp, 0, len_to_slash));
+}
+
+void	switch_signals(int ign)
+{
+	void	(*act)(int);
+
+	act = (ign) ? SIG_IGN : SIG_DFL;
+	signal(SIGINT, act);
+	signal(SIGTERM, act);
+	signal(SIGTSTP, SIG_IGN);
 }

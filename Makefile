@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/02/08 23:17:59 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/02/13 19:36:51 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRCFILES = minishell.c \
 	msh_misc.c \
 	msh_prompt.c \
 	msh_env.c \
+	msh_piping.c \
 	bltns/msh_builtins.c \
 	bltns/msh_env_bltncmd.c \
 	bltns/msh_cd_bltncmd.c \
@@ -53,9 +54,11 @@ PROJTEXT = \033[1;36m$(NAME): \033[0;39m
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(INCLUDES)
-	@ printf "\033[K$(PROJTEXT)Compiling\n"
+$(LIBFT): force
 	@ make -C $(dir $(LIBFT))
+
+$(NAME): $(LIBFT) $(OBJS) $(INCLUDES)
+	@ printf "\033[K$(PROJTEXT)Compiling\n"
 	@ printf "$(PROJTEXT)Linking\n"
 	@ gcc -o $(NAME) $(LD_FLAGS) $(OBJS)
 	@ printf "$(PROJTEXT)\033[1;32mProgram built at $(NAME)\033[0;39m\n"
@@ -92,4 +95,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+force:
+	@ true
+
+.PHONY: all lib noflags fsanitize clean fclean re

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 21:23:18 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/11 00:08:37 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/13 22:38:05 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,11 @@ void		msh_child_sighandler(int sigc)
 		"Killed", "Bus error", "Segmentation fault",
 		"Bad system call", NULL, "Alarm clock", "Terminated",
 		NULL, NULL, NULL, NULL, NULL, NULL, NULL, "Cputime limit exceeded",
-		"Filesize limit exceeded", "Virtual timer expired", "Profiling timer expired",
-		NULL, NULL, "User defined signal 1", "User defined signal 2"};
+		"Filesize limit exceeded", "Virtual timer expired",
+		"Profiling timer expired", NULL, NULL,
+		"User defined signal 1", "User defined signal 2"};
 
+	ft_putchar('\n');
 	if (sigc < 0 || sigc > 31 || !errs[sigc - 1])
 		return ;
 	ft_putstr_fd(errs[sigc - 1], STDIN_FILENO);

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/11 08:50:11 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/13 23:51:36 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@
 # define SH_RC				".mshrc"
 # define SH_BLTNS			"echo\0cd\0exit\0env\0setenv\0unsetenv\0"
 
+# define SH_DEFAULT_PATH_1	"/usr/local/bin:/usr/bin:/bin:/usr/sbin:"
+# define SH_DEFAULT_PATH_2	"/opt/X11/bin"
+# define SH_DEFAULT_PATH	SH_DEFAULT_PATH_1 SH_DEFAULT_PATH_2
+
 # define SH_ERR_UNDEFINED	0
 # define SH_ERR_NOCMD		1
 # define SH_ERR_NOENT		2
@@ -40,8 +44,8 @@
 
 int		exec_shell(const char *path, char ***env);
 
-int		exec_cmds(char *line, char ***env);
 int		exec_cmd(t_cmd *cmd, char ***env);
+int		exec_cmds(char *line, char ***env);
 
 char	*get_cmd_path(char *line_cmd, char **env);
 t_cmd	*interpret_cmd(char *cline, char **env);
@@ -76,6 +80,12 @@ void	set_env_from_str(char ***env, char *str);
 void	del_env_var(char ***env, const char *var);
 
 /*
+** piping
+*/
+
+void	dup_out_to_pipe(int outfd, int pfd);
+
+/*
 ** misc functions / utilities
 */
 
@@ -83,6 +93,11 @@ char	*ft_strdiff(char *base, char *check);
 char	*get_last_component(const char *str, char c);
 char	*get_name_from_path(const char *path);
 char	*get_name_from_path_2(const char *path);
+void	switch_signals(int ign);
+
+/*
+** errors
+*/
 
 int		msh_err(int errc, const char *bltn, const char *path);
 int		msh_err_ret(int errc, const char *bltn, const char *path, int retv);

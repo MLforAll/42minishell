@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/11 08:50:29 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/14 00:00:21 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,34 @@ static int	cmd_chk(char *path)
 	return (-1);
 }
 
-int			exec_cmd(t_cmd *cmd, char ***env)
+static int	exec_bincmd(t_cmd *cmd, char ***env)
 {
 	pid_t	pid;
 	int		exval;
+
+	exval = 0;
+	pid = fork();
+	if (pid == 0)
+	{
+		(!cmd->prev) ? close(cmd->c_pfd[0]) : dup_out_to_pipe(STDIN_FILENO, cmd->prev->c_pfd[0]);
+		(cmd->next) ? dup_out_to_pipe(STDOUT_FILENO, cmd->c_pfd[1]) : close(cmd->c_pfd[1]);
+		switch_signals(FALSE);
+		set_env_var(env, "_", cmd->c_path);
+		execve(cmd->c_path, cmd->c_argv, *env);
+		exit(exec_shell(cmd->c_path, env) ? 0 : 127);
+	}
+	(!cmd->next) ? close(cmd->c_pfd[0]) : 0;
+	(cmd->next) ? close(cmd->c_pfd[1]) : 0;
+	if (cmd->next)
+		return (EXIT_SUCCESS);
+	wait4(pid, &exval, 0, NULL);
+	if (WIFSIGNALED(exval))
+		msh_child_sighandler(WTERMSIG(exval));
+	return (WEXITSTATUS(exval));
+}
+
+int			exec_cmd(t_cmd *cmd, char ***env)
+{
 	int		errval;
 
 	if (cmd->builtin)
@@ -42,19 +66,7 @@ int			exec_cmd(t_cmd *cmd, char ***env)
 	}
 	if ((errval = cmd_chk(cmd->c_path)) >= 0)
 		return (msh_err_ret(errval, NULL, cmd->c_path, 127));
-	exval = 0;
-	pid = fork();
-	if (pid == 0)
-	{
-		signal(SIGTERM, SIG_DFL);
-		set_env_var(env, "_", cmd->c_path);
-		execve(cmd->c_path, cmd->c_argv, *env);
-		exit(exec_shell(cmd->c_path, env) ? 0 : 127);
-	}
-	wait4(pid, &exval, 0, NULL);
-	if (WIFSIGNALED(exval))
-		msh_child_sighandler(WTERMSIG(exval));
-	return (WEXITSTATUS(exval));
+	return (exec_bincmd(cmd, env));
 }
 
 int			exec_cmds(char *line, char ***env)
@@ -67,6 +79,7 @@ int			exec_cmds(char *line, char ***env)
 
 	cmds = ft_strsplit(line, ';');
 	bw = cmds;
+	ret = EXIT_SUCCESS;
 	while (*bw)
 	{
 		cmdp = interpret_cmd(*bw, *env);

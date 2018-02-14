@@ -6,11 +6,10 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/10 20:10:04 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/13 23:55:07 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -76,9 +75,7 @@ int			main(int ac, char **av, char **environ)
 {
 	char	**env;
 
-	signal(SIGINT, SIG_IGN);
-	signal(SIGTERM, SIG_IGN);
-	signal(SIGTSTP, SIG_IGN);
+	switch_signals(TRUE);
 	if (environ)
 		env = ft_tabdup((const char**)environ);
 	else
@@ -87,6 +84,8 @@ int			main(int ac, char **av, char **environ)
 		*env = NULL;
 	}
 	set_env_var(&env, "SHELL", av[0]);
+	if (!get_env_var(env, "PATH"))
+		set_env_var(&env, "PATH", SH_DEFAULT_PATH);
 	if (ac > 1 || !ft_isatty(STDIN_FILENO))
 		exec_shell(av[1], &env);
 	else
