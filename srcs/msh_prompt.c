@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/03 19:23:49 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 06:36:52 by kdumarai         ###   ########.fr       */
+/*   Created: 2018/02/15 21:41:27 by kdumarai          #+#    #+#             */
+/*   Updated: 2018/02/15 22:44:51 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,89 +16,83 @@
 #include <stdlib.h>
 #include "minishell.h"
 
-static void	get_hostname_username(t_prompt *dest)
+static void	add_username(char **dest)
 {
-	char			hostname[MAXHOSTNAMELEN + 1];
-	char			*dot;
 	uid_t			puid;
 	struct passwd	*ppw;
 
-	if (gethostname(hostname, MAXHOSTNAMELEN) == -1)
-		dest->hostname = NULL;
-	else
-	{
-		if ((dot = ft_strchr(hostname, '.')))
-			dest->hostname = ft_strsub(hostname, 0, dot - hostname);
-		else
-			dest->hostname = ft_strdup(hostname);
-	}
 	puid = getuid();
 	if (!(ppw = getpwuid(puid)))
-		dest->username = NULL;
-	else
-		dest->username = ft_strdup(ppw->pw_name);
+		return ;
+	ft_stradd(dest, ppw->pw_name);
 }
 
-static char	*get_pwd(char **env)
+static void	add_hostname(char **dest)
 {
-	char			*ret;
+	char			hostname[MAXHOSTNAMELEN + 1];
+	char			*dot;
+
+	if (gethostname(hostname, MAXHOSTNAMELEN) == -1)
+		return ;
+	if ((dot = ft_strchr(hostname, '.')))
+		ft_strnadd(dest, hostname, dot - hostname);
+	else
+		ft_stradd(dest, hostname);
+}
+
+static void	add_pwd(char **dest, int all, char **env)
+{
+	char			*path;
 	char			*pwd;
 	char			*home;
 	char			*tmp;
 
-	pwd = get_env_var(env, "PWD");
-	if (!(ret = get_name_from_path_2(pwd)))
+	tmp = NULL;
+	if (!(pwd = get_env_var(env, "PWD")))
 	{
 		if (!(tmp = getcwd(NULL, 0)))
-			return (ft_strdup("unknown"));
-		ret = ft_strdup(get_name_from_path(tmp));
-		ft_strdel(&tmp);
+			return ;
+		path = ft_strdup(tmp);
+		free(tmp);
 	}
 	else
 	{
 		home = get_env_var(env, "HOME");
-		if (pwd && home && ft_strcmp(pwd, home) == 0)
-		{
-			free(ret);
-			return (ft_strdup("~"));
-		}
+		path = ft_strdup((pwd && home && ft_strcmp(pwd, home) == 0) ? "~" : pwd);
 	}
-	return (ret);
+	if (!all)
+	{
+		free(path);
+		path = get_name_from_path_2(path);
+	}
+	ft_stradd(dest, path);
+	free(path);
 }
 
-static char	*get_prompt_str(t_prompt *dprompt)
-{
-	char	*ret;
-
-	if (!dprompt->pwd || !dprompt->hostname || !dprompt->username)
-		return (ft_strdup(SH_PLAIN_PROMPT));
-	ret = ft_strnew(25 + ft_strlen(dprompt->pwd) + \
-		ft_strlen(dprompt->hostname) + ft_strlen(dprompt->username));
-	ft_strcpy(ret, "\033[1;36m");
-	ft_strcat(ret, dprompt->hostname);
-	ft_strcat(ret, ":\033[1;33m");
-	ft_strcat(ret, dprompt->pwd);
-	ft_strcat(ret, "\033[0;39m ");
-	ft_strcat(ret, dprompt->username);
-	ft_strcat(ret, "$ ");
-	return (ret);
-}
-
-char		*get_prompt(char **env)
+char		*get_prompt_from_str(char *s, char **env)
 {
 	char			*ret;
-	char			*envprompt;
-	t_prompt		dprompt;
+	char			*af;
 
-	if (!(envprompt = get_env_var(env, "MSH_PROMPT")))
+	ret = ft_strnew(0);
+	while (*s)
 	{
-		dprompt.pwd = get_pwd(env);
-		get_hostname_username(&dprompt);
-		ret = get_prompt_str(&dprompt);
-		ft_strdel(&dprompt.hostname);
-		ft_strdel(&dprompt.pwd);
-		ft_strdel(&dprompt.username);
-		return (ret);
+		if ((af = ft_strstart(s, "\\u")))
+			add_username(&ret);
+		else if ((af = ft_strstart(s, "\\h")))
+			add_hostname(&ret);
+		else if ((af = ft_strstart(s, "\\w")))
+			add_pwd(&ret, YES, env);
+		else if ((af = ft_strstart(s, "\\W")))
+			add_pwd(&ret, NO, env);
+		else if ((af = ft_strstart(s, "\\033")))
+			ft_stradd(&ret, "\033");
+		else
+		{
+			af = s + 1;
+			ft_strnadd(&ret, s, 1);
+		}
+		s += (af - s);
 	}
-	return (ft_strdup(envprompt));
+	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 07:59:49 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/15 22:38:41 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,15 @@ static void	launch_rc(char ***env)
 	free(rcpath);
 }
 
+static char	*ishell_get_prompt(char **env)
+{
+	char			*envprompt;
+
+	if ((envprompt = get_env_var(env, "MSH_PROMPT")))
+		return (get_prompt_from_str(envprompt, env));
+	return (get_prompt_from_str("\033[1;36m\\h:\033[1;33m\\W\033[0;39m \\u$ ", env));
+}
+
 static void	interactive_shell(char ***env)
 {
 	char	*line;
@@ -63,7 +72,7 @@ static void	interactive_shell(char ***env)
 	launch_rc(env);
 	while (42)
 	{
-		prompt = get_prompt(*env);
+		prompt = ishell_get_prompt(*env);
 		line = ft_readline(prompt, *env, hist);
 		if (line && *line)
 		{

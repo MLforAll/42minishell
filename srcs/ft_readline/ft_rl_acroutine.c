@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/08 23:12:06 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 08:11:18 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/15 22:46:20 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void			ac_line(char **line, t_cursor *csr, const char *pr, char **env)
 	base = (res && !res->next) ? res->content : get_highest_common(res);
 	if (base && (diff = ft_strdiff(base, fname)) && *diff)
 		line_add(line, diff, csr);
-	if (base == res->content && res->content_size != DT_LNK)
+	if (res && base == res->content && res->content_size != DT_LNK)
 		line_add(line, (res->content_size == DT_DIR) ? "/" : " ", csr);
 	else if (res && res->next)
 		show_choices(&res, pr, *line);

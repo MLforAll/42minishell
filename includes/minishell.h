@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 06:58:56 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/15 22:27:34 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "libft.h"
 # include "msh_data.h"
-# include "msh_prompt.h"
 
 /*
 ** macros
@@ -38,6 +37,12 @@
 # define SH_ERR_TMARG		5
 # define SH_ERR_PERM		6
 # define SH_ERR_FORK		7
+
+/*
+** prompt
+*/
+
+char			*get_prompt_from_str(char *s, char **env);
 
 /*
 ** cmd parsing and exec

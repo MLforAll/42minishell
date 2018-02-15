@@ -5,3 +5,4 @@ printenv.c
 get_keycodes.c
 ft_readline_tester.c
 testpipe.c
+testexit.c
