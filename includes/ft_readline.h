@@ -6,14 +6,13 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 17:46:30 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 08:14:55 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/16 20:21:27 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_READLINE_H
 # define FT_READLINE_H
 
-# include <string.h>
 # include "libft.h"
 
 /*
@@ -67,8 +66,9 @@ char			*ft_readline(const char *prompt, char **env, t_history *hist);
 
 int				rl_csr_keys(char *buff, t_cursor *csr);
 int				rl_history_keys(t_history **history, char *buff, char **line);
-int				rl_add_text(char *buff, char *line, t_cursor *csr);
-void			rl_rm_text(char *line, t_cursor *csr);
+void			rl_line_rm(char **line, size_t len, t_cursor *csr);
+void			rl_line_add(char **line, char *add, t_cursor *csr);
+int				rl_set_term(int fd, int echo, const char *prompt);
 
 /*
 ** Autocompletion

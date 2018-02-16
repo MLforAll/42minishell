@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 07:11:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 08:18:45 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/16 20:26:30 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,28 @@ void		ft_histdel(t_history **headref)
 	while (bw)
 		ft_histdelone(&bw);
 	*headref = NULL;
+}
+
+int			rl_history_keys(t_history **history, char *buff, char **line)
+{
+	int		ret;
+
+	if (!*history)
+		return (FALSE);
+	ret = FALSE;
+	if (ft_strcmp("\033[A", buff) == 0 && (*history)->next)
+	{
+		*history = (*history)->next;
+		ret = TRUE;
+	}
+	if (ft_strcmp("\033[B", buff) == 0 && (*history)->prev)
+	{
+		*history = (*history)->prev;
+		ret = TRUE;
+	}
+	if (!ret)
+		return (FALSE);
+	free(*line);
+	*line = ft_strdup((*history)->line);
+	return (TRUE);
 }

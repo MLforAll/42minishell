@@ -6,16 +6,34 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 08:14:51 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/16 22:03:37 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <termios.h>
 #include "libft.h"
 #include "ft_readline.h"
 
-int			rl_csr_keys(char *buff, t_cursor *csr)
+int		rl_set_term(int fd, int echo, const char *prompt)
+{
+	struct termios	t;
+
+	if (tcgetattr(fd, &t))
+		return (FALSE);
+	if (!echo)
+	{
+		ft_putstr_fd(prompt, fd);
+		t.c_lflag &= ~(ICANON | ECHO | ISIG);
+	}
+	else
+		t.c_lflag |= (ICANON | ECHO | ISIG);
+	tcsetattr(fd, TCSANOW, &t);
+	return (TRUE);
+}
+
+int		rl_csr_keys(char *buff, t_cursor *csr)
 {
 	int		ret;
 
@@ -35,62 +53,54 @@ int			rl_csr_keys(char *buff, t_cursor *csr)
 	return (ret);
 }
 
-int			rl_history_keys(t_history **history, char *buff, char **line)
+void	rl_line_rm(char **line, size_t len, t_cursor *csr)
 {
-	int		ret;
+	char			*tmp;
+	size_t			rpt;
 
-	if (!*history)
-		return (FALSE);
-	ret = FALSE;
-	if (ft_strcmp("\033[A", buff) == 0 && (*history)->next)
+	if (!line || !len || !csr)
+		return ;
+	rpt = len;
+	while (rpt--)
 	{
-		*history = (*history)->next;
-		ret = TRUE;
+		ft_putstr_fd("\033[D", STDIN_FILENO);
+		csr->pos--;
 	}
-	if (ft_strcmp("\033[B", buff) == 0 && (*history)->prev)
-	{
-		*history = (*history)->prev;
-		ret = TRUE;
-	}
-	if (!ret)
-		return (FALSE);
-	free(*line);
-	*line = ft_strdup((*history)->line);
-	return (TRUE);
+	ft_putstr_fd("\033[K\033[s", STDIN_FILENO);
+	if (csr->pos + len < csr->max)
+		ft_putstr_fd(*line + csr->pos + len, STDIN_FILENO);
+	ft_putstr_fd("\033[u", STDIN_FILENO);
+	tmp = *line;
+	*line = ft_strsub(tmp, 0, csr->pos);
+	if (csr->pos + len < csr->max)
+		ft_stradd(line, tmp + csr->pos + len);
+	free(tmp);
+	rpt = len;
+	while (rpt--)
+		csr->max--;
 }
 
-static int	rl_add_char(char c, t_cursor *csr)
+void	rl_line_add(char **line, char *add, t_cursor *csr)
 {
-	if (!ft_isprint(c))
-		return (FALSE);
-	ft_putchar_fd(c, STDIN_FILENO);
-	csr->max++;
-	csr->pos++;
-	return (TRUE);
-}
+	char	*tmp;
+	size_t	len;
 
-int			rl_add_text(char *buff, char *line, t_cursor *csr)
-{
-	int		ret;
-
-	ret = 0;
-	if (*buff == 27)
-		return (0);
+	if (!line || !add || !csr || !(len = ft_strlen(add)))
+		return ;
 	ft_putstr_fd("\033[K", STDIN_FILENO);
-	while (*buff)
-		ret += rl_add_char(*(buff++), csr);
-	ft_putstr_fd("\033[s", STDIN_FILENO);
+	ft_putstr_fd(add, STDIN_FILENO);
 	if (csr->pos < csr->max)
-		ft_putstr_fd(line + csr->pos, STDIN_FILENO);
-	ft_putstr_fd("\033[u", STDIN_FILENO);
-	return (ret);
-}
-
-void		rl_rm_text(char *line, t_cursor *csr)
-{
-	ft_putstr_fd("\033[D\033[K\033[s", STDIN_FILENO);
-	ft_putstr_fd(line + csr->pos, STDIN_FILENO);
-	ft_putstr_fd("\033[u", STDIN_FILENO);
-	csr->max--;
-	csr->pos--;
+	{
+		ft_putstr_fd("\033[s", STDIN_FILENO);
+		ft_putstr_fd(*line + csr->pos, STDIN_FILENO);
+		ft_putstr_fd("\033[u", STDIN_FILENO);
+	}
+	tmp = *line;
+	*line = ft_strsub(tmp, 0, csr->pos);
+	ft_stradd(line, add);
+	if (csr->pos < csr->max)
+		ft_stradd(line, tmp + csr->pos);
+	free(tmp);
+	csr->max += len;
+	csr->pos += len;
 }

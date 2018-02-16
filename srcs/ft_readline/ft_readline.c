@@ -6,12 +6,11 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 08:15:29 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/16 22:03:18 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
-#include <termios.h>
 #include <stdlib.h>
 #include "libft.h"
 #include "ft_readline.h"
@@ -25,28 +24,47 @@
 ** call on stdin will respond at each keypress.
 */
 
-static int	set_term(int fd, int echo, const char *prompt)
+static int	rl_add_text(char *buff, char **line, t_cursor *csr)
 {
-	struct termios	t;
+	char			add[5];
+	unsigned int	idx;
 
-	if (tcgetattr(fd, &t))
-		return (FALSE);
-	if (!echo)
+	if (*buff == 27)
+		return (0);
+	idx = 0;
+	ft_bzero(add, sizeof(add));
+	while (*buff)
 	{
-		ft_putstr_fd(prompt, fd);
-		t.c_lflag &= ~(ICANON | ECHO | ISIG);
+		if (ft_isprint(*buff))
+		{
+			add[idx] = *buff;
+			idx++;
+		}
+		buff++;
 	}
-	else
-		t.c_lflag |= (ICANON | ECHO | ISIG);
-	tcsetattr(fd, TCSANOW, &t);
-	return (TRUE);
+	rl_line_add(line, add, csr);
+	return ((idx > 0));
 }
 
-static int	act_char(char *buff, char **line, const char *pr, t_cursor *csr)
+static int	rl_rm_text(char **line, char *buff, t_cursor *csr)
 {
-	if (rl_add_text(buff, *line, csr))
-		return (RL_ADD_ACT);
-	if (*buff == 4 || *buff == 3)
+	if (*buff == 127 && csr->pos > 0)
+	{
+		rl_line_rm(line, 1, csr);
+		return (TRUE);
+	}
+	return (FALSE);
+}
+
+static void	act_on_buff(char *buff, char **line, const char *pr, t_cursor *csr)
+{
+	if (rl_add_text(buff, line, csr))
+		return ;
+	if (rl_rm_text(line, buff, csr))
+		return ;
+	if (rl_csr_keys(buff, csr))
+		return ;
+	if (*buff == 4 || *buff == 3 || *buff == 21)
 		ft_strdel(line);
 	if (*buff == 3 || *buff == 21)
 		*line = ft_strnew(0);
@@ -54,71 +72,27 @@ static int	act_char(char *buff, char **line, const char *pr, t_cursor *csr)
 	{
 		ft_putstr_fd("\r\033[K", STDIN_FILENO);
 		ft_putstr_fd(pr, STDIN_FILENO);
+		return ;
 	}
-	if (*buff == '\n' || *buff == 4 || *buff == 3)
-	{
-		ft_putchar_fd('\n', STDIN_FILENO);
-		return (RL_QUIT_ACT);
-	}
-	if (rl_csr_keys(buff, csr))
-		return (RL_MOVE_ACT);
-	if (*buff == 127 && csr->pos > 0)
-	{
-		rl_rm_text(*line, csr);
-		return (RL_BACKSPACE_ACT);
-	}
-	if (*buff != '\t')
-		ft_putchar_fd('\a', STDIN_FILENO);
-	return (RL_DEFAULT_ACT);
-}
-
-static void	mod_line(char **line, char *buff, int act_ret, t_cursor *csr)
-{
-	char			*tmp;
-
-	tmp = *line;
-	(void)act_ret;
-	*line = ft_strnew(csr->max);
-	if (csr->pos > 0)
-		ft_strncat(*line, tmp, csr->pos - (act_ret != 4));
-	if (act_ret != 4)
-		ft_strcat(*line, buff);
-	if (csr->pos != csr->max)
-		ft_strcat(*line, tmp + csr->pos + ((act_ret == 4) ? 1 : -1));
-	(*line)[csr->max] = '\0';
-	free(tmp);
-}
-
-void		line_add(char **line, char *add, t_cursor *csr)
-{
-	char	*tmp;
-	size_t	len;
-
-	tmp = *line;
-	*line = ft_strjoin(*line, add);
-	free(tmp);
-	len = ft_strlen(add);
-	ft_putstr_fd(add, STDIN_FILENO);
-	csr->max += len;
-	csr->pos += len;
+	if (*buff == 4 || *buff == 3)
+		return ;
+	//ft_putchar_fd('\a', STDIN_FILENO);
 }
 
 char		*ft_readline(const char *prompt, char **env, t_history *hist)
 {
 	char			buff[5];
-	ssize_t			rb;
-	int				act_ret;
 	t_cursor		csr;
 	char			*ret;
 
-	if (!set_term(STDIN_FILENO, FALSE, prompt))
+	if (!rl_set_term(STDIN_FILENO, NO, prompt))
 		return (NULL);
 	ft_bzero(&csr, sizeof(t_cursor));
 	ft_bzero(buff, sizeof(buff));
 	ret = ft_strnew(0);
-	while ((rb = read(STDIN_FILENO, buff, 4)) > 0)
+	while (read(STDIN_FILENO, buff, 4))
 	{
-		act_ret = act_char(buff, &ret, prompt, &csr);
+		act_on_buff(buff, &ret, prompt, &csr);
 		if (rl_history_keys(&hist, buff, &ret))
 		{
 			ft_putstr_fd("\r\033[K", STDIN_FILENO);
@@ -129,12 +103,13 @@ char		*ft_readline(const char *prompt, char **env, t_history *hist)
 		}
 		if (*buff == '\t')
 			ac_line(&ret, &csr, prompt, env);
-		if (act_ret < 0)
+		if (*buff == '\n' || *buff == 4 || *buff == 3)
+		{
+			ft_putchar_fd('\n', STDIN_FILENO);
 			break ;
-		else if (act_ret != 2 && act_ret != 0)
-			mod_line(&ret, buff, act_ret, &csr);
+		}
 		ft_bzero(buff, sizeof(buff));
 	}
-	set_term(STDIN_FILENO, 1, prompt);
+	rl_set_term(STDIN_FILENO, YES, prompt);
 	return (ret);
 }
