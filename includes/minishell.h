@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/15 22:27:34 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/16 19:00:09 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@
 ** prompt
 */
 
-char			*get_prompt_from_str(char *s, char **env);
+char	*get_prompt_from_str(char *s, char **env);
 
 /*
 ** cmd parsing and exec

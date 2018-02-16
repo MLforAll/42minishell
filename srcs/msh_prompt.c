@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/15 21:41:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/15 22:44:51 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/16 18:58:09 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void	add_pwd(char **dest, int all, char **env)
 	else
 	{
 		home = get_env_var(env, "HOME");
-		path = ft_strdup((pwd && home && ft_strcmp(pwd, home) == 0) ? "~" : pwd);
+		path = ft_strdup((pwd && home && !ft_strcmp(pwd, home)) ? "~" : pwd);
 	}
 	if (!all)
 	{

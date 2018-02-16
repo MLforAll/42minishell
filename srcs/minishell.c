@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/15 22:38:41 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/16 18:59:54 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 
 int			exec_shell(const char *path, char ***env)
 {
-	char	*line;
-	int		fd;
+	char		*line;
+	int			fd;
 
 	fd = (!path) ? STDIN_FILENO : open(path, O_RDONLY);
 	if (fd == -1)
@@ -37,8 +37,8 @@ int			exec_shell(const char *path, char ***env)
 
 static void	launch_rc(char ***env)
 {
-	char	*home;
-	char	*rcpath;
+	char		*home;
+	char		*rcpath;
 
 	if (!(home = get_env_var(*env, "HOME")))
 		return ;
@@ -53,17 +53,18 @@ static void	launch_rc(char ***env)
 
 static char	*ishell_get_prompt(char **env)
 {
-	char			*envprompt;
+	char		*envprompt;
 
 	if ((envprompt = get_env_var(env, "MSH_PROMPT")))
 		return (get_prompt_from_str(envprompt, env));
-	return (get_prompt_from_str("\033[1;36m\\h:\033[1;33m\\W\033[0;39m \\u$ ", env));
+	return (get_prompt_from_str("\033[1;36m\\h:\033[1;33m\\W\033[0;39m \\u$ ", \
+								env));
 }
 
 static void	interactive_shell(char ***env)
 {
-	char	*line;
-	char	*prompt;
+	char		*line;
+	char		*prompt;
 	t_history	*hist;
 
 	line = NULL;
@@ -91,7 +92,7 @@ static void	interactive_shell(char ***env)
 
 int			main(int ac, char **av, char **environ)
 {
-	char	**env;
+	char		**env;
 
 	switch_signals(TRUE);
 	if (environ)
