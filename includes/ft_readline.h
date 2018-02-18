@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 17:46:30 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 08:52:51 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 10:46:22 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,12 @@ char			*ft_readline(const char *prompt, char **env);
 
 int				rl_csr_keys(char *buff, t_cursor *csr);
 int				rl_home_end_keys(char *buff, t_cursor *csr);
+
 void			rl_line_rm(char **line, size_t len, t_cursor *csr);
 void			rl_line_add(char **line, char *add, t_cursor *csr);
 int				rl_set_term(int fd, int echo, const char *prompt);
+int				rl_input_add_text(char *buff, char **line, t_cursor *csr);
+int				rl_input_rm_text(char **line, char *buff, t_cursor *csr);
 
 /*
 ** Autocompletion

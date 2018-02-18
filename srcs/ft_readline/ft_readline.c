@@ -6,12 +6,13 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 08:54:18 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 10:46:39 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
 #include "libft.h"
 #include "ft_readline.h"
 
@@ -23,45 +24,6 @@
 ** To accomplish that, the terminal is set in raw mode, so a read
 ** call on stdin will respond at each keypress.
 */
-
-static int	input_add_text(char *buff, char **line, t_cursor *csr)
-{
-	char				add[5];
-	unsigned int		idx;
-
-	if (*buff == 27)
-		return (0);
-	idx = 0;
-	ft_bzero(add, sizeof(add));
-	while (*buff)
-	{
-		if (ft_isprint(*buff))
-		{
-			add[idx] = *buff;
-			idx++;
-		}
-		buff++;
-	}
-	rl_line_add(line, add, csr);
-	return ((idx > 0));
-}
-
-static int	input_rm_text(char **line, char *buff, t_cursor *csr)
-{
-	if (*buff == 127 && csr->pos > 0)
-	{
-		rl_line_rm(line, 1, csr);
-		return (TRUE);
-	}
-	else if (ft_strcmp(buff, ESC_DELK) == 0 && csr->pos < csr->max)
-	{
-		ft_putstr_fd(ESC_RIGHTK, STDIN_FILENO);
-		csr->pos++;
-		rl_line_rm(line, 1, csr);
-		return (TRUE);
-	}
-	return (FALSE);
-}
 
 static void	act_keys(char **line, char *buff, char **env, t_readline *rl)
 {
@@ -94,10 +56,14 @@ static void	act_keys(char **line, char *buff, char **env, t_readline *rl)
 
 static void	act_on_buff(char *buff, char **line, t_readline *rl)
 {
-	if (input_add_text(buff, line, &rl->csr))
+	int					retval;
+
+	if (rl_input_add_text(buff, line, &rl->csr))
 		return ;
-	if (input_rm_text(line, buff, &rl->csr))
+	if ((retval = rl_input_rm_text(line, buff, &rl->csr)) == 1)
 		return ;
+	else if (retval == -1)
+		ft_putchar_fd('\a', STDIN_FILENO);
 	if (*buff == 4 || *buff == 3 || *buff == 21)
 		ft_strdel(line);
 	if (*buff == 3 || *buff == 21)
@@ -111,6 +77,28 @@ static void	act_on_buff(char *buff, char **line, t_readline *rl)
 	}
 	if (*buff == 4 || *buff == 3)
 		return ;
+}
+
+static void	print_end_newlines(char *line, const char *prompt)
+{
+	struct winsize		ws;
+	size_t				times;
+	char				*buff;
+
+	if (!line || !prompt)
+	{
+		ft_putchar_fd('\n', STDIN_FILENO);
+		return ;
+	}
+	if (ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) == -1)
+		return ;
+	times = (ft_strlen(line) + ft_strlen(prompt)) / ws.ws_col;
+	times += (times == 0);
+	if (!(buff = (char*)malloc(sizeof(char) * (times + 1))))
+		return ;
+	ft_memset(buff, '\n', times);
+	ft_putstr_fd(buff, STDIN_FILENO);
+	free(buff);
 }
 
 char		*ft_readline(const char *prompt, char **env)
@@ -135,7 +123,7 @@ char		*ft_readline(const char *prompt, char **env)
 			break ;
 		ft_bzero(buff, sizeof(buff));
 	}
-	ft_putchar_fd('\n', STDIN_FILENO);
+	print_end_newlines(ret, prompt);
 	rl_set_term(STDIN_FILENO, YES, prompt);
 	if (ret && *ret)
 		ft_histadd(&hist, ret);

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 09:00:42 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 10:46:31 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,51 @@ void	rl_line_add(char **line, char *add, t_cursor *csr)
 	free(tmp);
 	csr->max += len;
 	csr->pos += len;
+}
+
+int		rl_input_add_text(char *buff, char **line, t_cursor *csr)
+{
+	char				add[5];
+	unsigned int		idx;
+
+	if (*buff == 27)
+		return (0);
+	idx = 0;
+	ft_bzero(add, sizeof(add));
+	while (*buff)
+	{
+		if (ft_isprint(*buff))
+		{
+			add[idx] = *buff;
+			idx++;
+		}
+		buff++;
+	}
+	rl_line_add(line, add, csr);
+	return ((idx > 0));
+}
+
+int		rl_input_rm_text(char **line, char *buff, t_cursor *csr)
+{
+	int		keys[2];
+
+	keys[0] = (*buff == 127);
+	keys[1] = (ft_strcmp(buff, ESC_DELK) == 0);
+	if (keys[0] && csr->pos > 0)
+	{
+		rl_line_rm(line, 1, csr);
+		return (1);
+	}
+	else if (keys[0])
+		return (-1);
+	else if (keys[1] && csr->pos < csr->max)
+	{
+		ft_putstr_fd(ESC_RIGHTK, STDIN_FILENO);
+		csr->pos++;
+		rl_line_rm(line, 1, csr);
+		return (1);
+	}
+	else if (keys[1])
+		return (-1);
+	return (0);
 }
