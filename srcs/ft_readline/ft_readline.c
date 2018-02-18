@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 04:19:39 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 08:54:18 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@
 
 static int	input_add_text(char *buff, char **line, t_cursor *csr)
 {
-	char			add[5];
-	unsigned int	idx;
+	char				add[5];
+	unsigned int		idx;
 
 	if (*buff == 27)
 		return (0);
@@ -65,10 +65,10 @@ static int	input_rm_text(char **line, char *buff, t_cursor *csr)
 
 static void	act_keys(char **line, char *buff, char **env, t_readline *rl)
 {
-	int				rval;
-	unsigned int	idx;
-	static int		(*f[])(char *, t_cursor *) =
-		{&rl_csr_keys, &rl_home_end_keys, NULL};
+	int					rval;
+	unsigned int		idx;
+	static int			(*f[])(char *, t_cursor *) =
+	{&rl_csr_keys, &rl_home_end_keys, NULL};
 
 	if ((rval = rl_history_keys(&rl->hist, buff, line)) > 0)
 	{
@@ -113,16 +113,17 @@ static void	act_on_buff(char *buff, char **line, t_readline *rl)
 		return ;
 }
 
-char		*ft_readline(const char *prompt, char **env, t_history **hist)
+char		*ft_readline(const char *prompt, char **env)
 {
-	char			buff[5];
-	t_readline		rl;
-	char			*ret;
+	char				buff[5];
+	static t_history	*hist;
+	t_readline			rl;
+	char				*ret;
 
 	if (!rl_set_term(STDIN_FILENO, NO, prompt))
 		return (NULL);
 	ft_bzero(&rl.csr, sizeof(t_cursor));
-	rl.hist = (hist) ? *hist : NULL;
+	rl.hist = hist;
 	rl.prompt = prompt;
 	ft_bzero(buff, sizeof(buff));
 	ret = ft_strnew(0);
@@ -137,6 +138,6 @@ char		*ft_readline(const char *prompt, char **env, t_history **hist)
 	ft_putchar_fd('\n', STDIN_FILENO);
 	rl_set_term(STDIN_FILENO, YES, prompt);
 	if (ret && *ret)
-		ft_histadd(hist, ret);
+		ft_histadd(&hist, ret);
 	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/17 21:07:19 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 08:52:17 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,10 @@
 # define SH_ERR_TMARG		5
 # define SH_ERR_PERM		6
 # define SH_ERR_FORK		7
+# define SH_ERR_TMLNK		8
+# define SH_ERR_NOTDIR		9
+# define SH_ERR_NUMARG		10
+# define SH_ERR_INVID		11
 
 /*
 ** prompt
@@ -108,6 +112,7 @@ void	switch_signals(int ign);
 int		msh_err(int errc, const char *bltn, const char *path);
 int		msh_err_ret(int errc, const char *bltn, const char *path, int retv);
 void	msh_child_sighandler(int sigc);
+int		get_errcode_for_path(const char *path, int mode, int dir);
 
 /*
 ** lists

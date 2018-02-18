@@ -6,11 +6,12 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 21:23:18 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 06:59:07 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 08:48:18 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include <sys/stat.h>
 #include "minishell.h"
 
 static void	msh_puterr(int errc)
@@ -29,11 +30,19 @@ static void	msh_puterr(int errc)
 		ft_putendl_fd("Permission denied", STDERR_FILENO);
 	else if (errc == SH_ERR_FORK)
 		ft_putendl_fd("Fork failed", STDERR_FILENO);
+	else if (errc == SH_ERR_TMLNK)
+		ft_putendl_fd("Too many symbolic links", STDERR_FILENO);
+	else if (errc == SH_ERR_NOTDIR)
+		ft_putendl_fd("Not a directory", STDERR_FILENO);
+	else if (errc == SH_ERR_NUMARG)
+		ft_putendl_fd("numeric argument required", STDERR_FILENO);
+	else if (errc == SH_ERR_INVID)
+		ft_putendl_fd("not a valid identifier", STDERR_FILENO);
 	else
 		ft_putendl_fd("Undefined error", STDERR_FILENO);
 }
 
-static void	msh_prep_err(int errc, const char *bltn, const char *path)
+int			msh_err(int errc, const char *bltn, const char *path)
 {
 	ft_putstr_fd(SH_NAME, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
@@ -48,17 +57,12 @@ static void	msh_prep_err(int errc, const char *bltn, const char *path)
 		ft_putstr_fd((errc == SH_ERR_NOSET) ? " " : ": ", STDERR_FILENO);
 	}
 	msh_puterr(errc);
-}
-
-int			msh_err(int errc, const char *bltn, const char *path)
-{
-	msh_prep_err(errc, bltn, path);
 	return (1);
 }
 
 int			msh_err_ret(int errc, const char *bltn, const char *path, int retv)
 {
-	msh_prep_err(errc, bltn, path);
+	msh_err(errc, bltn, path);
 	return (retv);
 }
 
@@ -80,4 +84,22 @@ void		msh_child_sighandler(int sigc)
 	ft_putstr_fd(": ", STDIN_FILENO);
 	ft_putnbr_fd(sigc, STDIN_FILENO);
 	ft_putchar_fd('\n', STDIN_FILENO);
+}
+
+int			get_errcode_for_path(const char *path, int mode, int dir)
+{
+	struct stat	st;
+
+	if (access(path, F_OK) == -1)
+		return ((lstat(path, &st) == 0) ? SH_ERR_TMLNK : SH_ERR_NOENT);
+	if (dir)
+	{
+		if (stat(path, &st) == -1)
+			return (SH_ERR_UNDEFINED);
+		if (!S_ISDIR(st.st_mode))
+			return (SH_ERR_NOTDIR);
+	}
+	if (access(path, mode) == -1)
+		return (SH_ERR_PERM);
+	return (SH_ERR_UNDEFINED);
 }

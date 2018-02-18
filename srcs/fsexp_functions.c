@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 21:26:34 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/16 21:29:24 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 08:57:12 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ char		*search_dir_for_file(const char *d_path, const char *name)
 			break ;
 		ft_strdel(&elem_path);
 	}
-	//free(dird);
 	closedir(dirp);
 	return (elem_path);
 }

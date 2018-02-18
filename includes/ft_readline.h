@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 17:46:30 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 04:12:04 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 08:52:51 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ typedef struct	s_readline
 ** Functions
 */
 
-void			line_add(char **line, char *add, t_cursor *csr);
-char			*ft_readline(const char *prompt, char **env, t_history **hist);
+char			*ft_readline(const char *prompt, char **env);
 
 /*
 ** Utilities functions

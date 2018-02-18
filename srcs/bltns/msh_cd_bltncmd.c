@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 06:43:00 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 07:56:31 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ int			cd_bltn(int ac, char **av, char ***env, int outfd)
 	if (chdir(path_cd) == -1)
 	{
 		ft_strdel(&bkp);
-		return (msh_err(access(path_cd, F_OK) == -1 ? SH_ERR_NOENT \
-									: SH_ERR_PERM, av[0], path_cd));
+		return (msh_err(get_errcode_for_path(path_cd, X_OK, YES), \
+				av[0], path_cd));
 	}
 	chg_cd_env(env, bkp, YES);
 	free(bkp);

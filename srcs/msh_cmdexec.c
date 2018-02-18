@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 04:38:05 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 08:16:50 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,15 @@
 static int	cmd_chk(char *path)
 {
 	int		noent_msg;
+	int		code;
 
 	if (!path)
 		return (SH_ERR_UNDEFINED);
 	noent_msg = ft_strchr(path, '/') ? SH_ERR_NOENT : SH_ERR_NOCMD;
-	if (access(path, F_OK) == -1)
+	if ((code = get_errcode_for_path(path, X_OK, NO)) == SH_ERR_NOENT)
 		return (noent_msg);
-	if (access(path, X_OK) == -1)
-		return (SH_ERR_PERM);
+	else if (code != SH_ERR_UNDEFINED)
+		return (code);
 	return (-1);
 }
 
@@ -46,7 +47,7 @@ static int	exec_bincmd(t_cmd *cmd, char ***env)
 		switch_signals(FALSE);
 		set_env_var(env, "_", cmd->c_path);
 		execve(cmd->c_path, cmd->c_argv, *env);
-		exit(exec_shell(cmd->c_path, env) ? 0 : 127);
+		exit(exec_shell(cmd->c_path, env) == EXIT_SUCCESS ? EXIT_SUCCESS : 127);
 	}
 	if (cmd->next)
 		return (EXIT_SUCCESS);
