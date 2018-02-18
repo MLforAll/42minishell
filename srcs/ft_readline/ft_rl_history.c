@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 07:11:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/16 20:26:30 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 04:19:41 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,18 @@ t_history	*ft_histnew(char *line)
 void		ft_histadd(t_history **headref, char *line)
 {
 	t_history	*new;
-	t_history	*bak;
 
 	if (!headref || !line || !(new = ft_histnew(line)))
 		return ;
-	bak = *headref;
-	if (bak)
+	if (*headref)
 	{
-		bak->prev = new;
-		new->next = bak;
+		ft_histdelone(headref);
+		(*headref)->prev = new;
+		new->next = *headref;
 	}
-	*headref = new;
+	*headref = ft_histnew("");
+	new->prev = *headref;
+	(*headref)->next = new;
 }
 
 void		ft_histdelone(t_history **hist)
@@ -47,6 +48,8 @@ void		ft_histdelone(t_history **hist)
 	if (!hist || !*hist)
 		return ;
 	bak = (*hist)->next;
+	if ((*hist)->prev)
+		(*hist)->prev->next = (*hist)->next;
 	free((*hist)->line);
 	free(*hist);
 	*hist = bak;
@@ -67,23 +70,28 @@ void		ft_histdel(t_history **headref)
 int			rl_history_keys(t_history **history, char *buff, char **line)
 {
 	int		ret;
+	int		keys[2];
 
+	keys[0] = (ft_strcmp("\033[A", buff) == 0);
+	keys[1] = (ft_strcmp("\033[B", buff) == 0);
+	if (!keys[0] && !keys[1])
+		return (0);
 	if (!*history)
-		return (FALSE);
-	ret = FALSE;
-	if (ft_strcmp("\033[A", buff) == 0 && (*history)->next)
+		return (-1);
+	ret = -1;
+	if (keys[0] && (*history)->next)
 	{
 		*history = (*history)->next;
-		ret = TRUE;
+		ret = 1;
 	}
-	if (ft_strcmp("\033[B", buff) == 0 && (*history)->prev)
+	if (keys[1] && (*history)->prev)
 	{
 		*history = (*history)->prev;
-		ret = TRUE;
+		ret = 1;
 	}
-	if (!ret)
-		return (FALSE);
+	if (ret == -1)
+		return (-1);
 	free(*line);
 	*line = ft_strdup((*history)->line);
-	return (TRUE);
+	return (1);
 }

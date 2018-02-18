@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 07:03:36 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 04:38:05 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,15 +80,15 @@ int			exec_cmds(char *line, char ***env)
 	int		ret;
 	t_cmd	*cmdp;
 	t_cmd	*cbw;
-	char	**cmds;
-	char	**bw;
+	t_list	*cmds;
+	t_list	*bw;
 
-	cmds = ft_strsplit(line, ';');
+	cmds = ft_splitquote(line, ";", '"');
 	bw = cmds;
 	ret = EXIT_SUCCESS;
-	while (*bw)
+	while (bw)
 	{
-		cmdp = interpret_cmd(*bw, *env);
+		cmdp = interpret_cmd(bw->content, *env);
 		cbw = cmdp;
 		while (cbw)
 		{
@@ -96,9 +96,9 @@ int			exec_cmds(char *line, char ***env)
 				break ;
 			cbw = cbw->next;
 		}
-		bw++;
+		bw = bw->next;
 		ft_cmddel(&cmdp);
 	}
-	ft_tabfree(&cmds);
+	ft_lstdel(&cmds, &free_tlist);
 	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 17:46:30 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/16 20:21:27 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 04:12:04 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,17 @@
 # include "libft.h"
 
 /*
-** BUFF_SIZE of ft_readline
-** 25/01/18: to be used later
+** ESC Sequences Codes
 */
 
-# define RL_BUFF_SIZE		32
-
-/*
-** ft_readline codes
-*/
-
-# define RL_BACKSPACE_ACT	4
-# define RL_ADD_ACT			3
-# define RL_DEFAULT_ACT		0
-# define RL_MOVE_ACT		2
-# define RL_QUIT_ACT		-1
+# define ESC_LEFTK	"\033[D"
+# define ESC_RIGHTK	"\033[C"
+# define ESC_HOMEK	"\033[H"
+# define ESC_ENDK	"\033[F"
+# define ESC_DELK	"\033[3~"
+# define ESC_CLRL	"\033[K"
+# define ESC_SAVEP	"\033[s"
+# define ESC_RESTP	"\033[u"
 
 /*
 ** struct for cursor mgmt
@@ -54,18 +50,29 @@ typedef struct	s_history
 }				t_history;
 
 /*
+** struct for moving around data
+*/
+
+typedef struct	s_readline
+{
+	const char	*prompt;
+	t_cursor	csr;
+	t_history	*hist;
+}				t_readline;
+
+/*
 ** Functions
 */
 
 void			line_add(char **line, char *add, t_cursor *csr);
-char			*ft_readline(const char *prompt, char **env, t_history *hist);
+char			*ft_readline(const char *prompt, char **env, t_history **hist);
 
 /*
 ** Utilities functions
 */
 
 int				rl_csr_keys(char *buff, t_cursor *csr);
-int				rl_history_keys(t_history **history, char *buff, char **line);
+int				rl_home_end_keys(char *buff, t_cursor *csr);
 void			rl_line_rm(char **line, size_t len, t_cursor *csr);
 void			rl_line_add(char **line, char *add, t_cursor *csr);
 int				rl_set_term(int fd, int echo, const char *prompt);
@@ -75,6 +82,7 @@ int				rl_set_term(int fd, int echo, const char *prompt);
 */
 
 void			ac_line(char **line, t_cursor *csr, const char *pr, char **env);
+t_list			*get_ac_result(char *line, char *region, char **env);
 
 /*
 ** History
@@ -84,11 +92,6 @@ t_history		*ft_histnew(char *line);
 void			ft_histadd(t_history **headref, char *line);
 void			ft_histdelone(t_history	**hist);
 void			ft_histdel(t_history **headref);
-
-/*
-** Autocompletion Utilities functions
-*/
-
-t_list			*get_ac_result(char *line, char *region, char **env);
+int				rl_history_keys(t_history **history, char *buff, char **line);
 
 #endif

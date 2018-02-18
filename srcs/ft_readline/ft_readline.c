@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/16 22:03:18 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 04:19:39 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 ** call on stdin will respond at each keypress.
 */
 
-static int	rl_add_text(char *buff, char **line, t_cursor *csr)
+static int	input_add_text(char *buff, char **line, t_cursor *csr)
 {
 	char			add[5];
 	unsigned int	idx;
@@ -46,23 +46,57 @@ static int	rl_add_text(char *buff, char **line, t_cursor *csr)
 	return ((idx > 0));
 }
 
-static int	rl_rm_text(char **line, char *buff, t_cursor *csr)
+static int	input_rm_text(char **line, char *buff, t_cursor *csr)
 {
 	if (*buff == 127 && csr->pos > 0)
 	{
 		rl_line_rm(line, 1, csr);
 		return (TRUE);
 	}
+	else if (ft_strcmp(buff, ESC_DELK) == 0 && csr->pos < csr->max)
+	{
+		ft_putstr_fd(ESC_RIGHTK, STDIN_FILENO);
+		csr->pos++;
+		rl_line_rm(line, 1, csr);
+		return (TRUE);
+	}
 	return (FALSE);
 }
 
-static void	act_on_buff(char *buff, char **line, const char *pr, t_cursor *csr)
+static void	act_keys(char **line, char *buff, char **env, t_readline *rl)
 {
-	if (rl_add_text(buff, line, csr))
+	int				rval;
+	unsigned int	idx;
+	static int		(*f[])(char *, t_cursor *) =
+		{&rl_csr_keys, &rl_home_end_keys, NULL};
+
+	if ((rval = rl_history_keys(&rl->hist, buff, line)) > 0)
+	{
+		ft_putstr_fd("\r\033[K", STDIN_FILENO);
+		ft_putstr_fd(rl->prompt, STDIN_FILENO);
+		ft_putstr_fd(*line, STDIN_FILENO);
+		rl->csr.max = ft_strlen(*line);
+		rl->csr.pos = rl->csr.max;
+	}
+	else if (rval == -1)
+		ft_putchar_fd('\a', STDIN_FILENO);
+	idx = -1;
+	while (f[++idx])
+	{
+		if ((rval = f[idx](buff, &rl->csr)) > 0)
+			return ;
+		else if (rval == -1)
+			ft_putchar_fd('\a', STDIN_FILENO);
+	}
+	if (*buff == '\t')
+		ac_line(line, &rl->csr, rl->prompt, env);
+}
+
+static void	act_on_buff(char *buff, char **line, t_readline *rl)
+{
+	if (input_add_text(buff, line, &rl->csr))
 		return ;
-	if (rl_rm_text(line, buff, csr))
-		return ;
-	if (rl_csr_keys(buff, csr))
+	if (input_rm_text(line, buff, &rl->csr))
 		return ;
 	if (*buff == 4 || *buff == 3 || *buff == 21)
 		ft_strdel(line);
@@ -71,45 +105,38 @@ static void	act_on_buff(char *buff, char **line, const char *pr, t_cursor *csr)
 	if (*buff == 21)
 	{
 		ft_putstr_fd("\r\033[K", STDIN_FILENO);
-		ft_putstr_fd(pr, STDIN_FILENO);
+		ft_putstr_fd(rl->prompt, STDIN_FILENO);
+		ft_bzero(&rl->csr, sizeof(t_cursor));
 		return ;
 	}
 	if (*buff == 4 || *buff == 3)
 		return ;
-	//ft_putchar_fd('\a', STDIN_FILENO);
 }
 
-char		*ft_readline(const char *prompt, char **env, t_history *hist)
+char		*ft_readline(const char *prompt, char **env, t_history **hist)
 {
 	char			buff[5];
-	t_cursor		csr;
+	t_readline		rl;
 	char			*ret;
 
 	if (!rl_set_term(STDIN_FILENO, NO, prompt))
 		return (NULL);
-	ft_bzero(&csr, sizeof(t_cursor));
+	ft_bzero(&rl.csr, sizeof(t_cursor));
+	rl.hist = (hist) ? *hist : NULL;
+	rl.prompt = prompt;
 	ft_bzero(buff, sizeof(buff));
 	ret = ft_strnew(0);
-	while (read(STDIN_FILENO, buff, 4))
+	while (read(STDIN_FILENO, buff, 4) > 0)
 	{
-		act_on_buff(buff, &ret, prompt, &csr);
-		if (rl_history_keys(&hist, buff, &ret))
-		{
-			ft_putstr_fd("\r\033[K", STDIN_FILENO);
-			ft_putstr_fd(prompt, STDIN_FILENO);
-			ft_putstr_fd(ret, STDIN_FILENO);
-			csr.max = ft_strlen(ret);
-			csr.pos = csr.max;
-		}
-		if (*buff == '\t')
-			ac_line(&ret, &csr, prompt, env);
+		act_keys(&ret, buff, env, &rl);
+		act_on_buff(buff, &ret, &rl);
 		if (*buff == '\n' || *buff == 4 || *buff == 3)
-		{
-			ft_putchar_fd('\n', STDIN_FILENO);
 			break ;
-		}
 		ft_bzero(buff, sizeof(buff));
 	}
+	ft_putchar_fd('\n', STDIN_FILENO);
 	rl_set_term(STDIN_FILENO, YES, prompt);
+	if (ret && *ret)
+		ft_histadd(hist, ret);
 	return (ret);
 }

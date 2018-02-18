@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 06:42:08 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 04:49:07 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,26 +59,45 @@ char		*get_cmd_path(char *line_cmd, char **env)
 	return ((!ret) ? line_cmd : ret);
 }
 
+static char	**get_cmd_argv(char *s)
+{
+	char	**ret;
+	t_list	*argvlst;
+	t_list	*bw;
+
+	if (!(argvlst = ft_splitquote(s, "\t ", '"')))
+		return (NULL);
+	bw = argvlst;
+	while (bw)
+	{
+		ft_strrmc((char**)&bw->content, '"');
+		bw = bw->next;
+	}
+	ret = ft_ltot(argvlst);
+	ft_lstdel(&argvlst, &free_tlist);
+	return (ret);
+}
+
 t_cmd		*interpret_cmd(char *cline, char **env)
 {
 	t_cmd	*ret;
 	t_cmd	*new;
-	char	**psplit;
-	char	**bw;
+	t_list	*psplit;
+	t_list	*bw;
 
 	ret = NULL;
-	psplit = ft_strsplit(cline, '|');
+	psplit = ft_splitquote(cline, "|", '"');
 	bw = psplit;
-	while (*bw)
+	while (bw)
 	{
 		new = ft_cmdnew();
-		new->c_argv = ft_strsplit(*bw, ' ');
+		new->c_argv = get_cmd_argv(bw->content);
 		fill_bltn(new, *new->c_argv);
 		new->c_path = (!new->builtin) ? get_cmd_path(*new->c_argv, env) : NULL;
 		pipe(new->c_pfd);
 		ft_cmdpush(&ret, new);
-		bw++;
+		bw = bw->next;
 	}
-	ft_tabfree(&psplit);
+	ft_lstdel(&psplit, &free_tlist);
 	return (ret);
 }

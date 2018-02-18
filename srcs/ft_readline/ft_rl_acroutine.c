@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/08 23:12:06 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/16 21:57:27 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 03:11:55 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ static char		*get_highest_common(t_list *lst)
 	size_t			len;
 	size_t			new;
 
-	first = TRUE;
-	len = 0;
 	if (!lst)
 		return (NULL);
+	first = TRUE;
+	len = 0;
 	while (lst->next)
 	{
 		new = 0;
@@ -85,7 +85,9 @@ void			ac_line(char **line, t_cursor *csr, const char *pr, char **env)
 		rl_line_add(line, diff, csr);
 	else if (res && res->next)
 		show_choices(&res, pr, *line);
-	if (res &&base && base == res->content && res->content_size != DT_LNK)
+	if ((res && res->next) || !res)
+		ft_putchar_fd('\a', STDIN_FILENO);
+	if (res && base && base == res->content && res->content_size != DT_LNK)
 		rl_line_add(line, (res->content_size == DT_DIR) ? "/" : " ", csr);
 	if (base && base != res->content)
 		ft_strdel(&base);

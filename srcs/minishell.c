@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/16 18:59:54 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 01:37:39 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,7 @@ static void	interactive_shell(char ***env)
 	while (42)
 	{
 		prompt = ishell_get_prompt(*env);
-		line = ft_readline(prompt, *env, hist);
-		if (line && *line)
-		{
-			ft_histdelone(&hist);
-			ft_histadd(&hist, line);
-			ft_histadd(&hist, "");
-		}
+		line = ft_readline(prompt, *env, &hist);
 		ft_strdel(&prompt);
 		if (!line)
 			break ;
@@ -95,18 +89,12 @@ int			main(int ac, char **av, char **environ)
 	char		**env;
 
 	switch_signals(TRUE);
-	if (environ)
-		env = ft_tabdup((const char**)environ);
-	else
-	{
-		env = (char**)malloc(sizeof(char*));
-		*env = NULL;
-	}
+	env = (environ) ? ft_tabdup((const char**)environ) : ft_tabnew();
 	set_env_var(&env, "SHELL", av[0]);
 	if (!get_env_var(env, "PATH"))
 		set_env_var(&env, "PATH", SH_DEFAULT_PATH);
 	if (ac > 1 || !ft_isatty(STDIN_FILENO))
-		exec_shell(av[1], &env);
+		exec_shell((ac > 1) ? av[1] : NULL, &env);
 	else
 		interactive_shell(&env);
 	ft_tabfree(&env);
