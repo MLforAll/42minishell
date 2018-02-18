@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 01:37:39 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/18 04:53:46 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ static char	*ishell_get_prompt(char **env)
 
 	if ((envprompt = get_env_var(env, "MSH_PROMPT")))
 		return (get_prompt_from_str(envprompt, env));
-	return (get_prompt_from_str("\033[1;36m\\h:\033[1;33m\\W\033[0;39m \\u$ ", \
-								env));
+	return (get_prompt_from_str("\\u:\\W$ ", env));
 }
 
 static void	interactive_shell(char ***env)
