@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 22:31:45 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 06:57:53 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/20 03:58:11 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char			*get_env_var(char **env, const char *var)
 {
 	char	*ret;
 
-	if (!env)
+	if (!env || !var)
 		return (NULL);
 	while (*env)
 	{
@@ -28,12 +28,12 @@ char			*get_env_var(char **env, const char *var)
 	return (NULL);
 }
 
-static int		chg_env_var(char **env, const char *var, char *new)
+char			*chg_env_var(char **env, const char *var, char *new)
 {
 	char	*tmp;
 
 	if (!env)
-		return (FALSE);
+		return (NULL);
 	while (*env)
 	{
 		if ((tmp = ft_strstart(*env, (char*)var)) && *tmp == '=')
@@ -41,23 +41,26 @@ static int		chg_env_var(char **env, const char *var, char *new)
 		env++;
 	}
 	if (!*env)
-		return (FALSE);
+		return (NULL);
 	ft_strdel(env);
 	*env = ft_strnew(ft_strlen(var) + ft_strlen(new) + 1);
 	ft_strcpy(*env, var);
 	ft_strcat(*env, "=");
 	ft_strcat(*env, new);
-	return (TRUE);
+	return (*env);
 }
 
-void			set_env_var(char ***env, const char *var, char *value)
+char			*set_env_var(char ***env, const char *var, char *value)
 {
+	char	*ret;
 	char	**old;
 	char	*new_entry[2];
 	char	entry_str[ft_strlen(var) + ft_strlen(value) + 2];
 
-	if (chg_env_var(*env, var, value))
-		return ;
+	if (!env || !var || !value)
+		return (NULL);
+	if ((ret = chg_env_var(*env, var, value)))
+		return (ret);
 	ft_strcpy(entry_str, var);
 	ft_strcat(entry_str, "=");
 	ft_strcat(entry_str, value);
@@ -66,21 +69,24 @@ void			set_env_var(char ***env, const char *var, char *value)
 	old = *env;
 	*env = ft_tabjoin((const char**)*env, (const char**)new_entry);
 	ft_tabfree(&old);
+	return ((**env) ? (*env)[ft_tablen((const char**)*env) - 1] : NULL);
 }
 
-void			set_env_from_str(char ***env, char *str)
+char			*set_env_from_str(char ***env, char *str)
 {
 	char	*eq;
 	char	*var;
 	char	*value;
+	char	*ret;
 
-	if (!(eq = ft_strchr(str, '=')))
-		return ;
+	if (!env || !str || !(eq = ft_strchr(str, '=')))
+		return (NULL);
 	var = ft_strnew(eq - str);
 	ft_strncpy(var, str, eq - str);
 	value = eq + 1;
-	set_env_var(env, (const char*)var, value);
+	ret = set_env_var(env, (const char*)var, value);
 	ft_strdel(&var);
+	return (ret);
 }
 
 void			del_env_var(char ***env, const char *var)
@@ -90,8 +96,11 @@ void			del_env_var(char ***env, const char *var)
 	char	**bw;
 	char	**bwn;
 
-	new_env = (char**)malloc(sizeof(char*) * \
-		(ft_tablen((const char**)*env) + 1));
+	if (!env || !var)
+		return ;
+	if (!(new_env = (char**)malloc(sizeof(char*) * \
+		(ft_tablen((const char**)*env) + 1))))
+		return ;
 	bwn = new_env;
 	bw = *env;
 	while (*bw)

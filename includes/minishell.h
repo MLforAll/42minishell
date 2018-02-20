@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 08:52:17 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/20 03:56:46 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,24 +49,30 @@
 char	*get_prompt_from_str(char *s, char **env);
 
 /*
-** cmd parsing and exec
+** cmd parsing
+*/
+
+char	*get_cmd_path(char *line_cmd, char **env);
+t_list	*ft_splitquote(char *s, char *charset, char qc);
+t_cmd	*interpret_cmd(char *cline, char **env);
+
+/*
+** cmd exec
 */
 
 int		exec_shell(const char *path, char ***env);
-
 int		exec_cmd(t_cmd *cmd, char ***env);
 int		exec_cmds(char *line, char ***env);
-
-char	*get_cmd_path(char *line_cmd, char **env);
-t_cmd	*interpret_cmd(char *cline, char **env);
 
 /*
 ** builtins
 */
 
 int		echo_bltn(int ac, char **av, char ***env, int outfd);
-int		cd_bltn(int ac, char **av, char ***env, int outfd);
 int		exit_bltn(int ac, char **av, char ***env, int outfd);
+
+char	*getset_pwd_env(char ***env);
+int		cd_bltn(int ac, char **av, char ***env, int outfd);
 
 int		env_bltn(int ac, char **av, char ***env, int outfd);
 int		setenv_bltn(int ac, char **av, char ***env, int outfd);
@@ -85,8 +91,9 @@ t_list	*search_files_begin(const char *f_path, const char *s_dir, int exec);
 */
 
 char	*get_env_var(char **env, const char *var);
-void	set_env_var(char ***env, const char *var, char *value);
-void	set_env_from_str(char ***env, char *str);
+char	*chg_env_var(char **env, const char *var, char *new);
+char	*set_env_var(char ***env, const char *var, char *value);
+char	*set_env_from_str(char ***env, char *str);
 void	del_env_var(char ***env, const char *var);
 
 /*

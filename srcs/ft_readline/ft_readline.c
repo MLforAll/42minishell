@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 10:46:39 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/20 02:55:08 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ static void	print_end_newlines(char *line, const char *prompt)
 	if (!(buff = (char*)malloc(sizeof(char) * (times + 1))))
 		return ;
 	ft_memset(buff, '\n', times);
+	buff[times] = '\0';
 	ft_putstr_fd(buff, STDIN_FILENO);
 	free(buff);
 }

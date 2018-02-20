@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/30 23:00:55 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 08:56:54 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/20 03:56:18 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,7 @@ int			env_bltn(int ac, char **av, char ***env, int outfd)
 	idx = 1;
 	if ((opts = get_env_opts(ac, av, &idx)) < 0)
 		return (usage(-opts));
-	new_env = (opts & 0x1) ? ft_tabnew() : *env;
-	if (ac > 1)
-		new_env = ft_tabdup((const char**)*env);
+	new_env = (opts & 0x1) ? ft_tabnew() : ft_tabdup((const char**)*env);
 	while (ac > 1 && av[idx])
 	{
 		if (!ft_strchr(av[idx], '='))
@@ -99,7 +97,6 @@ int			env_bltn(int ac, char **av, char ***env, int outfd)
 	}
 	(!av[idx]) ? ft_puttab_fd(new_env, NULL, outfd) \
 		: (exval = launch_utility(av, idx, new_env, *env));
-	if (new_env != *env)
-		ft_tabfree(&new_env);
+	ft_tabfree(&new_env);
 	return (exval);
 }

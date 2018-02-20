@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 07:11:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 04:19:41 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/20 04:52:46 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void		ft_histdelone(t_history **hist)
 	if (!hist || !*hist)
 		return ;
 	bak = (*hist)->next;
-	if ((*hist)->prev)
+	if ((*hist)->prev && (*hist)->next)
 		(*hist)->prev->next = (*hist)->next;
 	free((*hist)->line);
 	free(*hist);

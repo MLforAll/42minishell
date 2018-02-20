@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/02/18 09:02:58 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/02/20 02:47:06 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,8 @@ SRCFILES = minishell.c \
 	ft_readline/ft_rl_acroutine.c \
 	ft_readline/ft_rl_autocompletion.c \
 	lists/lst_support.c \
-	lists/tlist_support.c
+	lists/tlist_support.c \
+	ft_splitquote.c
 SRCS = $(addprefix $(SRCDIR)/, $(SRCFILES))
 NSRC = $(shell echo "$(SRCFILES)" | awk '{print NF}')
 CSRC = 1

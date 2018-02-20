@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 09:04:06 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/20 03:57:57 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,10 @@ int			main(int ac, char **av, char **environ)
 	switch_signals(TRUE);
 	env = (environ) ? ft_tabdup((const char**)environ) : ft_tabnew();
 	set_env_var(&env, "SHELL", av[0]);
+	getset_pwd_env(&env);
 	if (!get_env_var(env, "PATH"))
 		set_env_var(&env, "PATH", SH_DEFAULT_PATH);
+	set_env_var(&env, "_/", "");
 	if (ac > 1 || !ft_isatty(STDIN_FILENO))
 		exval = exec_shell((ac > 1) ? av[1] : NULL, &env);
 	else

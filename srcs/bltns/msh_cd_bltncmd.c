@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 07:56:31 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/20 04:55:20 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,75 +14,122 @@
 #include <unistd.h>
 #include "minishell.h"
 
-static void	chg_cd_env(char ***env, char *bkp, int old)
+static void		chg_ret(char **ret, char **last, char *path, unsigned int idx)
 {
-	char	*pathname;
-	char	*tmp;
+	char			*rchr;
+	char			*tmp;
 
-	if ((old && !bkp) || (!old && bkp && ft_strcmp(bkp, ".") == 0))
-		return ;
-	tmp = get_env_var(*env, "PWD");
-	if (old)
-		pathname = (tmp) ? tmp : bkp;
-	else if (bkp && tmp && *bkp != '/')
+	if (!path)
 	{
-		if (ft_strcmp(bkp, "..") == 0)
-			pathname = get_basedir(tmp);
-		else
+		if ((rchr = ft_strrchr(*ret, '/')))
 		{
-			pathname = ft_strnew(ft_strlen(tmp) + ft_strlen(bkp) + 1);
-			ft_strcpy(pathname, tmp);
-			ft_strcat(pathname, "/");
-			ft_strcat(pathname, bkp);
+			if (!(tmp = ft_strsub(*ret, 0, rchr - *ret)))
+				return ;
+			free(*ret);
+			*ret = tmp;
 		}
+		*last += ((*last)[2] != '\0') + 2;
+		return ;
 	}
-	else
-		pathname = getcwd(NULL, 0);
-	set_env_var(env, old ? "OLDPWD" : "PWD", pathname);
-	if (pathname != tmp && pathname)
-		free(pathname);
+	if (**last || *path == '/')
+		ft_stradd(ret, "/");
+	ft_strnadd(ret, *last, idx);
 }
 
-static char	*get_cd_path(int ac, char **av, char **env, int outfd)
+static char		*get_newpath(char *curr, char *path)
 {
-	char	*ret;
-	char	*oldpwd;
+	char			*ret;
+	char			*last;
+	unsigned int	idx;
 
-	oldpwd = NULL;
+	if (!curr || !path || !(ret = ft_strdup((*path == '/') ? "" : curr)))
+		return (NULL);
+	last = path + (*path == '/');
+	idx = 0;
+	while (last[idx])
+	{
+		if (idx == 0 && ft_strncmp(last, ".", ft_strclen(last, '/')) == 0)
+			last += (last[1] != '\0') + 1;
+		else if (idx == 0 && ft_strncmp(last, "..", ft_strclen(last, '/')) == 0)
+			chg_ret(&ret, &last, NULL, idx);
+		else if (last[idx] == '/')
+		{
+			chg_ret(&ret, &last, path, idx);
+			last = &last[idx + 1];
+			idx = 0;
+		}
+		else
+			idx++;
+	}
+	chg_ret(&ret, &last, path, idx);
+	return (ret);
+}
+
+static char		*get_cd_path(int ac, char **av, char *pwd, char **env)
+{
+	char			*ret;
+	char			*oldpwd;
+
+	ret = NULL;
 	if (ac == 1)
 	{
 		if (!(ret = get_env_var(env, "HOME")))
 			msh_err(SH_ERR_NOSET, av[0], "HOME");
+		return (ft_strdup(ret));
 	}
-	else
-		ret = av[1];
-	if (ac > 1 && ft_strcmp(av[1], "-") == 0)
+	else if (ft_strcmp(av[1], "-") == 0)
 	{
 		if (!(oldpwd = get_env_var(env, "OLDPWD")))
 			msh_err(SH_ERR_NOSET, av[0], "OLDPWD");
-		ret = oldpwd;
+		else
+			return (ft_strdup(oldpwd));
 	}
-	if (ret && ret == oldpwd)
-		ft_putendl_fd(ret, outfd);
+	else if (ft_strcmp(av[1], "-P") != 0)
+		return (get_newpath(pwd, av[1]));
+	else if (ac == 3)
+		return (av[2]);
+	else
+		ret = av[1];
+	return (ret);
+}
+
+char		*getset_pwd_env(char ***env)
+{
+	char			*ret;
+	char			*pwd;
+
+	if ((ret = get_env_var(*env, "PWD")))
+		return (ret);
+	if (!(pwd = getcwd(NULL, 0)))
+		return (NULL);
+	ret = set_env_var(env, "PWD", pwd);
+	free(pwd);
 	return (ret);
 }
 
 int			cd_bltn(int ac, char **av, char ***env, int outfd)
 {
-	char	*path_cd;
-	char	*bkp;
+	char			*path_cd;
+	char			*pwd;
 
-	if (!(path_cd = get_cd_path(ac, av, *env, outfd)))
+	if (!(pwd = getset_pwd_env(env)))
+	{
+		ft_putendl_fd("getset_pwd_env: getcwd failed!", STDERR_FILENO);
 		return (EXIT_FAILURE);
-	bkp = getcwd(NULL, 0);
+	}
+	if (!(path_cd = get_cd_path(ac, av, pwd, *env)))
+		return (EXIT_FAILURE);
+	if (ac > 1 && ft_strcmp(av[1], "-") == 0)
+		ft_putendl_fd(path_cd, outfd);
 	if (chdir(path_cd) == -1)
 	{
-		ft_strdel(&bkp);
-		return (msh_err(get_errcode_for_path(path_cd, X_OK, YES), \
-				av[0], path_cd));
+		msh_err(get_errcode_for_path(path_cd, X_OK, YES), av[0], path_cd);
+		return (EXIT_FAILURE);
 	}
-	chg_cd_env(env, bkp, YES);
-	free(bkp);
-	chg_cd_env(env, path_cd, NO);
+	set_env_var(env, "OLDPWD", pwd);
+	if (ac > 1 && ft_strcmp(av[1], "-P") == 0)
+		path_cd = getcwd(NULL, 0);
+	set_env_var(env, "PWD", path_cd);
+	free(path_cd);
 	return (EXIT_SUCCESS);
 }
