@@ -21,6 +21,8 @@ char		*get_basedir(const char *f_path)
 	char			*rchr_ret;
 	size_t			ret_len;
 
+	if (!f_path)
+		return (NULL);
 	if (!(rchr_ret = ft_strrchr(f_path, '/')))
 		return (ft_strdup("."));
 	if ((ret_len = rchr_ret - f_path) == 0)
@@ -78,14 +80,9 @@ static int	is_exec(const char *d_path, char *name, int folder)
 		|| st.st_mode & S_IXGRP || st.st_mode & S_IXOTH)
 		&& S_ISDIR(st.st_mode) == folder)
 		ret = TRUE;
-	free(elem_path);
+	ft_strdel(&elem_path);
 	return (ret);
 }
-
-/*
-** ft_strstart alternative with ft_strncmp
-** ft_strncmp(dird->d_name, name, ft_strlen(name)) == 0
-*/
 
 t_list		*search_files_begin(const char *f_path, const char *s_dir, int exec)
 {
@@ -112,6 +109,6 @@ t_list		*search_files_begin(const char *f_path, const char *s_dir, int exec)
 	if (dirp)
 		closedir(dirp);
 	if (!s_dir)
-		free(basedir);
+		ft_strdel(&basedir);
 	return (ret);
 }
