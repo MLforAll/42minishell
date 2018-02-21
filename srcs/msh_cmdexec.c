@@ -103,8 +103,7 @@ static int	run_cmdp(t_cmd *cmdp, char ***env)
 	while (cbw)
 	{
 		wait4(cbw->pid, &exval, 0, NULL);
-		if (WEXITSTATUS(exval) > 0)
-			kill(cbw->pid, SIGTERM);
+		(WEXITSTATUS(exval) > 0) ? kill(cbw->pid, SIGTERM) : 0;
 		cbw = cbw->prev;
 	}
 	return (ret);

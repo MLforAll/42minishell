@@ -91,10 +91,10 @@ void	dup_out_to_pipe(int outfd, int pfd);
 ** misc functions / utilities
 */
 
-char	*ft_strdiff(char *base, char *check);
 char	*get_last_component(const char *str, char c);
 char	*get_name_from_path(const char *path);
 char	*get_name_from_path_2(const char *path);
+int		free_return(void **data, int retv);
 void	switch_signals(int ign);
 
 /*

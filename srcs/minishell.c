@@ -70,21 +70,26 @@ static int	interactive_shell(char ***env)
 	int			ret;
 	char		*line;
 	char		*prompt;
+	t_history	*history;
 
 	line = NULL;
 	prompt = NULL;
+	history = NULL;
 	ret = EXIT_SUCCESS;
 	launch_rc(env);
 	while (42)
 	{
 		prompt = ishell_get_prompt(*env);
-		line = ft_readline(prompt, *env);
+		line = ft_readline(prompt, *env, history);
+		if (line && *line)
+			ft_histadd(&history, line);
 		ft_strdel(&prompt);
 		if (!line)
 			break ;
 		ret = exec_cmds(line, env);
 		ft_strdel(&line);
 	}
+	ft_histdel(&history);
 	return (ret);
 }
 

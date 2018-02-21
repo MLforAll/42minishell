@@ -64,7 +64,7 @@ typedef struct	s_readline
 ** Functions
 */
 
-char			*ft_readline(const char *prompt, char **env);
+char			*ft_readline(const char *prompt, char **env, t_history *hist);
 
 /*
 ** Utilities functions

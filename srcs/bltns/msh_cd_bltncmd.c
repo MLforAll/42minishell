@@ -19,13 +19,15 @@ static void		chg_ret(char **ret, char **last, char *path, unsigned int idx)
 	char			*rchr;
 	char			*tmp;
 
+	if (!ret || !last || !path)
+		return ;
 	if (!path)
 	{
-		if ((rchr = ft_strrchr(*ret, '/')))
+		if (*ret && (rchr = ft_strrchr(*ret, '/')))
 		{
 			if (!(tmp = ft_strsub(*ret, 0, rchr - *ret)))
 				return ;
-			free(*ret);
+			ft_strdel(ret);
 			*ret = tmp;
 		}
 		*last += ((*last)[2] != '\0') + 2;
@@ -122,15 +124,15 @@ int				cd_bltn(int ac, char **av, char ***env, int outfd)
 	if (chdir(path_cd) == -1)
 	{
 		msh_err(get_errcode_for_path(path_cd, X_OK, YES), av[0], path_cd);
-		return (EXIT_FAILURE);
+		return (free_return((void**)&path_cd, EXIT_FAILURE));
 	}
 	set_env_var(env, "OLDPWD", pwd);
 	if (ac > 1 && ft_strcmp(av[1], "-P") == 0)
 	{
-		free(path_cd);
+		ft_strdel(&path_cd);
 		path_cd = getcwd(NULL, 0);
 	}
 	set_env_var(env, "PWD", path_cd);
-	free(path_cd);
+	ft_strdel(&path_cd);
 	return (EXIT_SUCCESS);
 }

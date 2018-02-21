@@ -60,6 +60,16 @@ char	*get_name_from_path_2(const char *path)
 	return (ft_strsub(tmp, 0, len_to_slash));
 }
 
+int		free_return(void **data, int retv)
+{
+	if (data && *data)
+	{
+		free(*data);
+		*data = NULL;
+	}
+	return (retv);
+}
+
 void	switch_signals(int ign)
 {
 	void	(*act)(int);

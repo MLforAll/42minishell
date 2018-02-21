@@ -102,10 +102,9 @@ static void	print_end_newlines(char *line, const char *prompt)
 	free(buff);
 }
 
-char		*ft_readline(const char *prompt, char **env)
+char		*ft_readline(const char *prompt, char **env, t_history *hist)
 {
 	char				buff[5];
-	static t_history	*hist;
 	t_readline			rl;
 	char				*ret;
 
@@ -126,7 +125,5 @@ char		*ft_readline(const char *prompt, char **env)
 	}
 	print_end_newlines(ret, prompt);
 	rl_set_term(STDIN_FILENO, YES, prompt);
-	if (ret && *ret)
-		ft_histadd(&hist, ret);
 	return (ret);
 }

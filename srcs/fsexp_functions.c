@@ -97,10 +97,9 @@ t_list		*search_files_begin(const char *f_path, const char *s_dir, int exec)
 
 	basedir = (!s_dir) ? get_basedir(f_path) : (char*)s_dir;
 	name = get_name_from_path(f_path);
-	if (!(dirp = opendir(basedir)))
-		return (NULL);
+	dirp = opendir(basedir);
 	ret = NULL;
-	while ((dird = readdir(dirp)))
+	while (dirp && (dird = readdir(dirp)))
 	{
 		if ((!exec && ft_strstart(dird->d_name, name))
 			|| (exec && ft_strstart(dird->d_name, name)
@@ -110,7 +109,8 @@ t_list		*search_files_begin(const char *f_path, const char *s_dir, int exec)
 			ret->content_size = (size_t)dird->d_type;
 		}
 	}
-	closedir(dirp);
+	if (dirp)
+		closedir(dirp);
 	if (!s_dir)
 		free(basedir);
 	return (ret);

@@ -80,17 +80,17 @@ static int	check_too_much_links(const char *path)
 	while (n--)
 	{
 		if (lstat(chk, &st) == -1)
-			return (FALSE);
+			return (free_return((void**)&chk, FALSE));
 		if (!S_ISLNK(st.st_mode))
 			break ;
 		tmp = chk;
 		if (!(chk = ft_strnew(st.st_size)))
-			return (TRUE);
+			return (free_return((void**)&tmp, FALSE));
 		if (readlink(tmp, chk, st.st_size) == -1)
-			return (TRUE);
-		free(tmp);
+			return (free_return((void**)&chk, FALSE));
+		ft_strdel(&tmp);
 	}
-	free(chk);
+	ft_strdel(&chk);
 	return ((n > 0) ? FALSE : TRUE);
 }
 
