@@ -51,8 +51,7 @@ static char	*build_home(char *pwd, char **env)
 
 	if (!pwd || !(home = get_env_var(env, "HOME")))
 		return (NULL);
-	if ((stret = ft_strstart(pwd, home)))
-		ret = ft_strdup("~");
+	ret = ((stret = ft_strstart(pwd, home))) ? ft_strdup("~") : ft_strnew(0);
 	ft_stradd(&ret, (stret) ? stret : pwd);
 	return (ret);
 }
@@ -68,8 +67,7 @@ int			add_pwd(char **dest, int all, char **env)
 	{
 		if (!(tmp = getcwd(NULL, 0)))
 			return (FALSE);
-		path = ft_strdup(tmp);
-		free(tmp);
+		path = tmp;
 	}
 	else
 	{
@@ -78,8 +76,9 @@ int			add_pwd(char **dest, int all, char **env)
 	}
 	if (!all)
 	{
-		free(path);
+		tmp = path;
 		path = get_name_from_path_2(path);
+		free(tmp);
 	}
 	ft_stradd(dest, path);
 	free(path);
