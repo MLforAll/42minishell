@@ -19,7 +19,7 @@ static void		chg_ret(char **ret, char **last, char *path, unsigned int idx)
 	char			*rchr;
 	char			*tmp;
 
-	if (!ret || !last || !path)
+	if (!ret || !last)
 		return ;
 	if (!path)
 	{
