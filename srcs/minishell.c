@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 03:47:19 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 18:26:40 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int			main(int ac, char **av, char **environ)
 	getset_pwd_env(&env);
 	if (!get_env_var(env, "PATH"))
 		set_env_var(&env, "PATH", SH_DEFAULT_PATH);
-	set_env_var(&env, "_/", "");
+	set_env_var(&env, "_", av[0]);
 	if (ac > 1 || !ft_isatty(STDIN_FILENO))
 		exval = exec_shell((ac > 1) ? av[1] : NULL, &env);
 	else

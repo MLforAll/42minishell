@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 00:47:32 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 18:32:04 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define SH_NAME			"msh"
 # define SH_PLAIN_PROMPT	"msh$ "
 # define SH_RC				".mshrc"
-# define SH_BLTNS			"echo\0cd\0exit\0env\0setenv\0unsetenv\0"
+# define SH_BLTNS			"echo\0cd\0exit\0env\0setenv\0unsetenv\0source\0"
 
 # define SH_DEFAULT_PATH_1	"/usr/local/bin:/usr/bin:/bin:/usr/sbin:"
 # define SH_DEFAULT_PATH_2	"/opt/X11/bin"
@@ -59,6 +59,7 @@ int		cd_bltn(int ac, char **av, char ***env, int outfd);
 int		env_bltn(int ac, char **av, char ***env, int outfd);
 int		setenv_bltn(int ac, char **av, char ***env, int outfd);
 int		unsetenv_bltn(int ac, char **av, char ***env, int outfd);
+int		source_bltn(int ac, char **av, char ***env, int outfd);
 
 /*
 ** fsexp utilities
@@ -75,8 +76,10 @@ t_list	*search_files_begin(const char *f_path, const char *s_dir, int exec);
 char	*get_env_var(char **env, const char *var);
 char	*chg_env_var(char **env, const char *var, char *new);
 char	*set_env_var(char ***env, const char *var, char *value);
-char	*set_env_from_str(char ***env, char *str);
 void	del_env_var(char ***env, const char *var);
+
+char	*set_env_from_str(char ***env, char *str);
+char	*set_env_var_n(char ***env, const char *var, int value);
 
 /*
 ** piping

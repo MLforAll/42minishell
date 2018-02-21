@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/02/21 00:48:56 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/02/21 18:34:06 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRCFILES = minishell.c \
 	msh_err.c \
 	msh_misc.c \
 	msh_env.c \
+	msh_env_helpers.c \
 	msh_piping.c \
 	bltns/msh_builtins.c \
 	bltns/msh_env_bltncmd.c \
@@ -50,7 +51,11 @@ SRCFILES = minishell.c \
 	lists/tlist_support.c
 SRCS = $(addprefix $(SRCDIR)/, $(SRCFILES))
 NSRC = $(shell echo "$(SRCFILES)" | awk '{print NF}')
-CSRC = 1
+ifeq ($(shell [ ! -z "`which bc`" ] && [ ! -z "`which awk`" ] && echo true),true)
+	CSRC = 1
+else
+	CSRC = 0
+endif
 
 OBJDIR = objs
 OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
@@ -83,9 +88,12 @@ fsanitize:
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@ if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
 	@ printf "\033[K$(PROJTEXT)Compiling \033[1;33m$<"
+ifneq ($(CSRC),0)
 	@ printf " %.0s" {1..$(shell expr 44 - $(shell printf "$<" | wc -m))}
-	@ export LC_ALL=C; printf "\033[1;34m[%3.0f%%]\033[0;39m\r" "$(shell bc <<< "scale=1; $(CSRC) / $(NSRC) * 100")"
+	@ export LC_ALL=C; printf "\033[1;34m[%3.0f%%]" "$(shell bc <<< "scale=1; $(CSRC) / $(NSRC) * 100")"
 	@ $(eval CSRC = $(shell expr $(CSRC) + 1))
+endif
+	@ printf "\033[0;39m\r"
 	@ gcc $(CC_FLAGS) $(CC_LIB) -c $< -o $@
 
 clean:
@@ -103,4 +111,4 @@ re: fclean all
 force:
 	@ true
 
-.PHONY: all lib noflags fsanitize clean fclean re
+.PHONY: all noflags fsanitize clean fclean re force

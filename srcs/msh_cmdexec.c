@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 03:50:24 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 18:39:11 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ static int	run_cmdp(t_cmd *cmdp, char ***env)
 	int		exval;
 	t_cmd	*cbw;
 
+	if (!cmdp)
+		return (EXIT_SUCCESS);
 	cbw = cmdp;
 	while (cbw)
 	{
@@ -94,6 +96,7 @@ static int	run_cmdp(t_cmd *cmdp, char ***env)
 			break ;
 		cbw = cbw->next;
 	}
+	set_env_var_n(env, "?", ret);
 	if (!cmdp->next)
 		return (ret);
 	while (cbw)

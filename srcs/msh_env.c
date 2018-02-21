@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 22:31:45 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/20 03:58:11 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 18:31:47 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,15 @@ char			*set_env_var(char ***env, const char *var, char *value)
 	char	*ret;
 	char	**old;
 	char	*new_entry[2];
-	char	entry_str[ft_strlen(var) + ft_strlen(value) + 2];
+	char	*entry_str;
+	size_t	newlen;
 
 	if (!env || !var || !value)
 		return (NULL);
 	if ((ret = chg_env_var(*env, var, value)))
 		return (ret);
+	if (!(entry_str = ft_strnew(ft_strlen(var) + ft_strlen(value) + 1)))
+		return (NULL);
 	ft_strcpy(entry_str, var);
 	ft_strcat(entry_str, "=");
 	ft_strcat(entry_str, value);
@@ -68,25 +71,10 @@ char			*set_env_var(char ***env, const char *var, char *value)
 	new_entry[1] = NULL;
 	old = *env;
 	*env = ft_tabjoin((const char**)*env, (const char**)new_entry);
+	free(entry_str);
 	ft_tabfree(&old);
-	return ((**env) ? (*env)[ft_tablen((const char**)*env) - 1] : NULL);
-}
-
-char			*set_env_from_str(char ***env, char *str)
-{
-	char	*eq;
-	char	*var;
-	char	*value;
-	char	*ret;
-
-	if (!env || !str || !(eq = ft_strchr(str, '=')))
-		return (NULL);
-	var = ft_strnew(eq - str);
-	ft_strncpy(var, str, eq - str);
-	value = eq + 1;
-	ret = set_env_var(env, (const char*)var, value);
-	ft_strdel(&var);
-	return (ret);
+	newlen = ft_tablen((const char**)*env);
+	return ((**env && newlen > 0) ? (*env)[newlen - 1] : NULL);
 }
 
 void			del_env_var(char ***env, const char *var)

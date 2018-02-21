@@ -6,25 +6,13 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/31 18:31:09 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/14 08:07:06 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 17:45:14 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include <stdlib.h>
 #include "libft.h"
-
-char	*ft_strdiff(char *base, char *check)
-{
-	if (!base || !check)
-		return (NULL);
-	while (*base && *check && *base == *check)
-	{
-		base++;
-		check++;
-	}
-	return (base);
-}
 
 char	*get_last_component(const char *str, char c)
 {

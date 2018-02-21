@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 08:26:45 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 18:33:52 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,27 @@ int		unsetenv_bltn(int ac, char **av, char ***env, int outfd)
 
 int		exit_bltn(int ac, char **av, char ***env, int outfd)
 {
-	(void)env;
+	char	*last_cmd_ret;
+
 	(void)outfd;
 	if (ac > 2)
 		return (msh_err(SH_ERR_TMARG, av[0], NULL));
 	if (ac == 1)
-		exit(EXIT_SUCCESS);
+	{
+		last_cmd_ret = get_env_var(*env, "?");
+		exit((last_cmd_ret) ? ft_atoi(last_cmd_ret) : EXIT_SUCCESS);
+	}
 	if (!ft_strisnumeric(av[1]))
 		exit(msh_err_ret(SH_ERR_NUMARG, av[0], av[1], 255));
 	exit(ft_atoi(av[1]));
+	return (EXIT_SUCCESS);
+}
+
+int		source_bltn(int ac, char **av, char ***env, int outfd)
+{
+	(void)outfd;
+	if (ac == 1)
+		return (EXIT_FAILURE);
+	exec_shell(av[1], env);
 	return (EXIT_SUCCESS);
 }

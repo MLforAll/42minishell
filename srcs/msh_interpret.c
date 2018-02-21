@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 00:55:36 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 18:54:34 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	fill_bltn(t_cmd *cmd, char *line_cmd)
 	unsigned int	idx;
 	static int		(*bltns_funcs[])(int, char **, char ***, int) = {&echo_bltn,
 		&cd_bltn, &exit_bltn, &env_bltn, &setenv_bltn, &unsetenv_bltn,
-		NULL};
+		&source_bltn, NULL};
 
 	idx = 0;
 	nptr = SH_BLTNS;
@@ -91,6 +91,7 @@ t_cmd		*interpret_cmd(char *cline, char **env)
 	while (bw)
 	{
 		new = ft_cmdnew();
+		ft_cmdpush(&ret, new);
 		if (!(new->c_argv = get_cmd_argv(bw->content)))
 		{
 			ft_cmddel(&ret);
@@ -99,7 +100,6 @@ t_cmd		*interpret_cmd(char *cline, char **env)
 		fill_bltn(new, *new->c_argv);
 		new->c_path = (!new->builtin) ? get_cmd_path(*new->c_argv, env) : NULL;
 		pipe(new->c_pfd);
-		ft_cmdpush(&ret, new);
 		bw = bw->next;
 	}
 	ft_lstdel(&psplit, &free_tlist);

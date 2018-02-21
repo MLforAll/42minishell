@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/20 21:06:12 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 18:17:49 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,31 @@ static t_list	*get_res_with_path(char *base, char **env)
 	return (ret);
 }
 
+static char		*get_last_components(const char *s, const char *comps)
+{
+	char	*ret;
+	char	*tmp;
+	char	*chk;
+
+	if (!s || !comps)
+		return (NULL);
+	tmp = (char*)s;
+	ret = tmp;
+	while (*tmp)
+	{
+		chk = (char*)comps;
+		while (*chk)
+		{
+			if (*tmp == *chk)
+				ret = tmp;
+			chk++;
+		}
+		tmp++;
+	}
+	ret += (ret > s);
+	return (ret);
+}
+
 static int		check_is_command(char *line)
 {
 	size_t	nchars;
@@ -76,7 +101,7 @@ t_list			*get_ac_result(char *line, char *region, char **env)
 	t_list	*ret;
 	char	*chk_cmd_line;
 
-	chk_cmd_line = get_last_component(line, '|');
+	chk_cmd_line = get_last_components(line, "|;");
 	if (!ft_strchr(region, '/') && check_is_command(chk_cmd_line))
 		ret = get_res_with_path(region, env);
 	else
