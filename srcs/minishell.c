@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/20 03:57:57 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 00:34:01 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,14 @@ static void	launch_rc(char ***env)
 
 static char	*ishell_get_prompt(char **env)
 {
-	char		*envprompt;
+	char		*mshp_entry;
+	char		*pr;
 
-	if ((envprompt = get_env_var(env, "MSH_PROMPT")))
-		return (get_prompt_from_str(envprompt, env));
-	return (get_prompt_from_str("\\u:\\W$ ", env));
+	if ((mshp_entry = get_env_var(env, "MSH_PROMPT")))
+		pr = get_prompt_from_str(mshp_entry, env);
+	else
+		pr = get_prompt_from_str("\\u:\\W$ ", env);
+	return ((pr) ? pr : ft_strdup("msh-1.0$ "));
 }
 
 static int	interactive_shell(char ***env)

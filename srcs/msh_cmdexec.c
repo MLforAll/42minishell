@@ -6,12 +6,13 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/20 05:01:24 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 03:34:46 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/wait.h>
 #include "minishell.h"
 
@@ -49,6 +50,7 @@ static int	exec_bincmd(t_cmd *cmd, char ***env)
 		execve(cmd->c_path, cmd->c_argv, *env);
 		exit(exec_shell(cmd->c_path, env) == EXIT_SUCCESS ? EXIT_SUCCESS : 127);
 	}
+	cmd->pid = pid;
 	if (cmd->next)
 		return (EXIT_SUCCESS);
 	wait4(pid, &exval, 0, NULL);
@@ -78,28 +80,45 @@ int			exec_cmd(t_cmd *cmd, char ***env)
 	return (exval);
 }
 
+static int	run_cmdp(t_cmd *cmdp, char ***env)
+{
+	int		ret;
+	int		exval;
+	t_cmd	*cbw;
+
+	cbw = cmdp;
+	while (cbw)
+	{
+		ret = exec_cmd(cbw, env);
+		if (!cbw->next)
+			break ;
+		cbw = cbw->next;
+	}
+	while (cbw)
+	{
+		wait4(cbw->pid, &exval, 0, NULL);
+		if (WEXITSTATUS(exval) > 0)
+			kill(cbw->pid, SIGTERM);
+		cbw = cbw->prev;
+	}
+	return (ret);
+}
+
 int			exec_cmds(char *line, char ***env)
 {
 	int		ret;
 	t_cmd	*cmdp;
-	t_cmd	*cbw;
 	t_list	*cmds;
 	t_list	*bw;
 
-	if (!(cmds = ft_splitquote(line, ";", '"')))
+	if (!ft_splitquote(&cmds, line, ";", '"'))
 		return (ft_returnmsg("exec_cmds: line split err!", STDERR_FILENO, 0));
 	bw = cmds;
 	ret = EXIT_SUCCESS;
 	while (bw)
 	{
 		cmdp = interpret_cmd(bw->content, *env);
-		cbw = cmdp;
-		while (cbw)
-		{
-			if ((ret = exec_cmd(cbw, env)) > 0)
-				break ;
-			cbw = cbw->next;
-		}
+		run_cmdp(cmdp, env);
 		bw = bw->next;
 		ft_cmddel(&cmdp);
 	}

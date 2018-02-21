@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/20 05:00:36 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 00:55:36 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static char	**get_cmd_argv(char *s)
 	t_list	*argvlst;
 	t_list	*bw;
 
-	if (!(argvlst = ft_splitquote(s, "\t ", '"')))
+	if (!s || !ft_splitquote(&argvlst, s, "\t ", '"'))
 		return (NULL);
 	bw = argvlst;
 	while (bw)
@@ -86,12 +86,16 @@ t_cmd		*interpret_cmd(char *cline, char **env)
 	t_list	*bw;
 
 	ret = NULL;
-	psplit = ft_splitquote(cline, "|", '"');
+	ft_splitquote(&psplit, cline, "|", '"');
 	bw = psplit;
 	while (bw)
 	{
 		new = ft_cmdnew();
-		new->c_argv = get_cmd_argv(bw->content);
+		if (!(new->c_argv = get_cmd_argv(bw->content)))
+		{
+			ft_cmddel(&ret);
+			break ;
+		}
 		fill_bltn(new, *new->c_argv);
 		new->c_path = (!new->builtin) ? get_cmd_path(*new->c_argv, env) : NULL;
 		pipe(new->c_pfd);

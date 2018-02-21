@@ -6,12 +6,12 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/18 02:37:36 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 04:42:46 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 00:53:20 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "libft.h"
+#include "minishell.h"
 
 static int	is_c_charset(char c, char *charset)
 {
@@ -22,12 +22,6 @@ static int	is_c_charset(char c, char *charset)
 		charset++;
 	}
 	return (FALSE);
-}
-
-static void	free_lst(void *data, size_t ds)
-{
-	(void)ds;
-	free(data);
 }
 
 static void	add_elem(t_list **dest, char **last, unsigned int *idx)
@@ -48,31 +42,31 @@ static void	add_elem(t_list **dest, char **last, unsigned int *idx)
 	*idx = 0;
 }
 
-t_list		*ft_splitquote(char *s, char *charset, char qc)
+int			ft_splitquote(t_list **dest, char *s, char *charset, char qc)
 {
-	t_list			*ret;
 	char			*last;
 	unsigned int	idx;
 	int				split;
 
-	ret = NULL;
+	*dest = NULL;
 	idx = 0;
-	last = s;
+	if (!(last = s))
+		return (FALSE);
 	split = TRUE;
 	while (last[idx])
 	{
 		if (last[idx] == qc && (idx == 0 || last[idx - 1] != '\\'))
 			split = !split;
 		if (!last[idx] || (is_c_charset(last[idx], charset) && split))
-			add_elem(&ret, &last, &idx);
+			add_elem(dest, &last, &idx);
 		else
 			idx++;
 	}
 	if (!split)
 	{
-		ft_lstdel(&ret, &free_lst);
-		return (NULL);
+		ft_lstdel(dest, &free_tlist);
+		return (FALSE);
 	}
-	add_elem(&ret, &last, &idx);
-	return (ret);
+	add_elem(dest, &last, &idx);
+	return (TRUE);
 }

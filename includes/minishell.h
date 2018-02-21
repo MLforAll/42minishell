@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/20 03:56:46 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 00:47:32 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft.h"
 # include "msh_data.h"
+# include "msh_prompt.h"
 
 /*
 ** macros
@@ -29,31 +30,12 @@
 # define SH_DEFAULT_PATH_2	"/opt/X11/bin"
 # define SH_DEFAULT_PATH	SH_DEFAULT_PATH_1 SH_DEFAULT_PATH_2
 
-# define SH_ERR_UNDEFINED	0
-# define SH_ERR_NOCMD		1
-# define SH_ERR_NOENT		2
-# define SH_ERR_NOCD		3
-# define SH_ERR_NOSET		4
-# define SH_ERR_TMARG		5
-# define SH_ERR_PERM		6
-# define SH_ERR_FORK		7
-# define SH_ERR_TMLNK		8
-# define SH_ERR_NOTDIR		9
-# define SH_ERR_NUMARG		10
-# define SH_ERR_INVID		11
-
-/*
-** prompt
-*/
-
-char	*get_prompt_from_str(char *s, char **env);
-
 /*
 ** cmd parsing
 */
 
 char	*get_cmd_path(char *line_cmd, char **env);
-t_list	*ft_splitquote(char *s, char *charset, char qc);
+int		ft_splitquote(t_list **dest, char *s, char *charset, char qc);
 t_cmd	*interpret_cmd(char *cline, char **env);
 
 /*

@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/02/20 02:47:06 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/02/21 00:48:56 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ LIBFT = libft/libft.a
 INCDIR = includes
 INCFILES = minishell.h \
 		   msh_data.h \
+		   msh_prompt.h \
 		   ft_readline.h
 INCLUDES = $(addprefix $(INCDIR)/, $(INCFILES))
 
@@ -30,13 +31,15 @@ SRCFILES = minishell.c \
 	msh_cmdexec.c \
 	msh_err.c \
 	msh_misc.c \
-	msh_prompt.c \
 	msh_env.c \
 	msh_piping.c \
 	bltns/msh_builtins.c \
 	bltns/msh_env_bltncmd.c \
 	bltns/msh_cd_bltncmd.c \
 	fsexp_functions.c \
+	ft_splitquote.c \
+	prompt/msh_prompt_routine.c \
+	prompt/msh_prompt.c \
 	ft_readline/ft_readline.c \
 	ft_readline/ft_rl_utils.c \
 	ft_readline/ft_rl_csrkeys.c \
@@ -44,8 +47,7 @@ SRCFILES = minishell.c \
 	ft_readline/ft_rl_acroutine.c \
 	ft_readline/ft_rl_autocompletion.c \
 	lists/lst_support.c \
-	lists/tlist_support.c \
-	ft_splitquote.c
+	lists/tlist_support.c
 SRCS = $(addprefix $(SRCDIR)/, $(SRCFILES))
 NSRC = $(shell echo "$(SRCFILES)" | awk '{print NF}')
 CSRC = 1

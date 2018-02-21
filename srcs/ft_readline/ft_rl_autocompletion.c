@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 01:37:34 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/20 21:06:12 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,10 @@ static int		check_is_command(char *line)
 t_list			*get_ac_result(char *line, char *region, char **env)
 {
 	t_list	*ret;
+	char	*chk_cmd_line;
 
-	if (!ft_strchr(line, '/') && check_is_command(line))
+	chk_cmd_line = get_last_component(line, '|');
+	if (!ft_strchr(region, '/') && check_is_command(chk_cmd_line))
 		ret = get_res_with_path(region, env);
 	else
 		ret = search_files_begin(region, NULL, FALSE);
