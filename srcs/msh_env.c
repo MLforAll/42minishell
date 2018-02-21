@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 22:31:45 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 18:31:47 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 18:57:00 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char			*chg_env_var(char **env, const char *var, char *new)
 {
 	char	*tmp;
 
-	if (!env)
+	if (!env || !var || !new)
 		return (NULL);
 	while (*env)
 	{

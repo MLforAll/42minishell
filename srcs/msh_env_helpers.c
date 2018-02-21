@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/21 18:30:04 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 18:34:24 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 18:58:01 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ char			*set_env_var_n(char ***env, const char *var, int value)
 	char	*ret;
 	char	*value_str;
 
-	value_str = ft_itoa(value);
+	if (!env || !var || !(value_str = ft_itoa(value)))
+		return (NULL);
 	ret = set_env_var(env, var, value_str);
 	ft_strdel(&value_str);
 	return (ret);
