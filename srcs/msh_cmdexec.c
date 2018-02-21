@@ -88,6 +88,7 @@ static int	run_cmdp(t_cmd *cmdp, char ***env)
 
 	if (!cmdp)
 		return (EXIT_SUCCESS);
+	exval = 0;
 	cbw = cmdp;
 	while (cbw)
 	{
@@ -124,8 +125,8 @@ int			exec_cmds(char *line, char ***env)
 	{
 		cmdp = interpret_cmd(bw->content, *env);
 		ret = run_cmdp(cmdp, env);
-		bw = bw->next;
 		ft_cmddel(&cmdp);
+		bw = bw->next;
 	}
 	ft_lstdel(&cmds, &free_tlist);
 	return (ret);

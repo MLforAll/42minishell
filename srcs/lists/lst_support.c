@@ -65,6 +65,10 @@ void	ft_cmddel(t_cmd **headref)
 	if (!headref || !*headref)
 		return ;
 	while (*headref)
+	{
 		ft_cmddelone(headref);
+		if (*headref)
+			(*headref)->prev = NULL;
+	}
 	*headref = NULL;
 }

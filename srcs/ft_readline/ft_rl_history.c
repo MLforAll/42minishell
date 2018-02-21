@@ -57,13 +57,14 @@ void		ft_histdelone(t_history **hist)
 
 void		ft_histdel(t_history **headref)
 {
-	t_history	*bw;
-
 	if (!headref)
 		return ;
-	bw = *headref;
-	while (bw)
-		ft_histdelone(&bw);
+	while (*headref)
+	{
+		ft_histdelone(headref);
+		if (*headref)
+			(*headref)->prev = NULL;
+	}
 	*headref = NULL;
 }
 
