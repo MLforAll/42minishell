@@ -51,7 +51,10 @@ static char	*build_home(char *pwd, char **env)
 
 	if (!pwd || !(home = get_env_var(env, "HOME")))
 		return (NULL);
-	ret = ((stret = ft_strstart(pwd, home))) ? ft_strdup("~") : ft_strnew(0);
+	if ((stret = ft_strstart(pwd, home)))
+		ret = ft_strdup("~");
+	else
+		ret = ft_strnew(0);
 	ft_stradd(&ret, (stret) ? stret : pwd);
 	return (ret);
 }
