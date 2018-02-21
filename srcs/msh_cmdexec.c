@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 03:34:46 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 03:50:24 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ static int	run_cmdp(t_cmd *cmdp, char ***env)
 			break ;
 		cbw = cbw->next;
 	}
+	if (!cmdp->next)
+		return (ret);
 	while (cbw)
 	{
 		wait4(cbw->pid, &exval, 0, NULL);
@@ -118,7 +120,7 @@ int			exec_cmds(char *line, char ***env)
 	while (bw)
 	{
 		cmdp = interpret_cmd(bw->content, *env);
-		run_cmdp(cmdp, env);
+		ret = run_cmdp(cmdp, env);
 		bw = bw->next;
 		ft_cmddel(&cmdp);
 	}

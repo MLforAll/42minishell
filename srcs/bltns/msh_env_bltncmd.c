@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/30 23:00:55 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/20 03:56:18 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/21 03:51:03 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ static int	get_env_opt_code(char c)
 {
 	if (c == 'i')
 		return (0x1);
-	else if (c == 'v')
-		return (0x2);
 	else
 		return (-c);
 	return (0);
