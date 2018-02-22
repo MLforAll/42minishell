@@ -1,18 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_misc.c                                         :+:      :+:    :+:   */
+/*   msh_misc_str.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/31 18:31:09 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 17:45:14 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 04:44:49 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <signal.h>
 #include <stdlib.h>
 #include "libft.h"
+
+char	*get_last_tabitem(char **tab)
+{
+	while (*tab)
+	{
+		if (!*(tab + 1))
+			break ;
+		tab++;
+	}
+	return (*tab);
+}
 
 char	*get_last_component(const char *str, char c)
 {
@@ -58,24 +68,4 @@ char	*get_name_from_path_2(const char *path)
 		return (ft_strdup(tmp));
 	len_to_slash = chr - tmp;
 	return (ft_strsub(tmp, 0, len_to_slash));
-}
-
-int		free_return(void **data, int retv)
-{
-	if (data && *data)
-	{
-		free(*data);
-		*data = NULL;
-	}
-	return (retv);
-}
-
-void	switch_signals(int ign)
-{
-	void	(*act)(int);
-
-	act = (ign) ? SIG_IGN : SIG_DFL;
-	signal(SIGINT, act);
-	signal(SIGTERM, act);
-	signal(SIGTSTP, SIG_IGN);
 }

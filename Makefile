@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/02/21 18:34:06 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/02/22 04:41:52 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,8 @@ SRCFILES = minishell.c \
 	msh_interpret.c \
 	msh_cmdexec.c \
 	msh_err.c \
-	msh_misc.c \
+	msh_prompt.c \
+	msh_prompt_helpers.c \
 	msh_env.c \
 	msh_env_helpers.c \
 	msh_piping.c \
@@ -39,14 +40,14 @@ SRCFILES = minishell.c \
 	bltns/msh_cd_bltncmd.c \
 	fsexp_functions.c \
 	ft_splitquote.c \
-	prompt/msh_prompt_routine.c \
-	prompt/msh_prompt.c \
 	ft_readline/ft_readline.c \
 	ft_readline/ft_rl_utils.c \
 	ft_readline/ft_rl_csrkeys.c \
 	ft_readline/ft_rl_history.c \
 	ft_readline/ft_rl_acroutine.c \
 	ft_readline/ft_rl_autocompletion.c \
+	misc/msh_misc.c \
+	misc/msh_misc_str.c \
 	lists/lst_support.c \
 	lists/tlist_support.c
 SRCS = $(addprefix $(SRCDIR)/, $(SRCFILES))

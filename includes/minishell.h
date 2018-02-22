@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 18:32:04 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 04:42:24 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,11 @@ void	dup_out_to_pipe(int outfd, int pfd);
 ** misc functions / utilities
 */
 
+char	*get_last_tabitem(char **tab);
 char	*get_last_component(const char *str, char c);
 char	*get_name_from_path(const char *path);
 char	*get_name_from_path_2(const char *path);
+
 int		free_return(void **data, int retv);
 void	switch_signals(int ign);
 

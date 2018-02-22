@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 18:58:21 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 04:55:38 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static char		*get_cd_path(int ac, char **av, char *pwd, char **env)
 	char			*target;
 	int				mode;
 
-	target = (ac > 1 && ft_strcmp(av[1], "-P") == 0) ? av[2] : av[1];
+	target = (ac > 2 && ft_strcmp(av[1], "-P") == 0) ? av[2] : av[1];
 	mode = (ac > 1 && target == av[1]);
 	if (!target)
 	{
@@ -123,7 +123,8 @@ int				cd_bltn(int ac, char **av, char ***env, int outfd)
 		ft_putendl_fd(path_cd, outfd);
 	if (chdir(path_cd) == -1)
 	{
-		msh_err(get_errcode_for_path(path_cd, X_OK, YES), av[0], path_cd);
+		msh_err(get_errcode_for_path(path_cd, X_OK, YES), av[0], \
+			get_last_tabitem(av));
 		return (free_return((void**)&path_cd, EXIT_FAILURE));
 	}
 	set_env_var(env, "OLDPWD", pwd);
