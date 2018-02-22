@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 18:39:11 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 02:11:47 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,8 @@ static int	run_cmdp(t_cmd *cmdp, char ***env)
 		return (ret);
 	while (cbw)
 	{
-		wait4(cbw->pid, &exval, 0, NULL);
-		(WEXITSTATUS(exval) > 0 && cbw->pid > 0) ? kill(cbw->pid, SIGTERM) : 0;
+		kill(cbw->pid, SIGTERM);
+		waitpid(cbw->pid, NULL, 0);
 		cbw = cbw->prev;
 	}
 	return (ret);
