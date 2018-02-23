@@ -6,38 +6,34 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/31 18:31:09 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 14:23:53 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 20:11:31 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
 
-char	get_last_strc(char *s)
+int		ft_strchrf(char *s, char c)
 {
-	if (!s)
-		return ('\0');
-	while (*s)
-		s++;
-	return (*s);
-}
+	unsigned int	last;
+	unsigned int	idx;
 
-char	*get_last_tabitem(char **tab)
-{
-	if (!tab)
-		return (NULL);
-	while (*tab)
+	idx = 0;
+	last = 0;
+	while (s[idx])
 	{
-		if (!*(tab + 1))
-			break ;
-		tab++;
+		if (s[idx] == c && idx == last + 1)
+			return (TRUE);
+		if (s[idx] == c)
+			last = idx;
+		idx++;
 	}
-	return (*tab);
+	return (FALSE);
 }
 
 char	*get_last_component(const char *str, char c)
 {
-	char	*tmp;
+	char			*tmp;
 
 	if (!str)
 		return (NULL);
@@ -56,10 +52,10 @@ char	*get_name_from_path(const char *path)
 
 char	*get_name_from_path_2(const char *path)
 {
-	char	*tmp;
-	char	*chr;
-	size_t	len;
-	size_t	len_to_slash;
+	char			*tmp;
+	char			*chr;
+	size_t			len;
+	size_t			len_to_slash;
 
 	if ((tmp = get_name_from_path(path)) && *tmp)
 		return ((tmp) ? ft_strdup(tmp) : NULL);

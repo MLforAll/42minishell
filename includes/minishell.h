@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 18:08:57 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 20:08:37 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,7 @@ int		get_errcode_for_path(const char *path, int mode, int dir);
 ** misc functions / utilities
 */
 
-char	get_last_strc(char *s);
-char	*get_last_tabitem(char **tab);
+int		ft_strchrf(char *s, char c);
 char	*get_last_component(const char *str, char c);
 char	*get_name_from_path(const char *path);
 char	*get_name_from_path_2(const char *path);
