@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 20:08:54 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 20:48:26 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int		exit_bltn(int ac, char **av, char ***env, int outfd)
 		exit((last_cmd_ret) ? ft_atoi(last_cmd_ret) : EXIT_SUCCESS);
 	}
 	if (!ft_strisnumeric(av[1]))
-		exit(msh_err_ret(SH_ERR_NUMARG, av[0], av[1], 255));
+		return (msh_err_ret(SH_ERR_NUMARG, av[0], av[1], 255));
 	exit(ft_atoi(av[1]));
 	return (EXIT_SUCCESS);
 }
