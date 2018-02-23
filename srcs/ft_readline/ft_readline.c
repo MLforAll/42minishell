@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/20 02:55:08 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 23:02:16 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	act_keys(char **line, char *buff, char **env, t_readline *rl)
 	static int			(*f[])(char *, t_cursor *) =
 	{&rl_csr_keys, &rl_home_end_keys, NULL};
 
-	if ((rval = rl_history_keys(&rl->hist, buff, line)) > 0)
+	if ((rval = rl_history_keys(&rl->hist, buff, line)) > 0 && *line)
 	{
 		ft_putstr_fd("\r\033[K", STDIN_FILENO);
 		ft_putstr_fd(rl->prompt, STDIN_FILENO);
@@ -115,7 +115,7 @@ char		*ft_readline(const char *prompt, char **env, t_history *hist)
 	rl.prompt = prompt;
 	ft_bzero(buff, sizeof(buff));
 	ret = ft_strnew(0);
-	while (read(STDIN_FILENO, buff, 4) > 0)
+	while (ret && read(STDIN_FILENO, buff, 4) > 0)
 	{
 		act_keys(&ret, buff, env, &rl);
 		act_on_buff(buff, &ret, &rl);

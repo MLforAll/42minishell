@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/02/22 04:41:52 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/02/22 23:10:24 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,6 @@ SRCFILES = minishell.c \
 	msh_prompt_helpers.c \
 	msh_env.c \
 	msh_env_helpers.c \
-	msh_piping.c \
 	bltns/msh_builtins.c \
 	bltns/msh_env_bltncmd.c \
 	bltns/msh_cd_bltncmd.c \
@@ -48,8 +47,8 @@ SRCFILES = minishell.c \
 	ft_readline/ft_rl_autocompletion.c \
 	misc/msh_misc.c \
 	misc/msh_misc_str.c \
-	lists/lst_support.c \
-	lists/tlist_support.c
+	misc/lst_support.c \
+	misc/tlist_support.c
 SRCS = $(addprefix $(SRCDIR)/, $(SRCFILES))
 NSRC = $(shell echo "$(SRCFILES)" | awk '{print NF}')
 ifeq ($(shell [ ! -z "`which bc`" ] && [ ! -z "`which awk`" ] && echo true),true)

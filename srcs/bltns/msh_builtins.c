@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/22 05:35:54 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 21:42:53 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int		setenv_bltn(int ac, char **av, char ***env, int outfd)
 		ft_puttab_fd(*env, NULL, outfd);
 		return (EXIT_SUCCESS);
 	}
-	if (ft_isdigit(*av[1]))
+	if (!ft_isalpha(*av[1]))
 		return (msh_err(SH_ERR_INVID, av[0], av[1]));
 	if (ac == 3)
 		set_env_var(env, av[1], av[2]);
@@ -61,6 +61,8 @@ int		unsetenv_bltn(int ac, char **av, char ***env, int outfd)
 	(void)outfd;
 	if (ac == 1)
 		return (EXIT_FAILURE);
+	if (!ft_isalpha(*av[1]))
+		return (msh_err(SH_ERR_INVID, av[0], av[1]));
 	idx = 0;
 	while (idx < ac)
 		del_env_var(env, av[idx++]);

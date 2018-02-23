@@ -6,12 +6,21 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/31 18:31:09 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/22 04:44:49 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 23:54:46 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
+
+char	get_last_strc(char *s)
+{
+	if (!s)
+		return ('\0');
+	while (*s)
+		s++;
+	return (*s);
+}
 
 char	*get_last_tabitem(char **tab)
 {

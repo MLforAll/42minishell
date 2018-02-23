@@ -6,11 +6,12 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/31 18:31:09 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/22 04:40:49 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 23:09:03 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include "libft.h"
 
@@ -32,4 +33,10 @@ void	switch_signals(int ign)
 	signal(SIGINT, act);
 	signal(SIGTERM, act);
 	signal(SIGTSTP, SIG_IGN);
+}
+
+void	dup_out_to_pipe(int outfd, int pfd)
+{
+	close(outfd);
+	dup2(pfd, outfd);
 }

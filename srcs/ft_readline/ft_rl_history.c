@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/14 07:11:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 16:40:49 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 23:08:34 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,11 @@ t_history	*ft_histnew(char *line)
 	if (!(ret = (t_history*)malloc(sizeof(t_history))))
 		return (NULL);
 	ft_bzero(ret, sizeof(t_history));
-	ret->line = ft_strdup(line);
+	if (!(ret->line = ft_strdup(line)))
+	{
+		free(ret);
+		return (NULL);
+	}
 	return (ret);
 }
 
@@ -73,9 +77,9 @@ int			rl_history_keys(t_history **history, char *buff, char **line)
 	int		ret;
 	int		keys[2];
 
-	keys[0] = (ft_strcmp("\033[A", buff) == 0);
-	keys[1] = (ft_strcmp("\033[B", buff) == 0);
-	if (!keys[0] && !keys[1])
+	keys[0] = (buff && ft_strcmp("\033[A", buff) == 0);
+	keys[1] = (buff && ft_strcmp("\033[B", buff) == 0);
+	if (!line || !history || (!keys[0] && !keys[1]))
 		return (0);
 	if (!*history)
 		return (-1);
@@ -92,7 +96,7 @@ int			rl_history_keys(t_history **history, char *buff, char **line)
 	}
 	if (ret == -1)
 		return (-1);
-	free(*line);
+	ft_strdel(line);
 	*line = ft_strdup((*history)->line);
 	return (1);
 }

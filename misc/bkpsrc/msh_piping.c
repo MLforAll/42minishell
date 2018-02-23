@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/07 04:39:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/13 23:51:29 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 23:02:54 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,25 +32,5 @@ void	dup_out_to_pipe(int outfd, int pfd)
 **	while ((rb = read(pfds[0], buff, sizeof(buff))) > 0)
 **		write(outfd, buff, rb);
 **	close(outfd);
-**}
-*/
-
-/*
-**int		*get_pipes(size_t n)
-**{
-**	int				*ret;
-**	unsigned int	shift;
-**	size_t			len;
-**
-**	shift = 0;
-**	len = n / 2 + (n % 2);
-**	if (!(ret = (int*)malloc(sizeof(int) * (sizeof(int) * len))))
-**		return (NULL);
-**	while (len--)
-**	{
-**		pipe(ret + shift);
-**		shift += 2;
-**	}
-**	return (ret);
 **}
 */

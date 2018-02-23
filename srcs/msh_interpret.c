@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 18:54:34 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 23:38:03 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,15 +62,18 @@ char		*get_cmd_path(char *line_cmd, char **env)
 static char	**get_cmd_argv(char *s)
 {
 	char	**ret;
+	char	*new_str;
 	t_list	*argvlst;
 	t_list	*bw;
 
-	if (!s || !ft_splitquote(&argvlst, s, "\t ", '"'))
+	if (!s || !ft_splitquote(&argvlst, s, "\t ", SH_QUOTES))
 		return (NULL);
 	bw = argvlst;
 	while (bw)
 	{
-		ft_strrmc((char**)&bw->content, '"');
+		new_str = ft_strrmquote((char*)bw->content, SH_QUOTES);
+		ft_strdel((char**)&bw->content);
+		bw->content = new_str;
 		bw = bw->next;
 	}
 	ret = ft_ltot(argvlst);
@@ -86,7 +89,7 @@ t_cmd		*interpret_cmd(char *cline, char **env)
 	t_list	*bw;
 
 	ret = NULL;
-	ft_splitquote(&psplit, cline, "|", '"');
+	ft_splitquote(&psplit, cline, "|", SH_QUOTES);
 	bw = psplit;
 	while (bw)
 	{

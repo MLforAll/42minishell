@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 21:23:18 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 03:31:13 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 23:14:30 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,11 @@ void		msh_child_sighandler(int sigc)
 		"Profiling timer expired", NULL, NULL,
 		"User defined signal 1", "User defined signal 2"};
 
-	if (sigc <= 0 || sigc > 31 || !errs[sigc - 1])
+	if (sigc <= 0 || sigc > 31)
 		return ;
 	ft_putchar('\n');
+	if (!errs[sigc - 1])
+		return ;
 	ft_putstr_fd(errs[sigc - 1], STDIN_FILENO);
 	ft_putstr_fd(": ", STDIN_FILENO);
 	ft_putnbr_fd(sigc, STDIN_FILENO);

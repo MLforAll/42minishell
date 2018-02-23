@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/22 02:11:47 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/22 23:37:25 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int			exec_cmds(char *line, char ***env)
 	t_list	*cmds;
 	t_list	*bw;
 
-	if (!ft_splitquote(&cmds, line, ";", '"'))
+	if (!ft_splitquote(&cmds, line, ";", SH_QUOTES))
 		return (ft_returnmsg("exec_cmds: line split err!", STDERR_FILENO, 0));
 	bw = cmds;
 	ret = EXIT_SUCCESS;

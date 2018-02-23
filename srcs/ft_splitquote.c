@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/18 02:37:36 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 00:53:20 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 00:32:14 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,27 +35,27 @@ static void	add_elem(t_list **dest, char **last, unsigned int *idx)
 		if (!(new = ft_lstnew(NULL, 0)))
 			return ;
 		if ((new->content = ft_strsub(*last, 0, *idx)))
-			new->content_size = ft_strlen(new->content) + 1;
+			new->content_size = *idx + 1;
 		ft_lstpush(dest, new);
 	}
 	*last = (*last) + *idx + 1;
 	*idx = 0;
 }
 
-int			ft_splitquote(t_list **dest, char *s, char *charset, char qc)
+int			ft_splitquote(t_list **dest, char *s, char *charset, char *cset)
 {
 	char			*last;
 	unsigned int	idx;
 	int				split;
 
-	*dest = NULL;
-	idx = 0;
-	if (!(last = s))
+	(dest) ? *dest = NULL : 0;
+	if (!dest || !charset || !(last = s))
 		return (FALSE);
+	idx = 0;
 	split = TRUE;
 	while (last[idx])
 	{
-		if (last[idx] == qc && (idx == 0 || last[idx - 1] != '\\'))
+		if (is_c_charset(last[idx], cset) && (idx == 0 || last[idx - 1] != '\\'))
 			split = !split;
 		if (!last[idx] || (is_c_charset(last[idx], charset) && split))
 			add_elem(dest, &last, &idx);
@@ -69,4 +69,28 @@ int			ft_splitquote(t_list **dest, char *s, char *charset, char qc)
 	}
 	add_elem(dest, &last, &idx);
 	return (TRUE);
+}
+
+char		*ft_strrmquote(char *s, char *cset)
+{
+	char			*ret;
+	char			*tmp;
+	unsigned int	idx;
+
+	if (!s || !(ret = ft_strnew(ft_strlen(s))))
+		return (NULL);
+	idx = 0;
+	tmp = s;
+	while (*tmp)
+	{
+		if (*tmp == '\\' && is_c_charset(tmp[1], cset))
+			tmp++;
+		if (!is_c_charset(*tmp, cset) || (tmp > s && *(tmp - 1) == '\\'))
+			ret[idx++] = *tmp;
+		tmp++;
+	}
+	tmp = ret;
+	ret = ft_strdup(tmp);
+	ft_strdel(&tmp);
+	return (ret);
 }

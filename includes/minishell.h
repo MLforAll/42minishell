@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/22 04:42:24 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 00:32:19 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define SH_NAME			"msh"
 # define SH_PLAIN_PROMPT	"msh$ "
 # define SH_RC				".mshrc"
+# define SH_QUOTES			"\""
 # define SH_BLTNS			"echo\0cd\0exit\0env\0setenv\0unsetenv\0source\0"
 
 # define SH_DEFAULT_PATH_1	"/usr/local/bin:/usr/bin:/bin:/usr/sbin:"
@@ -31,11 +32,17 @@
 # define SH_DEFAULT_PATH	SH_DEFAULT_PATH_1 SH_DEFAULT_PATH_2
 
 /*
+** line parsing
+*/
+
+int		ft_splitquote(t_list **dest, char *s, char *charset, char *cset);
+char	*ft_strrmquote(char *s, char *cset);
+
+/*
 ** cmd parsing
 */
 
 char	*get_cmd_path(char *line_cmd, char **env);
-int		ft_splitquote(t_list **dest, char *s, char *charset, char qc);
 t_cmd	*interpret_cmd(char *cline, char **env);
 
 /*
@@ -82,24 +89,6 @@ char	*set_env_from_str(char ***env, char *str);
 char	*set_env_var_n(char ***env, const char *var, int value);
 
 /*
-** piping
-*/
-
-void	dup_out_to_pipe(int outfd, int pfd);
-
-/*
-** misc functions / utilities
-*/
-
-char	*get_last_tabitem(char **tab);
-char	*get_last_component(const char *str, char c);
-char	*get_name_from_path(const char *path);
-char	*get_name_from_path_2(const char *path);
-
-int		free_return(void **data, int retv);
-void	switch_signals(int ign);
-
-/*
 ** errors
 */
 
@@ -109,8 +98,18 @@ void	msh_child_sighandler(int sigc);
 int		get_errcode_for_path(const char *path, int mode, int dir);
 
 /*
-** lists
+** misc functions / utilities
 */
+
+char	get_last_strc(char *s);
+char	*get_last_tabitem(char **tab);
+char	*get_last_component(const char *str, char c);
+char	*get_name_from_path(const char *path);
+char	*get_name_from_path_2(const char *path);
+
+int		free_return(void **data, int retv);
+void	switch_signals(int ign);
+void	dup_out_to_pipe(int outfd, int pfd);
 
 t_cmd	*ft_cmdnew(void);
 void	ft_cmdpush(t_cmd **headref, t_cmd *new);
