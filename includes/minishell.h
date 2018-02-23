@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 00:32:19 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 16:23:37 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,19 @@
 # define SH_PLAIN_PROMPT	"msh$ "
 # define SH_RC				".mshrc"
 # define SH_QUOTES			"\""
+# define SH_MAXHIST			100
 # define SH_BLTNS			"echo\0cd\0exit\0env\0setenv\0unsetenv\0source\0"
 
 # define SH_DEFAULT_PATH_1	"/usr/local/bin:/usr/bin:/bin:/usr/sbin:"
 # define SH_DEFAULT_PATH_2	"/opt/X11/bin"
 # define SH_DEFAULT_PATH	SH_DEFAULT_PATH_1 SH_DEFAULT_PATH_2
+
+/*
+** shell types
+*/
+
+int		exec_shell(const char *path, char ***env);
+int		interactive_shell(char ***env);
 
 /*
 ** line parsing
@@ -49,7 +57,6 @@ t_cmd	*interpret_cmd(char *cline, char **env);
 ** cmd exec
 */
 
-int		exec_shell(const char *path, char ***env);
 int		exec_cmd(t_cmd *cmd, char ***env);
 int		exec_cmds(char *line, char ***env);
 

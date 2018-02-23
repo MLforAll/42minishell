@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 20:21:10 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 03:51:19 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 16:10:15 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct		s_cmd
 	char			*c_path;
 	char			**c_argv;
 	int				c_pfd[2];
-	pid_t			pid;
+	pid_t			c_pid;
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 }					t_cmd;

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 14:19:13 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 16:32:42 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static char		*get_newpath(char *curr, char *path)
 	char			*last;
 	unsigned int	idx;
 
-	if (!curr || !path || !(ret = ft_strdup((*path == '/') ? "" : curr)))
+	if (!path || !(ret = ft_strdup((*path == '/' || !curr) ? "" : curr)))
 		return (NULL);
 	last = path + (*path == '/');
 	idx = 0;
@@ -101,12 +101,9 @@ char			*getset_pwd_env(char ***env)
 	if ((ret = get_env_var(*env, "PWD")))
 		return (ret);
 	if (!(pwd = getcwd(NULL, 0)))
-	{
 		ft_putendl_fd("getset_pwd_env: getcwd failed!", STDERR_FILENO);
-		return (NULL);
-	}
 	ret = set_env_var(env, "PWD", pwd);
-	free(pwd);
+	ft_strdel(&pwd);
 	return (ret);
 }
 
@@ -115,18 +112,17 @@ int				cd_bltn(int ac, char **av, char ***env, int outfd)
 	char			*path_cd;
 	char			*pwd;
 
-	if (!(pwd = getset_pwd_env(env)))
-		return (EXIT_FAILURE);
+	pwd = getset_pwd_env(env);
 	if (!(path_cd = get_cd_path(ac, av, pwd, *env)))
 		return (EXIT_FAILURE);
-	if (ac > 1 && ft_strcmp(av[1], "-") == 0)
-		ft_putendl_fd(path_cd, outfd);
 	if (chdir(path_cd) == -1)
 	{
 		msh_err(get_errcode_for_path(path_cd, X_OK, YES), av[0], \
-			get_last_tabitem(av));
+			path_cd);
 		return (free_return((void**)&path_cd, EXIT_FAILURE));
 	}
+	if (ac > 1 && ft_strcmp(av[1], "-") == 0)
+		ft_putendl_fd(path_cd, outfd);
 	set_env_var(env, "OLDPWD", pwd);
 	if (ac > 1 && ft_strcmp(av[1], "-P") == 0)
 	{

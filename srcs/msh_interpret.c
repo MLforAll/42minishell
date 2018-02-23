@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:22:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/22 23:38:03 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 16:10:06 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,8 @@ t_cmd		*interpret_cmd(char *cline, char **env)
 		}
 		fill_bltn(new, *new->c_argv);
 		new->c_path = (!new->builtin) ? get_cmd_path(*new->c_argv, env) : NULL;
-		pipe(new->c_pfd);
+		if (pipe(new->c_pfd) == -1)
+			ft_bzero(new->c_pfd, sizeof(new->c_pfd) / sizeof(int));
 		bw = bw->next;
 	}
 	ft_lstdel(&psplit, &free_tlist);

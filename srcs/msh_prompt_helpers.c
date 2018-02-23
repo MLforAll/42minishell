@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_prompt.c                                       :+:      :+:    :+:   */
+/*   msh_prompt_helpers.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/15 21:41:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 00:47:45 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 16:07:55 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ static char	*build_home(char *pwd, char **env)
 		ret = ft_strdup("~");
 	else
 		ret = ft_strnew(0);
+	if (!ret)
+		return (NULL);
 	ft_stradd(&ret, (stret) ? stret : pwd);
 	return (ret);
 }
@@ -81,9 +83,9 @@ int			add_pwd(char **dest, int all, char **env)
 	{
 		tmp = path;
 		path = get_name_from_path_2(path);
-		free(tmp);
+		ft_strdel(&tmp);
 	}
 	ft_stradd(dest, path);
-	free(path);
+	ft_strdel(&path);
 	return (TRUE);
 }

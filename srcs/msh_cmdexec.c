@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 14:00:56 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 16:35:24 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	exec_bincmd(t_cmd *cmd, char ***env)
 		execve(cmd->c_path, cmd->c_argv, *env);
 		exit(exec_shell(cmd->c_path, env) == EXIT_SUCCESS ? EXIT_SUCCESS : 127);
 	}
-	cmd->pid = pid;
+	cmd->c_pid = pid;
 	if (cmd->next)
 		return (EXIT_SUCCESS);
 	waitpid(pid, &exval, 0);
@@ -101,8 +101,8 @@ static int	run_cmdp(t_cmd *cmdp, char ***env)
 		cbw = cbw->prev;
 	while (cbw)
 	{
-		kill(cbw->pid, SIGTERM);
-		waitpid(cbw->pid, NULL, 0);
+		kill(cbw->c_pid, SIGTERM);
+		waitpid(cbw->c_pid, NULL, 0);
 		cbw = cbw->prev;
 	}
 	return (ret);
