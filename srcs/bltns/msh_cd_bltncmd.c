@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 00:12:05 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 14:19:13 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,17 +80,17 @@ static char		*get_cd_path(int ac, char **av, char *pwd, char **env)
 	{
 		if (!(ret = get_env_var(env, "HOME")))
 			msh_err(SH_ERR_NOSET, av[0], "HOME");
-		return (ft_strdup(ret));
+		return ((ret) ? ft_strdup(ret) : NULL);
 	}
 	if (target && ft_strcmp(target, "-") == 0)
 	{
 		if (!(oldpwd = get_env_var(env, "OLDPWD")))
 			msh_err(SH_ERR_NOSET, av[0], "OLDPWD");
-		return (ft_strdup(oldpwd));
+		return ((oldpwd) ? ft_strdup(oldpwd) : NULL);
 	}
 	if (mode)
 		return (get_newpath(pwd, target));
-	return (ft_strdup(target));
+	return ((target) ? ft_strdup(target) : NULL);
 }
 
 char			*getset_pwd_env(char ***env)

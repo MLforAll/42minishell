@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 19:49:11 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 16:41:16 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 14:24:35 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ t_cmd	*ft_cmdnew(void)
 {
 	t_cmd	*ret;
 
-	ret = (t_cmd*)malloc(sizeof(t_cmd));
+	if (!(ret = (t_cmd*)malloc(sizeof(t_cmd))))
+		return (NULL);
 	ft_bzero(ret, sizeof(t_cmd));
 	return (ret);
 }

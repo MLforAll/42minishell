@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/31 18:31:09 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/22 23:54:46 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 14:23:53 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ char	get_last_strc(char *s)
 
 char	*get_last_tabitem(char **tab)
 {
+	if (!tab)
+		return (NULL);
 	while (*tab)
 	{
 		if (!*(tab + 1))
@@ -60,7 +62,7 @@ char	*get_name_from_path_2(const char *path)
 	size_t	len_to_slash;
 
 	if ((tmp = get_name_from_path(path)) && *tmp)
-		return (ft_strdup(tmp));
+		return ((tmp) ? ft_strdup(tmp) : NULL);
 	if (!tmp)
 		return (NULL);
 	if ((len = ft_strlen(path)) == 0)
@@ -74,7 +76,7 @@ char	*get_name_from_path_2(const char *path)
 	}
 	tmp++;
 	if (!(chr = ft_strchr(tmp, '/')))
-		return (ft_strdup(tmp));
+		return ((tmp) ? ft_strdup(tmp) : NULL);
 	len_to_slash = chr - tmp;
 	return (ft_strsub(tmp, 0, len_to_slash));
 }
