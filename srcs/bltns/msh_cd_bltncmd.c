@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 19:19:33 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 20:42:19 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static char		*get_cd_path(int ac, char **av, char *pwd, char **env)
 	char			*target;
 	int				mode;
 
-	target = (ac > 2 && ft_strcmp(av[1], "-P") == 0) ? av[2] : av[1];
+	target = (av[1] && ft_strcmp(av[1], "-P") == 0) ? av[2] : av[1];
 	mode = (ac > 1 && target == av[1]);
 	if (!target)
 	{
