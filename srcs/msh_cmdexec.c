@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 18:25:25 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 18:50:55 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,25 @@
 #include <sys/wait.h>
 #include "minishell.h"
 
-static int	cmd_chk(char *path)
+static int	cmd_chk(char *path, char **env)
 {
 	int		code;
+	int		noent;
+	char	*pathenv;
 
 	if (!path)
 		return (SH_ERR_UNDEFINED);
+	noent = SH_ERR_NOENT;
 	if (!ft_strchr(path, '/'))
-		return (SH_ERR_NOCMD);
+	{
+		if ((pathenv = get_env_var(env, "PATH")) && *pathenv)
+			return (SH_ERR_NOCMD);
+		noent = SH_ERR_NOCMD;
+	}
 	if ((code = get_errcode_for_path(path, X_OK, NO)) == SH_ERR_UNDEFINED)
 		return (-1);
+	if (code == SH_ERR_NOENT)
+		return (noent);
 	return (code);
 }
 
@@ -67,7 +76,7 @@ int			exec_cmd(t_cmd *cmd, char ***env)
 			cmd->c_argv, env, (cmd->next) ? cmd->c_pfd[1] : STDOUT_FILENO);
 	else
 	{
-		if ((errval = cmd_chk(cmd->c_path)) >= 0)
+		if ((errval = cmd_chk(cmd->c_path, *env)) >= 0)
 		{
 			if (cmd->prev)
 				close(cmd->prev->c_pfd[0]);

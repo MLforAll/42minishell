@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 16:32:42 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 18:56:56 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void		chg_ret(char **ret, char **last, char *path, unsigned int idx)
 		*last += ((*last)[2] != '\0') + 2;
 		return ;
 	}
-	if (**last || ft_strcmp(path, "/") == 0)
+	if (**last || (*path == '/' && !**ret))
 		ft_stradd(ret, "/");
 	ft_strnadd(ret, *last, idx);
 }

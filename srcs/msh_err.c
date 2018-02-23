@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 21:23:18 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 17:17:45 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 18:46:39 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,12 @@ int			get_errcode_for_path(const char *path, int mode, int dir)
 
 	if (access(path, F_OK) == -1)
 		return ((check_too_much_links(path)) ? SH_ERR_TMLNK : SH_ERR_NOENT);
-	if (dir)
-	{
-		if (stat(path, &st) == -1)
-			return (SH_ERR_UNDEFINED);
-		if (!S_ISDIR(st.st_mode))
-			return (SH_ERR_NOTDIR);
-	}
+	if (stat(path, &st) == -1)
+		return (SH_ERR_UNDEFINED);
+	if (dir && !S_ISDIR(st.st_mode))
+		return (SH_ERR_NOTDIR);
+	else if (!dir && !S_ISREG(st.st_mode))
+		return (SH_ERR_NOENT);
 	if (access(path, mode) == -1)
 		return (SH_ERR_PERM);
 	return (SH_ERR_UNDEFINED);
