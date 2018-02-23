@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/02/22 23:10:24 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/02/23 02:15:32 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,11 +34,11 @@ SRCFILES = minishell.c \
 	msh_prompt_helpers.c \
 	msh_env.c \
 	msh_env_helpers.c \
+	msh_lineparser.c \
 	bltns/msh_builtins.c \
 	bltns/msh_env_bltncmd.c \
 	bltns/msh_cd_bltncmd.c \
 	fsexp_functions.c \
-	ft_splitquote.c \
 	ft_readline/ft_readline.c \
 	ft_readline/ft_rl_utils.c \
 	ft_readline/ft_rl_csrkeys.c \
