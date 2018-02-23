@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 18:10:00 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 18:25:25 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,12 @@ int			exec_cmd(t_cmd *cmd, char ***env)
 	else
 	{
 		if ((errval = cmd_chk(cmd->c_path)) >= 0)
-			return (msh_err_ret(errval, NULL, cmd->c_path, 127));
+		{
+			if (cmd->prev)
+				close(cmd->prev->c_pfd[0]);
+			msh_err(errval, NULL, cmd->c_path);
+			return (127);
+		}
 		exval = exec_bincmd(cmd, env);
 	}
 	if (!cmd->next && cmd->c_pfd[0] > 2)
