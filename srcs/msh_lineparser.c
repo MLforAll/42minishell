@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/18 02:37:36 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 02:14:59 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 18:08:40 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void	add_elem(t_list **dest, char **last, unsigned int *idx)
 	*idx = 0;
 }
 
-int			ft_splitquote(t_list **dest, char *s, char *charset, char *cset)
+int			ft_splitquote(t_list **dest, char *s, char *charset, char *cs)
 {
 	char			*last;
 	unsigned int	idx;
@@ -55,7 +55,7 @@ int			ft_splitquote(t_list **dest, char *s, char *charset, char *cset)
 	split = TRUE;
 	while (last[idx])
 	{
-		if (is_c_charset(last[idx], cset) && (idx == 0 || last[idx - 1] != '\\'))
+		if (is_c_charset(last[idx], cs) && (idx == 0 || last[idx - 1] != '\\'))
 			split = !split;
 		if (!last[idx] || (is_c_charset(last[idx], charset) && split))
 			add_elem(dest, &last, &idx);

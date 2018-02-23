@@ -1,42 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_misc.c                                         :+:      :+:    :+:   */
+/*   testtrap.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/31 18:31:09 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 17:43:26 by kdumarai         ###   ########.fr       */
+/*   Created: 2018/02/23 17:38:53 by kdumarai          #+#    #+#             */
+/*   Updated: 2018/02/23 17:43:44 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include "libft.h"
+#include <string.h>
+#include <signal.h>
 
-int		free_return(void **data, int retv)
+static void	putnl(char *s)
 {
-	if (data && *data)
+	if (!s)
+		putnl("(null)");
+	write(STDOUT_FILENO, s, strlen(s));
+	write(STDOUT_FILENO, "\n", 1);
+}
+
+int			main(void)
+{
+	putnl("This prgm will run and trap Ctrl-C");
+	signal(SIGINT, SIG_IGN);
+	signal(SIGTERM, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
+	while (42)
 	{
-		free(*data);
-		*data = NULL;
+		putnl("running...");
+		sleep(1);
 	}
-	return (retv);
-}
-
-void	switch_traps(int ign)
-{
-	void	(*act)(int);
-
-	act = (ign) ? SIG_IGN : SIG_DFL;
-	signal(SIGINT, act);
-	signal(SIGTERM, act);
-	signal(SIGTSTP, act);
-}
-
-void	dup_out_to_pipe(int outfd, int pfd)
-{
-	close(outfd);
-	dup2(pfd, outfd);
+	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 16:23:37 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 18:08:57 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int		interactive_shell(char ***env);
 ** line parsing
 */
 
-int		ft_splitquote(t_list **dest, char *s, char *charset, char *cset);
+int		ft_splitquote(t_list **dest, char *s, char *charset, char *cs);
 char	*ft_strrmquote(char *s, char *cset);
 
 /*
@@ -115,7 +115,7 @@ char	*get_name_from_path(const char *path);
 char	*get_name_from_path_2(const char *path);
 
 int		free_return(void **data, int retv);
-void	switch_signals(int ign);
+void	switch_traps(int ign);
 void	dup_out_to_pipe(int outfd, int pfd);
 
 t_cmd	*ft_cmdnew(void);

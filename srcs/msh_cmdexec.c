@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 16:35:24 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 18:10:00 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,15 @@
 
 static int	cmd_chk(char *path)
 {
-	int		noent_msg;
 	int		code;
 
 	if (!path)
 		return (SH_ERR_UNDEFINED);
-	noent_msg = ft_strchr(path, '/') ? SH_ERR_NOENT : SH_ERR_NOCMD;
-	if ((code = get_errcode_for_path(path, X_OK, NO)) == SH_ERR_NOENT)
-		return (noent_msg);
-	else if (code != SH_ERR_UNDEFINED)
-		return (code);
-	return (-1);
+	if (!ft_strchr(path, '/'))
+		return (SH_ERR_NOCMD);
+	if ((code = get_errcode_for_path(path, X_OK, NO)) == SH_ERR_UNDEFINED)
+		return (-1);
+	return (code);
 }
 
 static int	exec_bincmd(t_cmd *cmd, char ***env)
@@ -45,7 +43,7 @@ static int	exec_bincmd(t_cmd *cmd, char ***env)
 			: dup_out_to_pipe(STDIN_FILENO, cmd->prev->c_pfd[0]);
 		(cmd->next) ? dup_out_to_pipe(STDOUT_FILENO, cmd->c_pfd[1]) \
 			: close(cmd->c_pfd[1]);
-		switch_signals(FALSE);
+		switch_traps(FALSE);
 		chg_env_var(*env, "_", cmd->c_path);
 		execve(cmd->c_path, cmd->c_argv, *env);
 		exit(exec_shell(cmd->c_path, env) == EXIT_SUCCESS ? EXIT_SUCCESS : 127);
@@ -116,7 +114,7 @@ int			exec_cmds(char *line, char ***env)
 	t_list	*bw;
 
 	if (*line == '#')
-		return (0);
+		return (EXIT_SUCCESS);
 	if (!ft_splitquote(&cmds, line, ";", SH_QUOTES))
 		return (ft_returnmsg("exec_cmds: line split err!", STDERR_FILENO, 258));
 	bw = cmds;

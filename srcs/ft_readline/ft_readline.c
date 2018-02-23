@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 13:46:19 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 18:07:19 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,30 +79,31 @@ static void	act_on_buff(char *buff, char **line, t_readline *rl)
 		return ;
 }
 
-static void	print_end_newlines(char *line, const char *prompt, t_cursor *csr)
+static void	print_end_newlines(char *line, char *buff, t_readline *rl)
 {
 	struct winsize		ws;
 	size_t				times;
 	size_t				linelen;
-	char				*buff;
+	char				*nlb;
 
-	if (!line || !prompt || csr->pos == csr->max)
+	if (!line || !rl || rl->csr.pos == rl->csr.max)
 	{
 		ft_putchar_fd('\n', STDIN_FILENO);
 		return ;
 	}
 	if (ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) == -1)
 		return ;
-	linelen = ft_strlen(line) + ft_strlen(prompt);
+	linelen = ft_strlen(line) + ft_strlen(rl->prompt);
 	times = linelen / ws.ws_col + (linelen % ws.ws_col != 0);
-	times -= csr->pos / ws.ws_col;
+	times -= rl->csr.pos / ws.ws_col;
 	times = (times <= 0) ? 1 : times;
-	if (!(buff = (char*)malloc(sizeof(char) * (times + 1))))
+	times += (buff && *buff != '\n');
+	if (!(nlb = (char*)malloc(sizeof(char) * (times + 1))))
 		return ;
-	ft_memset(buff, '\n', times);
-	buff[times] = '\0';
-	ft_putstr_fd(buff, STDIN_FILENO);
-	free(buff);
+	ft_memset(nlb, '\n', times);
+	nlb[times] = '\0';
+	ft_putstr_fd(nlb, STDIN_FILENO);
+	free(nlb);
 }
 
 char		*ft_readline(const char *prompt, char **env, t_history *hist)
@@ -126,7 +127,7 @@ char		*ft_readline(const char *prompt, char **env, t_history *hist)
 			break ;
 		ft_bzero(buff, sizeof(buff));
 	}
-	print_end_newlines(ret, prompt, &rl.csr);
+	print_end_newlines(ret, buff, &rl);
 	rl_set_term(STDIN_FILENO, YES, prompt);
 	return (ret);
 }
