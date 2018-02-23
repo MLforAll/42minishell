@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 18:26:40 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 13:53:47 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int			exec_shell(const char *path, char ***env)
 	while (get_next_line(fd, &line) > 0)
 	{
 		ret = exec_cmds(line, env);
+		set_env_var_n(env, "?", ret);
 		ft_strdel(&line);
 	}
 	if (fd != STDIN_FILENO)
@@ -58,7 +59,7 @@ static char	*ishell_get_prompt(char **env)
 	char		*mshp_entry;
 	char		*pr;
 
-	if ((mshp_entry = get_env_var(env, "MSH_PROMPT")))
+	if ((mshp_entry = get_env_var(env, "MSH_PROMPT")) && *mshp_entry)
 		pr = get_prompt_from_str(mshp_entry, env);
 	else
 		pr = get_prompt_from_str("\\u:\\W$ ", env);
@@ -87,6 +88,7 @@ static int	interactive_shell(char ***env)
 		if (!line)
 			break ;
 		ret = exec_cmds(line, env);
+		set_env_var_n(env, "?", ret);
 		ft_strdel(&line);
 	}
 	ft_histdel(&history);

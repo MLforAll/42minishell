@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/22 23:01:59 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 13:46:01 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		rl_set_term(int fd, int echo, const char *prompt)
 {
 	struct termios	t;
 
-	if (tcgetattr(fd, &t))
+	if (!prompt || tcgetattr(fd, &t))
 		return (FALSE);
 	if (!echo)
 	{
@@ -38,7 +38,7 @@ void	rl_line_rm(char **line, size_t len, t_cursor *csr)
 	char			*tmp;
 	size_t			rpt;
 
-	if (!line || !len || !csr)
+	if (!line || len == 0 || !csr)
 		return ;
 	rpt = len;
 	while (rpt--)

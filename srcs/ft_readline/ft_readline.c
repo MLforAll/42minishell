@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/22 23:02:16 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 13:46:19 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,21 +79,24 @@ static void	act_on_buff(char *buff, char **line, t_readline *rl)
 		return ;
 }
 
-static void	print_end_newlines(char *line, const char *prompt)
+static void	print_end_newlines(char *line, const char *prompt, t_cursor *csr)
 {
 	struct winsize		ws;
 	size_t				times;
+	size_t				linelen;
 	char				*buff;
 
-	if (!line || !prompt)
+	if (!line || !prompt || csr->pos == csr->max)
 	{
 		ft_putchar_fd('\n', STDIN_FILENO);
 		return ;
 	}
 	if (ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) == -1)
 		return ;
-	times = (ft_strlen(line) + ft_strlen(prompt)) / ws.ws_col;
-	times += (times == 0);
+	linelen = ft_strlen(line) + ft_strlen(prompt);
+	times = linelen / ws.ws_col + (linelen % ws.ws_col != 0);
+	times -= csr->pos / ws.ws_col;
+	times = (times <= 0) ? 1 : times;
 	if (!(buff = (char*)malloc(sizeof(char) * (times + 1))))
 		return ;
 	ft_memset(buff, '\n', times);
@@ -123,7 +126,7 @@ char		*ft_readline(const char *prompt, char **env, t_history *hist)
 			break ;
 		ft_bzero(buff, sizeof(buff));
 	}
-	print_end_newlines(ret, prompt);
+	print_end_newlines(ret, prompt, &rl.csr);
 	rl_set_term(STDIN_FILENO, YES, prompt);
 	return (ret);
 }

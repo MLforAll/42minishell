@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/22 23:37:25 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 14:00:56 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static int	exec_bincmd(t_cmd *cmd, char ***env)
 	cmd->pid = pid;
 	if (cmd->next)
 		return (EXIT_SUCCESS);
-	wait4(pid, &exval, 0, NULL);
+	waitpid(pid, &exval, 0);
 	if (WIFSIGNALED(exval))
 		msh_child_sighandler(WTERMSIG(exval));
 	return (WEXITSTATUS(exval));
@@ -83,12 +83,10 @@ int			exec_cmd(t_cmd *cmd, char ***env)
 static int	run_cmdp(t_cmd *cmdp, char ***env)
 {
 	int		ret;
-	int		exval;
 	t_cmd	*cbw;
 
 	if (!cmdp)
 		return (EXIT_SUCCESS);
-	exval = 0;
 	cbw = cmdp;
 	while (cbw)
 	{
@@ -97,9 +95,10 @@ static int	run_cmdp(t_cmd *cmdp, char ***env)
 			break ;
 		cbw = cbw->next;
 	}
-	set_env_var_n(env, "?", ret);
 	if (!cmdp->next)
 		return (ret);
+	if (cbw)
+		cbw = cbw->prev;
 	while (cbw)
 	{
 		kill(cbw->pid, SIGTERM);
@@ -116,8 +115,10 @@ int			exec_cmds(char *line, char ***env)
 	t_list	*cmds;
 	t_list	*bw;
 
+	if (*line == '#')
+		return (0);
 	if (!ft_splitquote(&cmds, line, ";", SH_QUOTES))
-		return (ft_returnmsg("exec_cmds: line split err!", STDERR_FILENO, 0));
+		return (ft_returnmsg("exec_cmds: line split err!", STDERR_FILENO, 258));
 	bw = cmds;
 	ret = EXIT_SUCCESS;
 	while (bw)
