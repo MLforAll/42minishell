@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 19:27:24 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/23 19:29:27 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ t_list			*get_ac_result(char *line, char *region, char **env)
 	if (!ft_strchr(region, '/') && check_is_command(chk_cmd_line))
 	{
 		ret = get_res_with_path(region, env);
-		add_bltn_ac(base, &ret);
+		add_bltn_ac(region, &ret);
 	}
 	else
 		ret = search_files_begin(region, NULL, FALSE);
