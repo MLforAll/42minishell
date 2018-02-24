@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/30 23:00:55 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/21 03:51:03 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/24 16:02:34 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,14 @@ static int	get_env_opts(int ac, char **av, int *idx)
 	return (ret);
 }
 
-static int	launch_utility(char **av, int idx, char **new_env, char **env)
+static int	launch_utility(char **av, int idx, char **new_env)
 {
 	int				ret;
 	t_cmd			*cmd;
 
 	cmd = ft_cmdnew();
 	cmd->c_argv = ft_tabdup((const char**)(av + idx));
-	cmd->c_path = get_cmd_path(*cmd->c_argv, env);
+	cmd->c_path = get_cmd_path(*cmd->c_argv, new_env);
 	ret = exec_cmd(cmd, &new_env);
 	ft_cmddel(&cmd);
 	return (ret);
@@ -94,7 +94,7 @@ int			env_bltn(int ac, char **av, char ***env, int outfd)
 		idx++;
 	}
 	(!av[idx]) ? ft_puttab_fd(new_env, NULL, outfd) \
-		: (exval = launch_utility(av, idx, new_env, *env));
+		: (exval = launch_utility(av, idx, new_env));
 	ft_tabfree(&new_env);
 	return (exval);
 }

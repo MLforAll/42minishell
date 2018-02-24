@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 13:46:01 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/24 13:03:46 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	rl_line_rm(char **line, size_t len, t_cursor *csr)
 	*line = ft_strsub(tmp, 0, csr->pos);
 	if (csr->pos + len < csr->max)
 		ft_stradd(line, tmp + csr->pos + len);
-	free(tmp);
+	ft_strdel(&tmp);
 	rpt = len;
 	while (rpt--)
 		csr->max--;
@@ -62,8 +62,8 @@ void	rl_line_rm(char **line, size_t len, t_cursor *csr)
 
 void	rl_line_add(char **line, char *add, t_cursor *csr)
 {
-	char	*tmp;
-	size_t	len;
+	char			*tmp;
+	size_t			len;
 
 	if (!line || !add || !csr || !(len = ft_strlen(add)))
 		return ;
@@ -80,15 +80,15 @@ void	rl_line_add(char **line, char *add, t_cursor *csr)
 	ft_stradd(line, add);
 	if (csr->pos < csr->max)
 		ft_stradd(line, tmp + csr->pos);
-	free(tmp);
+	ft_strdel(&tmp);
 	csr->max += len;
 	csr->pos += len;
 }
 
 int		rl_input_add_text(char *buff, char **line, t_cursor *csr)
 {
-	char				add[5];
-	unsigned int		idx;
+	char			add[5];
+	unsigned int	idx;
 
 	if (*buff == 27)
 		return (0);
@@ -109,17 +109,17 @@ int		rl_input_add_text(char *buff, char **line, t_cursor *csr)
 
 int		rl_input_rm_text(char **line, char *buff, t_cursor *csr)
 {
-	int		keys[2];
+	int				keys[2];
 
 	keys[0] = (*buff == 127);
 	keys[1] = (ft_strcmp(buff, ESC_DELK) == 0);
+	if (!keys[0] && !keys[1])
+		return (0);
 	if (keys[0] && csr->pos > 0)
 	{
 		rl_line_rm(line, 1, csr);
 		return (1);
 	}
-	else if (keys[0])
-		return (-1);
 	else if (keys[1] && csr->pos < csr->max)
 	{
 		ft_putstr_fd(ESC_RIGHTK, STDIN_FILENO);
@@ -127,7 +127,5 @@ int		rl_input_rm_text(char **line, char *buff, t_cursor *csr)
 		rl_line_rm(line, 1, csr);
 		return (1);
 	}
-	else if (keys[1])
-		return (-1);
-	return (0);
+	return (-1);
 }

@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/18 09:00:17 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/24 01:04:52 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/24 12:50:32 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,46 +15,45 @@
 #include "libft.h"
 #include "ft_readline.h"
 
-static void	configure_rightk(char *buff, t_readline *rl)
+static int	rightk_action(char *buff, t_readline *rl)
 {
+	int				ioctl_ret;
 	struct winsize	ws;
 
-	if (ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) == -1)
-		return ;
-	if ((rl->csr.pos + rl->prlen) % ws.ws_col == 0)
+	ioctl_ret = ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+	if (ioctl_ret != -1 && (rl->csr.pos + 1 + rl->prlen) % ws.ws_col == 0)
 	{
-		ft_putstr_fd("\033[", STDIN_FILENO);
-		ft_putnbr_fd(ws.ws_col, STDIN_FILENO);
-		ft_putchar_fd('D', STDIN_FILENO);
-		ft_putstr_fd("\033[B", STDIN_FILENO);
+		if (rl->csr.max + rl->prlen == ws.ws_col)
+			return (FALSE);
+		ft_putstr_fd("\n\r", STDIN_FILENO);
 	}
 	else
 		ft_putstr_fd(buff, STDIN_FILENO);
+	return (TRUE);
 }
 
 int			rl_csr_keys(char *buff, t_readline *rl)
 {
-	int				ret;
 	int				keys[2];
 
 	keys[0] = (ft_strcmp(ESC_RIGHTK, buff) == 0);
 	keys[1] = (ft_strcmp(ESC_LEFTK, buff) == 0);
 	if (!keys[0] && !keys[1])
 		return (0);
-	ret = -1;
 	if (keys[0] && rl->csr.pos < rl->csr.max)
 	{
+		if (!rightk_action(buff, rl))
+			return (0);
 		rl->csr.pos++;
-		configure_rightk(buff, rl);
-		ret = 1;
+		return (1);
 	}
 	if (keys[1] && rl->csr.pos > 0)
 	{
 		rl->csr.pos--;
 		ft_putstr_fd(buff, STDIN_FILENO);
-		ret = 1;
+		return (1);
 	}
-	return (ret);
+	return (-1);
 }
 
 static void	configure_hekeys(int k[2], size_t *len, char *ckey, t_readline *rl)

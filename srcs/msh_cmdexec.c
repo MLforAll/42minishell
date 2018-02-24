@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 18:50:55 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/24 15:43:05 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,7 @@ static int	exec_bincmd(t_cmd *cmd, char ***env)
 		return (EXIT_FAILURE);
 	if (pid == 0)
 	{
-		(!cmd->prev) ? close(cmd->c_pfd[0]) \
-			: dup_out_to_pipe(STDIN_FILENO, cmd->prev->c_pfd[0]);
-		(cmd->next) ? dup_out_to_pipe(STDOUT_FILENO, cmd->c_pfd[1]) \
-			: close(cmd->c_pfd[1]);
+		prepare_dups(cmd);
 		switch_traps(FALSE);
 		chg_env_var(*env, "_", cmd->c_path);
 		execve(cmd->c_path, cmd->c_argv, *env);

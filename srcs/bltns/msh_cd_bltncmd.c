@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 21:26:00 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 20:42:19 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/24 14:30:57 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,8 @@ int				cd_bltn(int ac, char **av, char ***env, int outfd)
 			path_cd);
 		return (free_return((void**)&path_cd, EXIT_FAILURE));
 	}
-	if (ac > 1 && ft_strcmp(av[1], "-") == 0)
+	if ((ac > 1 && ft_strcmp(av[1], "-") == 0)
+		|| (ac > 2 && ft_strcmp(av[2], "-") == 0))
 		ft_putendl_fd(path_cd, outfd);
 	set_env_var(env, "OLDPWD", pwd);
 	if (ac > 1 && ft_strcmp(av[1], "-P") == 0)

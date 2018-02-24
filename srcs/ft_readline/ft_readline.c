@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/24 01:10:53 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/24 13:07:56 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,15 @@ static size_t	ft_strlen_nocolor(const char *s)
 	return (ret);
 }
 
-static void		act_keys(char **line, char *buff, char **env, t_readline *rl)
+static void		act_keys(char **line, char *buff, t_readline *rl)
 {
 	int				rval;
 	unsigned int	idx;
 	static int		(*f[])(char*, t_readline*) =
 	{&rl_csr_keys, &rl_home_end_keys, NULL};
 
+	if (!line || !*line || !buff)
+		return ;
 	if ((rval = rl_history_keys(&rl->hist, buff, line)) > 0 && *line)
 	{
 		ft_putstr_fd("\r\033[K", STDIN_FILENO);
@@ -70,14 +72,14 @@ static void		act_keys(char **line, char *buff, char **env, t_readline *rl)
 		else if (rval == -1)
 			ft_putchar_fd('\a', STDIN_FILENO);
 	}
-	if (*buff == '\t')
-		ac_line(line, &rl->csr, rl->prompt, env);
 }
 
 static void		act_on_buff(char *buff, char **line, t_readline *rl)
 {
 	int				retval;
 
+	if (!line || !*line || !buff)
+		return ;
 	if (rl_input_add_text(buff, line, &rl->csr))
 		return ;
 	if ((retval = rl_input_rm_text(line, buff, &rl->csr)) == 1)
@@ -142,8 +144,10 @@ char			*ft_readline(const char *prompt, char **env, t_history *hist)
 	ret = ft_strnew(0);
 	while (ret && read(STDIN_FILENO, buff, 4) > 0)
 	{
-		act_keys(&ret, buff, env, &rl);
+		act_keys(&ret, buff, &rl);
 		act_on_buff(buff, &ret, &rl);
+		if (*buff == '\t')
+			ac_line(&ret, &rl.csr, rl.prompt, env);
 		if (*buff == '\n' || *buff == 4 || *buff == 3)
 			break ;
 		ft_bzero(buff, sizeof(buff));

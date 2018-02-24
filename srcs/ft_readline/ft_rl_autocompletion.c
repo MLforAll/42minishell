@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/26 20:53:53 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 19:29:27 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/24 14:25:41 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void		add_bltn_ac(char *base, t_list **res)
 {
 	char	*nptr;
 
-	if (!base || !res)
+	if (!base || !*base || !res)
 		return ;
 	nptr = SH_BLTNS;
 	while (*nptr)
@@ -52,7 +52,6 @@ static t_list	*get_res_with_path(char *base, char **env)
 			ft_lstadd(&ret, new);
 		bw++;
 	}
-	ft_lstrmdups(&ret);
 	ft_tabfree(&paths);
 	return (ret);
 }
@@ -107,6 +106,7 @@ t_list			*get_ac_result(char *line, char *region, char **env)
 	{
 		ret = get_res_with_path(region, env);
 		add_bltn_ac(region, &ret);
+		ft_lstrmdups(&ret);
 	}
 	else
 		ret = search_files_begin(region, NULL, FALSE);

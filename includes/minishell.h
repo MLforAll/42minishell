@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 20:08:37 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/24 15:42:57 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ char	*get_name_from_path_2(const char *path);
 
 int		free_return(void **data, int retv);
 void	switch_traps(int ign);
-void	dup_out_to_pipe(int outfd, int pfd);
+void	prepare_dups(t_cmd *cmd);
 
 t_cmd	*ft_cmdnew(void);
 void	ft_cmdpush(t_cmd **headref, t_cmd *new);
