@@ -6,13 +6,12 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/21 19:45:50 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 18:07:19 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/24 01:10:53 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
-#include <sys/ioctl.h>
 #include "libft.h"
 #include "ft_readline.h"
 
@@ -25,11 +24,32 @@
 ** call on stdin will respond at each keypress.
 */
 
-static void	act_keys(char **line, char *buff, char **env, t_readline *rl)
+static size_t	ft_strlen_nocolor(const char *s)
 {
-	int					rval;
-	unsigned int		idx;
-	static int			(*f[])(char *, t_cursor *) =
+	size_t			ret;
+	size_t			chk;
+
+	ret = 0;
+	while (*s)
+	{
+		if (*s == '\033')
+		{
+			chk = 0;
+			while (chk++ < 7 && *s != 'm')
+				s++;
+			ret--;
+		}
+		ret++;
+		s++;
+	}
+	return (ret);
+}
+
+static void		act_keys(char **line, char *buff, char **env, t_readline *rl)
+{
+	int				rval;
+	unsigned int	idx;
+	static int		(*f[])(char*, t_readline*) =
 	{&rl_csr_keys, &rl_home_end_keys, NULL};
 
 	if ((rval = rl_history_keys(&rl->hist, buff, line)) > 0 && *line)
@@ -45,7 +65,7 @@ static void	act_keys(char **line, char *buff, char **env, t_readline *rl)
 	idx = -1;
 	while (f[++idx])
 	{
-		if ((rval = f[idx](buff, &rl->csr)) > 0)
+		if ((rval = f[idx](buff, rl)) > 0)
 			return ;
 		else if (rval == -1)
 			ft_putchar_fd('\a', STDIN_FILENO);
@@ -54,9 +74,9 @@ static void	act_keys(char **line, char *buff, char **env, t_readline *rl)
 		ac_line(line, &rl->csr, rl->prompt, env);
 }
 
-static void	act_on_buff(char *buff, char **line, t_readline *rl)
+static void		act_on_buff(char *buff, char **line, t_readline *rl)
 {
-	int					retval;
+	int				retval;
 
 	if (rl_input_add_text(buff, line, &rl->csr))
 		return ;
@@ -79,12 +99,12 @@ static void	act_on_buff(char *buff, char **line, t_readline *rl)
 		return ;
 }
 
-static void	print_end_newlines(char *line, char *buff, t_readline *rl)
+static void		print_end_newlines(char *line, char *buff, t_readline *rl)
 {
-	struct winsize		ws;
-	size_t				times;
-	size_t				linelen;
-	char				*nlb;
+	struct winsize	ws;
+	size_t			times;
+	size_t			linelen;
+	char			*nlb;
 
 	if (!line || !rl || rl->csr.pos == rl->csr.max)
 	{
@@ -93,7 +113,7 @@ static void	print_end_newlines(char *line, char *buff, t_readline *rl)
 	}
 	if (ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) == -1)
 		return ;
-	linelen = ft_strlen(line) + ft_strlen(rl->prompt);
+	linelen = ft_strlen(line) + rl->prlen;
 	times = linelen / ws.ws_col + (linelen % ws.ws_col != 0);
 	times -= rl->csr.pos / ws.ws_col;
 	times = (times <= 0) ? 1 : times;
@@ -106,17 +126,18 @@ static void	print_end_newlines(char *line, char *buff, t_readline *rl)
 	free(nlb);
 }
 
-char		*ft_readline(const char *prompt, char **env, t_history *hist)
+char			*ft_readline(const char *prompt, char **env, t_history *hist)
 {
-	char				buff[5];
-	t_readline			rl;
-	char				*ret;
+	char			buff[5];
+	t_readline		rl;
+	char			*ret;
 
 	if (!rl_set_term(STDIN_FILENO, NO, prompt))
 		return (NULL);
 	ft_bzero(&rl.csr, sizeof(t_cursor));
 	rl.hist = hist;
 	rl.prompt = prompt;
+	rl.prlen = ft_strlen_nocolor(prompt);
 	ft_bzero(buff, sizeof(buff));
 	ret = ft_strnew(0);
 	while (ret && read(STDIN_FILENO, buff, 4) > 0)

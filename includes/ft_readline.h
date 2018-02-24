@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 17:46:30 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/22 23:16:37 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/02/24 01:00:37 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FT_READLINE_H
 
 # include "libft.h"
+# include <sys/ioctl.h>
 
 /*
 ** ESC Sequences Codes
@@ -56,6 +57,7 @@ typedef struct	s_history
 typedef struct	s_readline
 {
 	const char	*prompt;
+	size_t		prlen;
 	t_cursor	csr;
 	t_history	*hist;
 }				t_readline;
@@ -70,8 +72,8 @@ char			*ft_readline(const char *prompt, char **env, t_history *hist);
 ** Utilities functions
 */
 
-int				rl_csr_keys(char *buff, t_cursor *csr);
-int				rl_home_end_keys(char *buff, t_cursor *csr);
+int				rl_csr_keys(char *buff, t_readline *rl);
+int				rl_home_end_keys(char *buff, t_readline *rl);
 
 void			rl_line_rm(char **line, size_t len, t_cursor *csr);
 void			rl_line_add(char **line, char *add, t_cursor *csr);
