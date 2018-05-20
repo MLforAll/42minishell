@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh_cmdexec.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Kelian <Kelian@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 20:09:13 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/24 15:43:05 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/05/20 23:34:43 by Kelian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int			exec_cmd(t_cmd *cmd, char ***env)
 	int		exval;
 
 	if (cmd->builtin)
-		exval = (cmd->builtin)((int)ft_tablen((const char**)cmd->c_argv), \
+		exval = (cmd->builtin)((int)ft_tablen(cmd->c_argv), \
 			cmd->c_argv, env, (cmd->next) ? cmd->c_pfd[1] : STDOUT_FILENO);
 	else
 	{

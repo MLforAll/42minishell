@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh_env_bltncmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Kelian <Kelian@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/30 23:00:55 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/24 16:02:34 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/05/20 23:35:48 by Kelian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	launch_utility(char **av, int idx, char **new_env)
 	t_cmd			*cmd;
 
 	cmd = ft_cmdnew();
-	cmd->c_argv = ft_tabdup((const char**)(av + idx));
+	cmd->c_argv = ft_tabdup((av + idx));
 	cmd->c_path = get_cmd_path(*cmd->c_argv, new_env);
 	ret = exec_cmd(cmd, &new_env);
 	ft_cmddel(&cmd);
@@ -85,7 +85,7 @@ int			env_bltn(int ac, char **av, char ***env, int outfd)
 	idx = 1;
 	if ((opts = get_env_opts(ac, av, &idx)) < 0)
 		return (usage(-opts));
-	new_env = (opts & 0x1) ? ft_tabnew() : ft_tabdup((const char**)*env);
+	new_env = (opts & 0x1) ? ft_tabnew() : ft_tabdup(*env);
 	while (ac > 1 && av[idx])
 	{
 		if (!ft_strchr(av[idx], '='))

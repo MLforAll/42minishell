@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Kelian <Kelian@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 22:31:45 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/24 01:15:33 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/05/20 23:35:27 by Kelian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,10 @@ char			*set_env_var(char ***env, const char *var, char *value)
 	new_entry[0] = entry_str;
 	new_entry[1] = NULL;
 	old = *env;
-	*env = ft_tabjoin((const char**)*env, (const char**)new_entry);
+	*env = ft_tabjoin(*env, new_entry);
 	free(entry_str);
 	ft_tabfree(&old);
-	newlen = ft_tablen((const char**)*env);
+	newlen = ft_tablen(*env);
 	return ((**env && newlen > 0) ? (*env)[newlen - 1] : NULL);
 }
 
@@ -87,7 +87,7 @@ void			del_env_var(char ***env, const char *var)
 	if (!env || !var)
 		return ;
 	if (!(new_env = (char**)malloc(sizeof(char*) * \
-		(ft_tablen((const char**)*env) + 1))))
+		(ft_tablen(*env) + 1))))
 		return ;
 	bwn = new_env;
 	bw = *env;
