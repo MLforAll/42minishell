@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/15 21:41:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 16:07:55 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/06/29 02:03:37 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static char	*build_home(char *pwd, char **env)
 {
 	char			*ret;
 	char			*home;
-	char			*stret;
+	const char		*stret;
 
 	if (!pwd || !(home = get_env_var(env, "HOME")))
 		return (NULL);

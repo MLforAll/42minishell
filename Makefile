@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/04/25 13:32:39 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/06/29 02:14:10 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -86,7 +86,7 @@ fsanitize:
 	@ printf "\r------------------------------\033[0;39m\n"
 	@ make all LD_FLAGS="$(LD_FLAGS) -fsanitize=address"
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCLUDES)
 	@ if [ ! -d $(dir $@) ]; then mkdir -p $(dir $@); fi
 	@ printf "\033[K$(PROJTEXT)Compiling \033[1;33m$<"
 ifneq ($(CSRC),0)
@@ -96,6 +96,16 @@ ifneq ($(CSRC),0)
 endif
 	@ printf "\033[0;39m\r"
 	@ gcc $(CC_FLAGS) $(CC_LIB) -c $< -o $@
+
+cleanp:
+	@ rm -rf $(OBJDIR)
+	@ printf "$(PROJTEXT)Removed objects\n"
+
+fcleanp: cleanp
+	@ rm -f $(NAME)
+	@ printf "$(PROJTEXT)Removed $(NAME)\n"
+
+rep: fcleanp all
 
 clean:
 	@ make clean -C $(dir $(LIBFT))

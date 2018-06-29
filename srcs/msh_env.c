@@ -6,7 +6,7 @@
 /*   By: Kelian <Kelian@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/24 22:31:45 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/05/20 23:35:27 by Kelian           ###   ########.fr       */
+/*   Updated: 2018/06/29 02:05:40 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 
 char			*get_env_var(char **env, const char *var)
 {
-	char	*ret;
+	const char	*ret;
 
 	if (!env || !var)
 		return (NULL);
 	while (*env)
 	{
-		if ((ret = ft_strstart(*env, (char*)var)) && *ret == '=')
-			return (ret + 1);
+		if ((ret = ft_strstart(*env, var)) && *ret == '=')
+			return ((char*)(ptrdiff_t)(ret + 1));
 		env++;
 	}
 	return (NULL);
@@ -30,13 +30,13 @@ char			*get_env_var(char **env, const char *var)
 
 char			*chg_env_var(char **env, const char *var, char *new)
 {
-	char	*tmp;
+	const char	*tmp;
 
 	if (!env || !var || !new)
 		return (NULL);
 	while (*env)
 	{
-		if ((tmp = ft_strstart(*env, (char*)var)) && *tmp == '=')
+		if ((tmp = ft_strstart(*env, var)) && *tmp == '=')
 			break ;
 		env++;
 	}
@@ -79,10 +79,10 @@ char			*set_env_var(char ***env, const char *var, char *value)
 
 void			del_env_var(char ***env, const char *var)
 {
-	char	*tmp;
-	char	**new_env;
-	char	**bw;
-	char	**bwn;
+	const char	*tmp;
+	char		**new_env;
+	char		**bw;
+	char		**bwn;
 
 	if (!env || !var)
 		return ;
@@ -93,7 +93,7 @@ void			del_env_var(char ***env, const char *var)
 	bw = *env;
 	while (*bw)
 	{
-		if (!(tmp = ft_strstart(*bw, (char*)var)) || *tmp != '=')
+		if (!(tmp = ft_strstart(*bw, var)) || *tmp != '=')
 			*(bwn++) = ft_strdup(*bw);
 		bw++;
 	}

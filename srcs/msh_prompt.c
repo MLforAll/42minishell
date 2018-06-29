@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/15 21:41:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/24 01:15:31 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/06/29 02:03:17 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include "minishell.h"
 
-static int	check_str(char **dest, char **af, char *s, char **env)
+static int	check_str(char **dest, const char **af, char *s, char **env)
 {
 	int			subr;
 
@@ -40,7 +40,7 @@ static int	check_str(char **dest, char **af, char *s, char **env)
 char		*get_prompt_from_str(char *s, char **env)
 {
 	char			*ret;
-	char			*af;
+	const char		*af;
 	int				subr;
 
 	ret = ft_strnew(0);

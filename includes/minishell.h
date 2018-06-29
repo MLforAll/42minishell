@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/22 01:57:27 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/24 15:42:57 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/06/29 02:12:31 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,6 @@ int		get_errcode_for_path(const char *path, int mode, int dir);
 */
 
 int		ft_strchrf(char *s, char c);
-char	*get_last_component(const char *str, char c);
-char	*get_name_from_path(const char *path);
-char	*get_name_from_path_2(const char *path);
 
 int		free_return(void **data, int retv);
 void	switch_traps(int ign);

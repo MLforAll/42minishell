@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/08 23:12:06 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/23 14:21:51 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/06/29 02:08:35 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void		show_choices(t_list **res, const char *prompt, char *line)
 
 static char		*get_region(char *line, t_cursor *csr)
 {
-	char			*tmp;
+	const char		*tmp;
 	unsigned int	idx;
 
 	if (csr->pos == csr->max)
@@ -72,7 +72,7 @@ void			ac_line(char **line, t_cursor *csr, const char *pr, char **env)
 {
 	char			*region;
 	t_list			*res;
-	char			*fname;
+	const char		*fname;
 	char			*diff;
 	char			*base;
 

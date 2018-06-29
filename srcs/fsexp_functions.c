@@ -6,7 +6,7 @@
 /*   By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 21:26:34 by kdumarai          #+#    #+#             */
-/*   Updated: 2018/02/18 08:57:12 by kdumarai         ###   ########.fr       */
+/*   Updated: 2018/06/29 02:13:26 by kdumarai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,6 @@ char		*get_basedir(const char *f_path)
 	if (!(ret = ft_strnew(ret_len)))
 		return (NULL);
 	ft_strncpy(ret, f_path, ret_len);
-	return (ret);
-}
-
-static char	*get_elem_path(const char *d_path, char *name)
-{
-	char			*ret;
-
-	if (!d_path || !name)
-		return (NULL);
-	if (!(ret = ft_strnew(ft_strlen(d_path) + ft_strlen(name) + 1)))
-		return (NULL);
-	ft_strcat(ret, d_path);
-	ft_strcat(ret, "/");
-	ft_strcat(ret, name);
 	return (ret);
 }
 
@@ -90,7 +76,7 @@ t_list		*search_files_begin(const char *f_path, const char *s_dir, int exec)
 	DIR				*dirp;
 	struct dirent	*dird;
 	char			*basedir;
-	char			*name;
+	const char		*name;
 
 	basedir = (!s_dir) ? get_basedir(f_path) : (char*)s_dir;
 	name = get_name_from_path(f_path);
