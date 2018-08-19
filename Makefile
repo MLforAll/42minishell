@@ -6,7 +6,7 @@
 #    By: kdumarai <kdumarai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/20 21:41:19 by kdumarai          #+#    #+#              #
-#    Updated: 2018/06/29 02:14:10 by kdumarai         ###   ########.fr        #
+#    Updated: 2018/08/19 20:46:10 by kdumarai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -122,4 +122,4 @@ re: fclean all
 force:
 	@ true
 
-.PHONY: all noflags fsanitize clean fclean re force
+.PHONY: all noflags fsanitize clean fclean re
